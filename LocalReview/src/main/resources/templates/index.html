@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Trang Chủ</title>
+    <link rel="stylesheet" href="/css/styles.css"> <!-- Thay đổi theo đường dẫn của bạn -->
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a th:href="@{/index}">Trang Chủ</a></li>
+                <li><a th:href="@{/register}">Đăng Ký</a></li>
+                <li><a th:href="@{/login}">Đăng Nhập</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h1>Chào mừng đến với Trang Chủ</h1>
+        <!-- Nội dung trang chủ -->
+    </main>
+    <footer>
+        <p>&copy; 2024 Cửa hàng của chúng tôi</p>
+    </footer>
+</body>
+</html>

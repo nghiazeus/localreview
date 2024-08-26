@@ -15,6 +15,7 @@ import com.localreview.entity.Store;
 import com.localreview.entity.User;
 import com.localreview.entityEnum.UserRole;
 import com.localreview.repository.StoreRepository;
+import com.localreview.service.EmailService;
 import com.localreview.service.QRCodeScansService;
 import com.localreview.service.UserService;
 
@@ -23,6 +24,10 @@ public class AuthController {
 
     @Autowired
     private UserService userService;
+    
+    @Autowired
+    private EmailService emailService;
+    
     
     @Autowired
     private StoreRepository storeRepository;
@@ -42,27 +47,44 @@ public class AuthController {
                                         @RequestParam("phone_number") String phoneNumber,
                                         RedirectAttributes redirectAttributes) {
         
-        
-        User user = new User();
-        user.setEmail(email);
-        user.setName(name);
-        user.setPhoneNumber(phoneNumber);
-        user.setPassword(password);
-        user.setRole(UserRole.store_owner);  // Sử dụng enum UserRole
-        userService.saveUser(user);
+        try {
+            // Tạo và lưu người dùng
+            User user = new User();
+            user.setEmail(email);
+            user.setName(name);
+            user.setPhoneNumber(phoneNumber);
+            user.setPassword(password);
+            user.setRole(UserRole.store_owner);
+            userService.saveUser(user);
 
-        Store store = new Store();
-        store.setStoreName(storeName);
-        store.setAddress(address);
-        store.setOwnerId(user.getUserId());
-        store.setPhoneNumber(phoneNumber);
-        storeRepository.save(store);
-     // Tạo mã QR cho Store và User đã tạo
-        QRCodeScans qrCodeScans = qrCodeScansService.createQRCodeScan(user, store);
+            // Tạo và lưu cửa hàng
+            Store store = new Store();
+            store.setStoreName(storeName);
+            store.setAddress(address);
+            store.setOwnerId(user.getUserId());
+            store.setPhoneNumber(phoneNumber);
+            storeRepository.save(store);
 
-        redirectAttributes.addFlashAttribute("message", "Đăng ký thành công với mã QR: " + qrCodeScans.getQrId());
-        return "redirect:/index";
+            // Tạo mã QR
+            QRCodeScans qrCodeScans = qrCodeScansService.createQRCodeScan(user, store);
+
+            // Tạo nội dung email
+            String subject = "Đăng ký thành công hệ thống đánh giá System Review!";
+
+            // Gửi email
+            emailService.sendRegistrationEmail(user.getEmail(), subject, name, storeName, qrCodeScans.getQrCodeUrl());
+            
+            // Thêm thông báo và chuyển hướng
+            redirectAttributes.addFlashAttribute("message", "Đăng ký thành công với mã QR: " + qrCodeScans.getQrId());
+            return "redirect:/index";
+            
+        } catch (Exception e) {
+            e.printStackTrace(); // Hoặc sử dụng logger để ghi lỗi
+            redirectAttributes.addFlashAttribute("error", "Đã xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại.");
+            return "redirect:/register"; // Chuyển hướng đến trang đăng ký nếu có lỗi
+        }
     }
+
 
     @GetMapping("/register")
     public String showRegisterForm() {

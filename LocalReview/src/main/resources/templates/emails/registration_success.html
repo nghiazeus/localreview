@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký thành công hệ thống đánh giá System Review</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #eee;
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #111;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #00bcd4;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .header .logo {
+            max-width: 85px;
+            margin-bottom: 10px;
+        }
+        .header h1 {
+            margin: 0;
+            color: #00bcd4;
+            font-size: 24px;
+        }
+        .content {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #ccc;
+        }
+        .content p {
+            margin: 0 0 15px;
+        }
+        .content strong {
+            color: #00bcd4;
+        }
+        .promo {
+            background-color: #333;
+            color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            border-top: 1px solid #333;
+            padding-top: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+        .footer p {
+            margin: 0;
+        }
+        .footer a {
+            color: #00bcd4;
+            text-decoration: none;
+        }
+        .footer .social-icon {
+            display: inline-block;
+            margin: 0 5px;
+        }
+        .footer .social-icon img {
+            width: 24px;
+            height: 24px;
+        }
+        .footer .company-info {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #999;
+        }
+        .qr-code {
+            display: block;
+            margin: 20px auto;
+            max-width: 200px;
+            border: 2px solid #00bcd4;
+            border-radius: 8px;
+            padding: 10px;
+            background-color: #111;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 10px;
+            background-color: #00bcd4;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .button:hover {
+            background-color: #0097a7;
+        }
+        @media only screen and (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            .header h1 {
+                font-size: 20px;
+            }
+            .content {
+                font-size: 14px;
+            }
+            .qr-code {
+                max-width: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="https://tse3.mm.bing.net/th?id=OIG1.ys7P5gPTENq13timTsw9&pid=ImgGn" alt="Company Logo" class="logo">
+            <h1>Chúc mừng, ${name}!</h1>
+        </div>
+        <div class="content">
+            <p>Chúc mừng bạn, <strong>${name}</strong>, đã đăng ký tài khoản thành công cho cửa hàng của bạn: <strong>${storeName}</strong>!</p>
+            <p>Mã QR của bạn:</p>
+            <img src="${qrCodeUrl}" alt="QR Code" class="qr-code">
+            <p>Hệ thống của chúng tôi tên là <strong>System Reviews</strong>. Chúng tôi rất vui được phục vụ bạn và giúp bạn quản lý cửa hàng của mình hiệu quả hơn.</p>
+            <a href="https://www.example.com" class="button">Khám Phá Ngay</a>
+            <div class="promo">
+                <p><strong>Ưu đãi đặc biệt:</strong> Đăng ký ngay hôm nay để nhận <strong>10% giảm giá</strong> cho lần mua hàng tiếp theo! Sử dụng mã khuyến mãi: <strong>WELCOME10</strong>.</p>
+            </div>
+        </div>
+        <div class="footer">
+            <p>Theo dõi chúng tôi trên mạng xã hội:</p>
+            <a href="https://facebook.com/" class="social-icon"><img src="https://cdn.pixabay.com/photo/2021/06/15/12/51/facebook-6338507_1280.png" alt="Facebook"></a>
+            <a href="https://instagram.com/" class="social-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Instagram_logo_2022.svg/640px-Instagram_logo_2022.svg.png" alt="Instagram"></a>
+            <a href="https://linkedin.com/" class="social-icon"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4fcdsIUPUgmbvGaP-RC4RbHYdVtoN_fM8aya_8gOXI2BRtClESO-0_jgWTtKtIVmOQKs&usqp=CAU" alt="LinkedIn"></a>
+            <p>Địa chỉ email hỗ trợ: <a href="mailto:support@example.com">support@t&ncomppany.com</a></p>
+            <div class="company-info">
+                <p>Thân ái,</p>
+                <p><strong>T&N</strong></p>
+                <p><a href="https://www.example.com">www.t&ncomppany.com</a></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

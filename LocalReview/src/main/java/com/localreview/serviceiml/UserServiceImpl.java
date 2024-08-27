@@ -37,6 +37,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword())); // Mã hóa mật khẩu trước khi lưu
         return userRepository.save(user);
     }
+    
 
     
 }

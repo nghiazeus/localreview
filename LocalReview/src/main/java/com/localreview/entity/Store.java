@@ -26,8 +26,21 @@ public class Store {
     @Column(name = "store_name", nullable = false)
     private String storeName;
 
-    @Column(name = "address", nullable = false)
-    private String address;
+    @Column(name = "store_size", nullable = false)
+    private String storeSize; // Thêm trường store_size để khớp với bảng SQL
+
+    @Column(name = "address_city", nullable = false)
+    private String addressCity; // Thêm trường address_city để khớp với bảng SQL
+
+    @Column(name = "address_district", nullable = false)
+    private String addressDistrict; // Thêm trường address_district để khớp với bảng SQL
+
+    @Column(name = "address_commune", nullable = false)
+    private String addressCommune; // Thêm trường address_Commune để khớp với bảng SQL
+
+    @Column(name = "address_street", nullable = false)
+    private String addressStreet; // Thêm trường address_Street để khớp với bảng SQL
+
 
     @Column(name = "owner_id", nullable = false, columnDefinition = "CHAR(36)")
     private String ownerId;

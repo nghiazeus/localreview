@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,7 +44,10 @@ public class AuthController {
                                         @RequestParam("name") String name,
                                         @RequestParam("password") String password,
                                         @RequestParam("store_name") String storeName,
-                                        @RequestParam("address") String address,
+                                        @RequestParam("addressCity") String addressCity,
+                                        @RequestParam("addressDistrict") String addressDistrict,
+                                        @RequestParam("addressCommune") String addressCommune,
+                                        @RequestParam("addressStreet") String addressStreet,
                                         @RequestParam("phone_number") String phoneNumber,
                                         RedirectAttributes redirectAttributes) {
         
@@ -60,7 +64,10 @@ public class AuthController {
             // Tạo và lưu cửa hàng
             Store store = new Store();
             store.setStoreName(storeName);
-            store.setAddress(address);
+            store.setAddressCity(addressCity);
+            store.setAddressDistrict(addressDistrict);
+            store.setAddressCommune(addressCommune);
+            store.setAddressStreet(addressStreet);
             store.setOwnerId(user.getUserId());
             store.setPhoneNumber(phoneNumber);
             storeRepository.save(store);
@@ -103,5 +110,20 @@ public class AuthController {
         }
         return "login";
     }
+    
+    @GetMapping("/login/oauth2/success")
+    public String handleOAuth2Success(@AuthenticationPrincipal OAuth2User oAuth2User) {
+        // Xử lý thông tin người dùng từ Google
+        String email = oAuth2User.getAttribute("email");
+        String name = oAuth2User.getAttribute("name");
+        String googleId = oAuth2User.getName(); // ID Google của người dùng
+
+        // Lưu người dùng vào cơ sở dữ liệu
+        userService.findOrCreateUser(email, name, googleId);
+
+        // Chuyển hướng đến trang chính sau khi đăng nhập thành công
+        return "redirect:/user";
+    }
+   
    
 }

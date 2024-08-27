@@ -1,25 +1,778 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <title>Trang Chủ</title>
-    <link rel="stylesheet" href="/css/styles.css"> <!-- Thay đổi theo đường dẫn của bạn -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Review</title>
+    <link href="dist/output.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@latest/dist/tailwind.min.css" />
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans:200,400&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/emoji-button@4.6.0/dist/index.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
+
 <body>
-    <header>
-        <nav>
-            <ul>
-                <li><a th:href="@{/index}">Trang Chủ</a></li>
-                <li><a th:href="@{/register}">Đăng Ký</a></li>
-                <li><a th:href="@{/login}">Đăng Nhập</a></li>
-            </ul>
-        </nav>
-    </header>
-    <main>
-        <h1>Chào mừng đến với Trang Chủ</h1>
-        <!-- Nội dung trang chủ -->
-    </main>
-    <footer>
-        <p>&copy; 2024 Cửa hàng của chúng tôi</p>
+
+    <div class="containe work-sans leading-normal text-base tracking-normal">
+        <!--Nav-->
+        <div class="fixed top-0 left-0 w-full shadow-md z-50">
+            <nav id="header" class="w-full z-30 top-0 py-2 bg-gray-100 dark:bg-neutral-800">
+                <div class="container mx-auto flex items-center justify-between px-5 relative">
+                    <!-- Tiêu đề mobile -->
+                    <div class="block md:hidden flex items-center">
+                        <a href="index.html" class="font-bold text-xl">
+                            <strong class="text-yellow-400">RE</strong>VIEW
+                        </a>
+                    </div>
+
+                    <!-- Tiêu đề laptop -->
+                    <div class="hidden md:flex md:items-center md:w-auto">
+                        <a class="flex items-center tracking-wide no-underline hover:no-underline font-bold text-xl"
+                            href="#">
+                            <strong class="text-yellow-400">RE</strong>VIEW
+                        </a>
+                    </div>
+
+                    <!-- Thanh tìm kiếm cho desktop -->
+                    <div class="flex-grow mx-4 hidden md:flex items-center justify-center relative">
+                        <div class="relative flex items-center w-full max-w-2xl">
+                            <input id="searchInput" type="text" placeholder="Tìm kiếm..."
+                                class="w-full py-3 pl-4 pr-10 text-sm bg-white border border-gray-300 rounded-full shadow-sm dark:bg-neutral-800 dark:border-neutral-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300 ease-in-out">
+                            <button id="searchButton" class="absolute right-0 mr-3 text-blue-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Thanh tìm kiếm cho mobile -->
+                    <div class="flex-grow mx-4 md:hidden flex items-center justify-center relative">
+                        <div class="relative flex items-center w-full max-w-xs">
+                            <input id="searchInputMobile" type="text" placeholder="Tìm kiếm..."
+                                class="w-full py-3 pl-4 pr-10 text-sm bg-white border border-gray-300 rounded-full shadow-sm dark:bg-neutral-800 dark:border-neutral-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300 ease-in-out">
+                            <button id="searchButtonMobile" class="absolute right-0 mr-3 text-blue-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                            </button>
+                        </div>
+                        <!-- Lịch sử tìm kiếm trên mobile -->
+                        <div id="searchHistoryMobile"
+                            class="absolute inset-x-0 top-full mt-1 w-full max-w-xs bg-white border border-gray-300 rounded-lg shadow-lg hidden">
+                            <ul id="searchHistoryListMobile" class="divide-y divide-gray-200">
+
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Icon người dùng -->
+                    <div th:if="${#request.remoteUser}" class="relative inline-block text-left">
+                        <i class="bi bi-person-circle text-yellow-500 text-2xl cursor-pointer"
+                            onclick="toggleMenu()"></i>
+
+                        <!-- Dropdown menu -->
+                        <div class="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none hidden"
+                            role="menu" aria-orientation="vertical" aria-labelledby="menu-button" id="dropdown-menu">
+                            <div class="py-1" role="none">
+                                <a href="/login" class="block px-4 py-2 text-sm text-gray-700 hover:text-yellow-400"
+                                    role="menuitem" tabindex="-1" id="menu-item-0"><i
+                                        class="bi bi-box-arrow-in-right"></i> Đăng nhập</a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:text-yellow-400"
+                                    role="menuitem" tabindex="-1" id="menu-item-1"><i class="bi bi-person-fill-add"></i>
+                                    Đăng ký</a>
+                                <a href="register" class="block px-4 py-2 text-sm text-gray-700 hover:text-yellow-400"
+                                    role="menuitem" tabindex="-1" id="menu-item-2"><i class="bi bi-house-add"></i> Đăng
+                                    ký cửa hàng</a>
+                                <!-- Đăng xuất -->
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:text-yellow-400"
+                                    role="menuitem" tabindex="-1" id="menu-item-2"><i class="bi bi-box-arrow-right"></i>
+                                    Đăng xuất</a>
+                            </div>
+                        </div>
+                        <script>
+                            function toggleMenu() {
+                                const menu = document.getElementById('dropdown-menu');
+                                menu.classList.toggle('hidden');
+                            }
+
+                            // Ẩn menu khi nhấp ra ngoài
+                            window.addEventListener('click', function (e) {
+                                const menu = document.getElementById('dropdown-menu');
+                                const button = document.getElementById('menu-button');
+                                if (!button.contains(e.target) && !menu.contains(e.target)) {
+                                    menu.classList.add('hidden');
+                                }
+                            });
+                        </script>
+                    </div>
+
+                </div>
+
+                <!-- Lịch sử tìm kiếm trên desktop -->
+                <div id="searchHistory"
+                    class="absolute inset-x-0 mt-2 w-full max-w-2xl mx-auto bg-white border border-gray-300 rounded-lg shadow-lg hidden">
+                    <ul id="searchHistoryList" class="divide-y divide-gray-200">
+                        <!-- Các mục lịch sử tìm kiếm sẽ được thêm vào đây -->
+                    </ul>
+                </div>
+
+            </nav>
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const searchInput = document.getElementById('searchInput');
+                    const searchButton = document.getElementById('searchButton');
+                    const searchInputMobile = document.getElementById('searchInputMobile');
+                    const searchButtonMobile = document.getElementById('searchButtonMobile');
+                    const searchHistory = document.getElementById('searchHistory');
+                    const searchHistoryList = document.getElementById('searchHistoryList');
+                    const searchHistoryMobile = document.getElementById('searchHistoryMobile');
+                    const searchHistoryListMobile = document.getElementById('searchHistoryListMobile');
+
+                    let searchTerms = JSON.parse(localStorage.getItem('searchHistory')) || [];
+
+                    // Hiển thị lịch sử tìm kiếm khi nhấn vào input
+                    function toggleSearchHistory(inputElement, historyElement) {
+                        historyElement.classList.toggle('hidden');
+                        updateSearchHistory();
+                    }
+
+                    searchInput.addEventListener('focus', () => toggleSearchHistory(searchInput, searchHistory));
+                    searchInputMobile.addEventListener('focus', () => toggleSearchHistory(searchInputMobile, searchHistoryMobile));
+
+                    // Xử lý khi nhấn nút tìm kiếm
+                    function handleSearch(inputElement) {
+                        const term = inputElement.value.trim();
+                        if (term !== '') {
+                            searchTerms = [term, ...searchTerms.filter(item => item !== term)].slice(0, 5);
+                            localStorage.setItem('searchHistory', JSON.stringify(searchTerms));
+                            updateSearchHistory();
+                        }
+                        inputElement.value = '';
+                    }
+
+                    searchButton.addEventListener('click', () => handleSearch(searchInput));
+                    searchButtonMobile.addEventListener('click', () => handleSearch(searchInputMobile));
+
+                    // Xử lý khi nhấn phím Enter
+                    searchInput.addEventListener('keydown', function (event) {
+                        if (event.key === 'Enter') {
+                            handleSearch(searchInput);
+                        }
+                    });
+
+                    searchInputMobile.addEventListener('keydown', function (event) {
+                        if (event.key === 'Enter') {
+                            handleSearch(searchInputMobile);
+                        }
+                    });
+
+                    // Cập nhật danh sách lịch sử tìm kiếm
+                    function updateSearchHistory() {
+                        searchHistoryList.innerHTML = '';
+                        searchHistoryListMobile.innerHTML = '';
+                        if (searchTerms.length > 0) {
+                            searchTerms.forEach((term, index) => {
+                                const li = document.createElement('li');
+                                li.classList.add('flex', 'justify-between', 'items-center', 'border-b', 'py-2');
+
+                                const icon = document.createElement('i');
+                                icon.classList.add('bi', 'bi-stopwatch', 'mr-2');
+
+                                const termSpan = document.createElement('span');
+                                termSpan.textContent = term;
+                                termSpan.classList.add('flex-grow', 'cursor-pointer');
+                                termSpan.addEventListener('click', function () {
+                                    searchInput.value = term;
+                                    searchInputMobile.value = term;
+                                    searchHistory.classList.add('hidden');
+                                    searchHistoryMobile.classList.add('hidden');
+                                });
+
+                                const deleteButton = document.createElement('button');
+                                deleteButton.innerHTML = '&times;';
+                                deleteButton.classList.add('delete-button');
+                                deleteButton.addEventListener('click', function (event) {
+                                    event.stopPropagation(); // Ngăn sự kiện click trên nút xóa được truyền lên
+                                    searchTerms.splice(index, 1);
+                                    localStorage.setItem('searchHistory', JSON.stringify(searchTerms));
+                                    updateSearchHistory();
+                                });
+
+                                // Thêm icon và termSpan vào li
+                                li.appendChild(icon);
+                                li.appendChild(termSpan);
+                                li.appendChild(deleteButton);
+                                searchHistoryList.appendChild(li);
+                                searchHistoryListMobile.appendChild(li.cloneNode(true));
+                            });
+                            searchHistory.classList.remove('hidden');
+                            searchHistoryMobile.classList.remove('hidden');
+                        } else {
+                            searchHistory.classList.add('hidden');
+                            searchHistoryMobile.classList.add('hidden');
+                        }
+                    }
+
+                    // Ẩn bảng lịch sử khi nhấp ra ngoài
+                    function clickOutsideHandler(event) {
+                        if (!searchHistory.contains(event.target) && event.target !== searchInput && !searchHistoryMobile.contains(event.target) && event.target !== searchInputMobile) {
+                            searchHistory.classList.add('hidden');
+                            searchHistoryMobile.classList.add('hidden');
+                        }
+                    }
+
+                    document.addEventListener('click', clickOutsideHandler);
+                });
+
+            </script>
+        </div>
+
+        <!-- ---------------- -->
+        <section class="body bg-gray-50 mt-10">
+            <div class="container mx-auto flex items-center flex-wrap pt-4">
+                <nav id="store" class="w-full z-30 top-0 px-6 py-1">
+                    <div class="w-full container mx-auto flex flex-wrap items-center justify-between mt-0 px-2 py-3">
+                        <a class="relative border hover:border-yellow-400 hover:bg-gray-50 text-1xl duration-500 group cursor-pointer overflow-hidden h-14 w-56 rounded-md bg-white p-2 flex justify-center items-center font-extrabold"
+                            href="#">
+                            Cửa hàng
+                        </a>
+                        <div class="flex items-center" id="store-nav-content">
+                            <button class="flex pl-3 inline-block no-underline hover:text-black" id="openModal">
+                                <svg class="fill-current hover:text-black" xmlns="http://www.w3.org/2000/svg" width="24"
+                                    height="24" viewBox="0 0 24 24">
+                                    <path d="M7 11H17V13H7zM4 7H20V9H4zM10 15H14V17H10z" />
+                                </svg> LỌC
+                            </button>
+
+                            <!-- Modal -->
+                            <div id="modal-container"
+                                class="fixed inset-0 bg-gray-400 bg-opacity-75 flex justify-center items-center z-50 hidden">
+                                <!-- Modal Container -->
+                                <div class="bg-white rounded-lg shadow-lg">
+                                    <!-- Modal Header -->
+                                    <div
+                                        class="flex justify-between items-center bg-gray-100 p-4 rounded-t-lg md-7 space-x-5">
+                                        <h2 class="font-bold">(Nhà hàng/Quán ăn được đánh giá tốt)</h2>
+                                        <button class="text-gray-500 hover:text-gray-700 focus:outline-none"
+                                            id="closeModal">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M6 18L18 6M6 6l12 12" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <!-- Modal Body -->
+                                    <div class="p-6">
+                                        <!-- Filter Option 1: Category -->
+                                        <div class="mb-4">
+                                            <label class="block text-gray-700 text-sm font-bold mb-2">Nhà hàng/Quán
+                                                ăn</label>
+                                            <select
+                                                class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                                <option value="">Chọn nhà hàng/quán ăn</option>
+                                                <option value="star">(5 SAO) 🌟🌟🌟🌟🌟</option>
+                                                <option value="star">(4 SAO) 🌟🌟🌟🌟</option>
+                                                <option value="star">(3 SAO) 🌟🌟🌟</option>
+                                                <option value="star">(2 SAO) 🌟🌟</option>
+                                                <option value="star">(1 SAO) 🌟</option>
+                                            </select>
+                                        </div>
+                                        <!-- Filter Option 3: Availability -->
+                                        <div class="mb-4">
+                                            <label class="block text-gray-700 text-sm font-bold mb-2">Phổ biến</label>
+                                            <div class="flex items-center">
+                                                <input type="checkbox" id="in-stock" class="mr-2">
+                                                <label for="in-stock" class="text-gray-600">Được xem nhiều</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Modal Footer -->
+                                    <div class="flex justify-end p-4 bg-gray-100 rounded-b-lg">
+                                        <button
+                                            class="bg-red-500 text-white px-4 py-2 rounded-md mr-2 hover:bg-red-600 transition duration-300"
+                                            id="closeModal2">Hủy</button>
+                                        <button
+                                            class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300">Áp
+                                            dụng</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <script>
+                            // Lấy các phần tử
+                            const openModalButton = document.getElementById('openModal');
+                            const modalContainer = document.getElementById('modal-container');
+                            const closeModalButtons = document.querySelectorAll('#closeModal, #closeModal2');
+
+                            // Mở modal
+                            openModalButton.addEventListener('click', () => {
+                                modalContainer.classList.remove('hidden');
+                            });
+
+                            // Đóng modal
+                            closeModalButtons.forEach(button => {
+                                button.addEventListener('click', () => {
+                                    modalContainer.classList.add('hidden');
+                                });
+                            });
+                        </script>
+
+                    </div>
+                </nav>
+                <!-- ----------------------- -->
+                <!-- <div class="w-full md:w-1/3 xl:w-1/4 p-4 flex flex-col">
+                    <a href="detail.html">
+                        <div
+                            class="flex flex-col gap-1 dark:text-white bg-white dark:bg-neutral-900 p-4 rounded-md shadow-md hover:scale-105 transition duration-150 ease-in-out">
+                            <div class="flex justify-between items-center">
+                                <div class="bg-black dark:bg-neutral-700 rounded-md w-40 text-center text-yellow-300">
+                                    <i class="bi bi-house-heart-fill text-white"></i> Hùng Vương
+                                </div>
+                                <div class="bg-black dark:bg-neutral-700 rounded-md w-20 text-center text-yellow-300">
+                                    5<i class="bi bi-stars"></i>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center mt-2">
+                                <div class="bg-gray-200 dark:bg-neutral-700 rounded-md w-40 text-center text-black">
+                                    <i class="bi bi-geo-alt-fill text-red-600"></i> TP.Hồ Chí Minh
+                                </div>
+                                <div class="text-xs">
+                                    <div class="flex flex-row">
+                                        <svg fill="currentColor" viewBox="0 0 20 20" class="h-4 w-4 text-yellow-400"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M9.049 2.927c.3-.916 1.603-.916 1.902 0l1.286 3.953a1.5 1.5 0 001.421 1.033h4.171c.949 0 1.341 1.154.577 1.715l-3.38 2.458a1.5 1.5 0 00-.54 1.659l1.286 3.953c.3.916-.757 1.67-1.539 1.145l-3.38-2.458a1.5 1.5 0 00-1.76 0l-3.38 2.458c-.782.525-1.838-.229-1.539-1.145l1.286-3.953a1.5 1.5 0 00-.54-1.659l-3.38-2.458c-.764-.561-.372-1.715.577-1.715h4.171a1.5 1.5 0 001.421-1.033l1.286-3.953z">
+                                            </path>
+                                        </svg>
+                                        <svg fill="currentColor" viewBox="0 0 20 20" class="h-4 w-4 text-yellow-400"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M9.049 2.927c.3-.916 1.603-.916 1.902 0l1.286 3.953a1.5 1.5 0 001.421 1.033h4.171c.949 0 1.341 1.154.577 1.715l-3.38 2.458a1.5 1.5 0 00-.54 1.659l1.286 3.953c.3.916-.757 1.67-1.539 1.145l-3.38-2.458a1.5 1.5 0 00-1.76 0l-3.38 2.458c-.782.525-1.838-.229-1.539-1.145l1.286-3.953a1.5 1.5 0 00-.54-1.659l-3.38-2.458c-.764-.561-.372-1.715.577-1.715h4.171a1.5 1.5 0 001.421-1.033l1.286-3.953z">
+                                            </path>
+                                        </svg>
+                                        <svg fill="currentColor" viewBox="0 0 20 20" class="h-4 w-4 text-yellow-400"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M9.049 2.927c.3-.916 1.603-.916 1.902 0l1.286 3.953a1.5 1.5 0 001.421 1.033h4.171c.949 0 1.341 1.154.577 1.715l-3.38 2.458a1.5 1.5 0 00-.54 1.659l1.286 3.953c.3.916-.757 1.67-1.539 1.145l-3.38-2.458a1.5 1.5 0 00-1.76 0l-3.38 2.458c-.782.525-1.838-.229-1.539-1.145l1.286-3.953a1.5 1.5 0 00-.54-1.659l-3.38-2.458c-.764-.561-.372-1.715.577-1.715h4.171a1.5 1.5 0 001.421-1.033l1.286-3.953z">
+                                            </path>
+                                        </svg>
+                                        <svg fill="currentColor" viewBox="0 0 20 20" class="h-4 w-4 text-yellow-400"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M9.049 2.927c.3-.916 1.603-.916 1.902 0l1.286 3.953a1.5 1.5 0 001.421 1.033h4.171c.949 0 1.341 1.154.577 1.715l-3.38 2.458a1.5 1.5 0 00-.54 1.659l1.286 3.953c.3.916-.757 1.67-1.539 1.145l-3.38-2.458a1.5 1.5 0 00-1.76 0l-3.38 2.458c-.782.525-1.838-.229-1.539-1.145l1.286-3.953a1.5 1.5 0 00-.54-1.659l-3.38-2.458c-.764-.561-.372-1.715.577-1.715h4.171a1.5 1.5 0 001.421-1.033l1.286-3.953z">
+                                            </path>
+                                        </svg>
+
+                                        <svg fill="currentColor" viewBox="0 0 20 20" class="h-4 w-4 text-yellow-200"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M9.049 2.927c.3-.916 1.603-.916 1.902 0l1.286 3.953a1.5 1.5 0 001.421 1.033h4.171c.949 0 1.341 1.154.577 1.715l-3.38 2.458a1.5 1.5 0 00-.54 1.659l1.286 3.953c.3.916-.757 1.67-1.539 1.145l-3.38-2.458a1.5 1.5 0 00-1.76 0l-3.38 2.458c-.782.525-1.838-.229-1.539-1.145l1.286-3.953a1.5 1.5 0 00-.54-1.659l-3.38-2.458c-.764-.561-.372-1.715.577-1.715h4.171a1.5 1.5 0 001.421-1.033l1.286-3.953z">
+                                            </path>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                            <img class="rounded-md w-full h-48 object-cover mt-3"
+                                src="https://noithattugia.com/wp-content/uploads/2022/10/thiet-ke-nha-hang-16.jpg"
+                                alt="">
+                        </div>
+                    </a>
+                </div> -->
+                <!-- ----------------------- -->
+            </div>
+        </section>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 p-4">
+        <div th:each="store : ${stores}" class="h-full">
+            <a th:href="@{/storedetail}" class="h-full">
+                <div
+                    class="flex flex-col justify-between gap-1 dark:text-white bg-white dark:bg-neutral-900 p-4 rounded-md shadow-md border-2 border-gray-200 dark:border-neutral-700 hover:scale-105 transition duration-150 ease-in-out h-full min-h-[250px]">
+                    <div class="flex justify-between items-center space-x-2">
+                        <div class="bg-black dark:bg-neutral-700 rounded-md w-40 text-center text-yellow-300">
+                            <i class="bi bi-house-heart-fill text-white"></i>
+                            <span th:text="${store.storeName}">Store Name</span>
+                        </div>
+                        <div class="bg-black dark:bg-neutral-700 rounded-md w-20 text-center text-yellow-300">
+                            5<i class="bi bi-stars"></i>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center mt-2 space-x-2">
+                        <div class="bg-gray-200 dark:bg-neutral-700 rounded-md w-40 text-center text-black">
+                            <i class="bi bi-geo-alt-fill text-red-600"></i>
+                            <span th:text="${store.address}">Address</span>
+                        </div>
+                        <div class="text-xs">
+                            <div class="bg-black dark:bg-neutral-700 rounded-md text-center text-yellow-300">
+                                SMALL
+                            </div>
+                        </div>
+                    </div>
+                    <img class="rounded-md w-full h-36 object-cover mt-2"
+                        src="https://noithattugia.com/wp-content/uploads/2022/10/thiet-ke-nha-hang-16.jpg"
+                        alt="Store Image">
+                </div>
+            </a>
+        </div>
+    </div>
+    <br>
+    <div class="ml-8 bg-gray-50">
+        <button
+            class="text-yellow-300 bg-black tracking-wide no-underline font-bold py-2 px-4 rounded-md transition duration-300 ease-in-out">
+            MỘT SỐ NHẬN XÉT ĐÁNG CHÚ Ý!
+        </button>
+    </div>
+    <br>
+    <section class="article bg-gray-50 flex flex-col md:flex-row">
+        <!-- Phần chính (7 phần) -->
+        <div class="md:w-7/12 w-full scrollable-container py-6 px-8">
+            <div class="space-y-4">
+                <!-- Card 1 -->
+                <div class="card">
+                    <div class="p-4">
+                        <div class="flex items-center">
+                            <img class="avatar" src="https://via.placeholder.com/150" alt="User Avatar">
+                            <div class="ml-4">
+                                <h3 class="text-lg font-semibold">Nguyễn Văn A</h3>
+                                <p class="text-sm text-gray-600">Có những nhà hàng ăn ngon như Kasaki</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="card">
+                    <div class="p-4">
+                        <div class="flex items-center">
+                            <img class="avatar" src="https://via.placeholder.com/150" alt="User Avatar">
+                            <div class="ml-4">
+                                <h3 class="text-lg font-semibold">Trần Thị B</h3>
+                                <p class="text-sm text-gray-600">Có các nhà hàng, quán ăn không ngon như giới thiệu</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="card">
+                    <div class="p-4">
+                        <div class="flex items-center">
+                            <img class="avatar" src="https://via.placeholder.com/150" alt="User Avatar">
+                            <div class="ml-4">
+                                <h3 class="text-lg font-semibold">Nguyễn Văn A</h3>
+                                <p class="text-sm text-gray-600">Có những nhà hàng ăn ngon như Kasaki</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="card">
+                    <div class="p-4">
+                        <div class="flex items-center">
+                            <img class="avatar" src="https://via.placeholder.com/150" alt="User Avatar">
+                            <div class="ml-4">
+                                <h3 class="text-lg font-semibold">Trần Thị B</h3>
+                                <p class="text-sm text-gray-600">Có các nhà hàng, quán ăn không ngon như giới thiệu</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cột bên phải chứa quảng cáo (3 phần) -->
+        <div class="md:w-3/12 w-full md:ml-20 mt-8 md:mt-6">
+            <div class="bg-white border border-slate-200 rounded-xl p-4 text-sm">
+                <h1 class="text-center text-slate-800 text-xl font-bold mb-2">Gửi cảm nhận của bạn</h1>
+                <textarea id="feedback" placeholder="Cảm nhận của bạn..."
+                    class="bg-slate-100 text-slate-600 h-40 w-full placeholder:text-slate-600 placeholder:opacity-50 border border-slate-200 resize-none outline-none rounded-lg p-2 duration-300 focus:border-slate-600"></textarea>
+                <div class="flex space-x-2 mt-2">
+                    <button
+                        class="flex-grow fill-slate-600 flex justify-center items-center rounded-lg p-2 duration-300 bg-slate-100 hover:border-slate-600 focus:fill-blue-200 focus:bg-blue-400 border border-slate-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 0 512 512">
+                            <path
+                                d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm177.6 62.1C192.8 334.5 218.8 352 256 352s63.2-17.5 78.4-33.9c9-9.7 24.2-10.4 33.9-1.4s10.4 24.2 1.4 33.9c-22 23.8-60 49.4-113.6 49.4s-91.7-25.5-113.6-49.4c-9-9.7-8.4-24.9 1.4-33.9s24.9-8.4 33.9 1.4zM144.4 208a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm192-32a32 32 0 1 1 0 64 32 32 0 1 1 0-64z">
+                            </path>
+                        </svg>
+                    </button>
+                    <button id="emoji-button"
+                        class="flex-grow fill-slate-600 flex justify-center items-center rounded-lg p-2 duration-300 bg-slate-100 hover:border-slate-600 focus:fill-blue-200 focus:bg-blue-400 border border-slate-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 0 512 512">
+                            <path
+                                d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm177.6 62.1C192.8 334.5 218.8 352 256 352s63.2-17.5 78.4-33.9c9-9.7 24.2-10.4 33.9-1.4s10.4 24.2 1.4 33.9c-22 23.8-60 49.4-113.6 49.4s-91.7-25.5-113.6-49.4c-9-9.7-8.4-24.9 1.4-33.9s24.9-8.4 33.9 1.4zM144.4 208a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm192-32a32 32 0 1 1 0 64 32 32 0 1 1 0-64z">
+                            </path>
+                        </svg>
+                    </button>
+                    <button
+                        class="flex items-center bg-black text-white gap-1 px-4 py-2 cursor-pointer text-yellow-400 font-semibold tracking-widest rounded-md hover:bg-yellow-400 hover:text-black duration-300 hover:gap-2 hover:translate-x-3">
+                        Gửi
+                        <svg class="w-5 h-5" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
+                                stroke-linejoin="round" stroke-linecap="round"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <br>
+    <!-- ------carousel-- -->
+    <div class="marquee mt-2 overflow-hidden relative">
+        <div class="marquee-content flex">
+            <!-- Image Tiles -->
+            <a href="#" class="flex bg-gray-200 rounded-lg p-4 m-2 min-w-max">
+                <div class="w-48 bg-gray-400 rounded-lg overflow-hidden">
+                    <img src="https://kientruchoanmy.vn/wp-content/uploads/2023/05/1_Camera_6_2.jpg" alt=""
+                        class="w-full h-full object-cover rounded-lg">
+                </div>
+                <div class="flex flex-col items-start ml-4">
+                    <h4 class="text-xl text-black font-semibold">Beatesk</h4>
+                    <p class="text-sm text-black">Thế giới thịt.</p>
+                </div>
+            </a>
+            <!-- Tile 2 -->
+            <a href="#" class="flex bg-gray-200 rounded-lg p-4 m-2 min-w-max">
+                <div class="w-48 bg-gray-400 rounded-lg overflow-hidden">
+                    <img src="https://nhahangdep.vn/wp-content/uploads/2018/12/kinh-nghiem-thiet-ke-nha-hang-hai-mat-tien-hieu-qua-3.jpg"
+                        alt="" class="w-full h-full object-cover rounded-lg">
+                </div>
+                <div class="flex flex-col items-start ml-4">
+                    <h4 class="text-xl text-black font-semibold">Chicken Plus</h4>
+                    <p class="text-sm text-black">Ẩm thực Phương Tấy.</p>
+                </div>
+            </a>
+            <!-- Image Tiles -->
+            <a href="#" class="flex bg-gray-200 rounded-lg p-4 m-2 min-w-max">
+                <div class="w-48 bg-gray-400 rounded-lg overflow-hidden">
+                    <img src="https://kientruchoanmy.vn/wp-content/uploads/2023/05/1_Camera_6_2.jpg" alt=""
+                        class="w-full h-full object-cover rounded-lg">
+                </div>
+                <div class="flex flex-col items-start ml-4">
+                    <h4 class="text-xl text-black font-semibold">Beatesk</h4>
+                    <p class="text-sm text-black">Thế giới thịt.</p>
+                </div>
+            </a>
+            <!-- Tile 2 -->
+            <a href="#" class="flex bg-gray-200 rounded-lg p-4 m-2 min-w-max">
+                <div class="w-48 bg-gray-400 rounded-lg overflow-hidden">
+                    <img src="https://nhahangdep.vn/wp-content/uploads/2018/12/kinh-nghiem-thiet-ke-nha-hang-hai-mat-tien-hieu-qua-3.jpg"
+                        alt="" class="w-full h-full object-cover rounded-lg">
+                </div>
+                <div class="flex flex-col items-start ml-4">
+                    <h4 class="text-xl text-black font-semibold">Chicken Plus</h4>
+                    <p class="text-sm text-black">Ẩm thực Phương Tấy.</p>
+                </div>
+            </a>
+        </div>
+        <script>
+            const root = document.documentElement;
+            const marqueeElementsDisplayed = getComputedStyle(root).getPropertyValue("--marquee-elements-displayed");
+            const marqueeContent = document.querySelector(".marquee-content");
+
+            root.style.setProperty("--marquee-elements", marqueeContent.children.length);
+
+            for (let i = 0; i < marqueeElementsDisplayed; i++) {
+                marqueeContent.appendChild(marqueeContent.children[i].cloneNode(true));
+            }
+        </script>
+    </div>
+    <br>
+    <!-- Main -->
+    <div class="flex bg-gray-100 overflow-hidden shadow-lg">
+        <!-- Phần chứa hình ảnh (7 phần) -->
+        <div class="w-7/12 relative">
+            <a href="#">
+                <img src="https://kientruchoanmy.vn/wp-content/uploads/2023/03/z3721059789261_08b35b195d108635ffccf321f9b79223.jpg"
+                    alt="Sample Image" class="w-full h-full object-cover">
+                <!-- Dòng chữ ở góc trái bên dưới -->
+                <div class="absolute bottom-0 left-0 bg-black bg-opacity-50 text-white text-xs px-4 py-2 ">
+                    NHÀ HÀNG CAO CẤP 7 SAO
+                </div>
+            </a>
+        </div>
+
+        <!-- Phần còn lại (5 phần) -->
+        <div class="w-5/12 relative">
+            <a href="#">
+                <img src="https://pendecor.vn/uploads/files/2023/08/20/xuan-son-mat-tien-7.jpg" alt="Sample Image"
+                    class="w-full h-full object-cover">
+                <!-- Dòng chữ ở góc trái bên dưới -->
+                <div class="absolute bottom-0 left-0 bg-black bg-opacity-50 text-white text-xs px-4 py-2">
+                    QUÁN ĂN HẢI SẢN CAO CẤP
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Carousel -->
+
+    <!-- ----------- -->
+    <footer class="container mx-auto bg-white py-8 border-t border-gray-400">
+        <div class="mx-auto container py-16 xl:px-20 lg:px-12 sm:px-6 px-4">
+            <!--- more free and premium Tailwind CSS components at https://tailwinduikit.com/ --->
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 md:gap-8 gap-4">
+                <div class="flex flex-col flex-shrink-0">
+                    <div class="dark:text-white">
+                        <svg width="57" height="17" viewBox="0 0 57 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M5.36 12.328H12.896V16H0.464V0.159999H5.36V12.328ZM18.8135 16.24C17.5815 16.24 16.6055 15.92 15.8855 15.28C15.1655 14.624 14.8055 13.552 14.8055 12.064V4H19.6535V10.936C19.6535 11.544 19.7655 11.976 19.9895 12.232C20.2135 12.488 20.5415 12.616 20.9735 12.616C21.4375 12.616 21.8055 12.44 22.0775 12.088C22.3655 11.736 22.5095 11.168 22.5095 10.384V4H27.3575V16H23.0135L22.8935 13.6C22.1735 15.36 20.8135 16.24 18.8135 16.24ZM34.3209 4L36.1209 7.672L37.9689 4H43.3689L39.2649 9.976L43.4649 16H37.9449L36.0249 12.136L34.1289 16H28.6809L32.9289 9.904L28.8249 4H34.3209ZM50.2822 16.24C48.2022 16.24 46.5702 15.696 45.3862 14.608C44.2022 13.52 43.6102 11.984 43.6102 10C43.6102 8.672 43.8822 7.544 44.4262 6.616C44.9702 5.688 45.7302 4.984 46.7062 4.504C47.6822 4.008 48.8102 3.76 50.0902 3.76C51.4022 3.76 52.5142 4.008 53.4262 4.504C54.3542 4.984 55.0582 5.656 55.5382 6.52C56.0342 7.384 56.2822 8.392 56.2822 9.544C56.2822 10.136 56.2422 10.64 56.1622 11.056H48.2662C48.3782 11.776 48.6022 12.272 48.9382 12.544C49.2902 12.8 49.7542 12.928 50.3302 12.928C50.8262 12.928 51.2182 12.824 51.5062 12.616C51.8102 12.408 52.0262 12.12 52.1542 11.752L56.0422 12.904C55.8342 13.64 55.4422 14.256 54.8662 14.752C54.2902 15.248 53.6022 15.624 52.8022 15.88C52.0022 16.12 51.1622 16.24 50.2822 16.24ZM50.0902 7.048C49.5782 7.048 49.1702 7.192 48.8662 7.48C48.5782 7.768 48.3862 8.256 48.2902 8.944H51.6982C51.6342 8.32 51.4742 7.848 51.2182 7.528C50.9782 7.208 50.6022 7.048 50.0902 7.048Z"
+                                fill="currentColor" />
+                        </svg>
+                    </div>
+                    <p class="text-sm leading-none text-gray-800 mt-4 dark:text-white">Copyright © 2021 Review</p>
+                    <p class="text-sm leading-none text-gray-800 mt-4 dark:text-white">
+                        <a href="index.html" class="font-bold text-xl">
+                            <strong class="text-yellow-400">RE</strong>VIEW
+                        </a>
+                    </p>
+                    <div class="flex items-center gap-x-4 mt-12">
+                        <button aria-label="instagram"
+                            class="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 opacity-50 w-8 h-8 flex-shrink-0 bg-gray-800 cursor-pointer hover:bg-gray-700 rounded-full flex items-center justify-center">
+                            <svg width="18" height="17" viewBox="0 0 18 17" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                    d="M9.00081 0.233398C6.68327 0.233398 6.39243 0.243215 5.48219 0.283343C4.57374 0.323644 3.95364 0.462973 3.41106 0.667403C2.84981 0.87855 2.37372 1.161 1.8994 1.62066C1.42473 2.08016 1.13317 2.54137 0.914502 3.08491C0.702944 3.61071 0.558942 4.2116 0.518053 5.09132C0.477342 5.97311 0.466675 6.25504 0.466675 8.50015C0.466675 10.7453 0.476986 11.0262 0.518231 11.9079C0.560009 12.788 0.703833 13.3887 0.914679 13.9144C1.13282 14.4581 1.42437 14.9193 1.89887 15.3788C2.37301 15.8386 2.8491 16.1218 3.40999 16.3329C3.95293 16.5373 4.57321 16.6767 5.48148 16.717C6.39171 16.7571 6.68238 16.7669 8.99974 16.7669C11.3175 16.7669 11.6074 16.7571 12.5176 16.717C13.4261 16.6767 14.0469 16.5373 14.5898 16.3329C15.1509 16.1218 15.6263 15.8386 16.1004 15.3788C16.5751 14.9193 16.8667 14.4581 17.0853 13.9145C17.2951 13.3887 17.4391 12.7878 17.4818 11.9081C17.5227 11.0263 17.5333 10.7453 17.5333 8.50015C17.5333 6.25504 17.5227 5.97328 17.4818 5.09149C17.4391 4.21143 17.2951 3.61071 17.0853 3.08508C16.8667 2.54137 16.5751 2.08016 16.1004 1.62066C15.6258 1.16082 15.1511 0.878377 14.5893 0.667403C14.0453 0.462973 13.4249 0.323644 12.5164 0.283343C11.6062 0.243215 11.3164 0.233398 8.99814 0.233398H9.00081ZM8.23525 1.72311C8.46245 1.72277 8.71597 1.72311 9.00077 1.72311C11.2792 1.72311 11.5492 1.73104 12.449 1.77065C13.281 1.8075 13.7326 1.94218 14.0334 2.05533C14.4316 2.20517 14.7155 2.38428 15.014 2.67362C15.3127 2.96295 15.4976 3.23851 15.6526 3.62429C15.7694 3.91535 15.9086 4.3528 15.9464 5.15881C15.9873 6.03026 15.9962 6.29204 15.9962 8.49823C15.9962 10.7044 15.9873 10.9662 15.9464 11.8377C15.9084 12.6437 15.7694 13.0811 15.6526 13.3722C15.4979 13.758 15.3127 14.0327 15.014 14.3218C14.7153 14.6112 14.4318 14.7903 14.0334 14.9401C13.7329 15.0538 13.281 15.1881 12.449 15.225C11.5494 15.2646 11.2792 15.2732 9.00077 15.2732C6.72217 15.2732 6.45212 15.2646 5.55256 15.225C4.72055 15.1878 4.26899 15.0531 3.96801 14.9399C3.56978 14.7901 3.28533 14.611 2.98666 14.3216C2.68799 14.0323 2.5031 13.7574 2.34808 13.3715C2.23128 13.0804 2.09208 12.643 2.05421 11.837C2.01332 10.9655 2.00514 10.7037 2.00514 8.49617C2.00514 6.2886 2.01332 6.0282 2.05421 5.15674C2.09226 4.35073 2.23128 3.91329 2.34808 3.62188C2.50275 3.2361 2.68799 2.96054 2.98666 2.67121C3.28533 2.38187 3.56978 2.20276 3.96801 2.05258C4.26881 1.93891 4.72055 1.80457 5.55256 1.76755C6.33977 1.7331 6.64484 1.72277 8.23525 1.72105V1.72311ZM13.5558 3.09574C12.9905 3.09574 12.5318 3.53956 12.5318 4.08741C12.5318 4.63508 12.9905 5.07942 13.5558 5.07942C14.1212 5.07942 14.5799 4.63508 14.5799 4.08741C14.5799 3.53974 14.1212 3.09574 13.5558 3.09574ZM9.00082 4.25481C6.58071 4.25481 4.61855 6.15564 4.61855 8.50013C4.61855 10.8446 6.58071 12.7446 9.00082 12.7446C11.4209 12.7446 13.3824 10.8446 13.3824 8.50013C13.3824 6.15564 11.4209 4.25481 9.00082 4.25481ZM9.00079 5.74454C10.5717 5.74454 11.8453 6.97818 11.8453 8.50013C11.8453 10.0219 10.5717 11.2557 9.00079 11.2557C7.42975 11.2557 6.15632 10.0219 6.15632 8.50013C6.15632 6.97818 7.42975 5.74454 9.00079 5.74454Z"
+                                    fill="white" />
+                            </svg>
+                        </button>
+                        <button aria-label="linked-in"
+                            class="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 opacity-50 w-8 h-8 flex-shrink-0 bg-gray-800 cursor-pointer hover:bg-gray-700 rounded-full flex items-center justify-center">
+                            <svg width="18" height="17" viewBox="0 0 18 17" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                    d="M17.5333 8.4886C17.5333 9.04766 17.4746 9.60594 17.3592 10.1501C17.2467 10.6814 17.08 11.203 16.8617 11.7016C16.6483 12.1914 16.3837 12.6634 16.0745 13.1035C15.77 13.5409 15.4191 13.9512 15.0337 14.3253C14.6474 14.6977 14.2224 15.0367 13.7711 15.333C13.3152 15.6304 12.8273 15.8864 12.3215 16.094C11.806 16.3044 11.2664 16.4657 10.7184 16.5745C10.1559 16.6866 9.57755 16.7438 8.99962 16.7438C8.42126 16.7438 7.8429 16.6866 7.28121 16.5745C6.73244 16.4657 6.19283 16.3044 5.67779 16.094C5.17195 15.8864 4.68357 15.6304 4.22772 15.333C3.77645 15.0367 3.35143 14.6977 2.96599 14.3253C2.58015 13.9512 2.22928 13.5409 1.92427 13.1035C1.61675 12.6634 1.35172 12.1913 1.13755 11.7016C0.919183 11.203 0.752114 10.6814 0.639188 10.1501C0.525025 9.60594 0.466675 9.04766 0.466675 8.4886C0.466675 7.92913 0.524992 7.36965 0.639221 6.82665C0.752147 6.29538 0.919216 5.77299 1.13759 5.27519C1.35175 4.78505 1.61678 4.31265 1.9243 3.87246C2.22931 3.43473 2.58018 3.02517 2.96602 2.65069C3.35146 2.27823 3.77648 1.94007 4.22775 1.64421C4.6836 1.3455 5.17198 1.08958 5.67783 0.881567C6.19286 0.670713 6.73244 0.509099 7.28124 0.401087C7.84294 0.289844 8.4213 0.233398 8.99966 0.233398C9.57758 0.233398 10.1559 0.289844 10.7185 0.401087C11.2664 0.509131 11.806 0.670745 12.3215 0.881567C12.8273 1.08955 13.3153 1.3455 13.7711 1.64421C14.2224 1.94007 14.6475 2.27823 15.0337 2.65069C15.4191 3.02517 15.77 3.43473 16.0746 3.87246C16.3837 4.31265 16.6483 4.78508 16.8617 5.27519C17.08 5.77299 17.2467 6.29538 17.3592 6.82665C17.4746 7.36965 17.5333 7.92913 17.5333 8.4886ZM5.89026 2.11217C3.85805 3.0405 2.34131 4.85195 1.86836 7.03507C2.06048 7.03668 5.0973 7.07377 8.59622 6.17446C7.33492 4.00666 5.98735 2.23757 5.89026 2.11217ZM9.2 7.26001C5.44774 8.34669 1.84711 8.2685 1.71795 8.26369C1.71585 8.33945 1.71211 8.4128 1.71211 8.4886C1.71211 10.2996 2.41839 11.9507 3.57929 13.1991C3.57678 13.1954 5.57108 9.77282 9.50377 8.54262C9.59876 8.51199 9.69546 8.48456 9.79128 8.45797C9.60838 8.05732 9.40875 7.65584 9.2 7.26001ZM13.8124 3.1977C12.5293 2.10329 10.8447 1.43946 8.9996 1.43946C8.40748 1.43946 7.83286 1.50879 7.28242 1.63697C7.39157 1.77887 8.76042 3.53549 10.0067 5.74921C12.7565 4.75199 13.7944 3.22348 13.8124 3.1977ZM10.288 9.6261C10.2718 9.63131 10.2556 9.6358 10.2397 9.64142C5.93997 11.0914 4.53583 14.0136 4.52064 14.0455C5.75781 14.9762 7.30956 15.5377 8.99965 15.5377C10.0088 15.5377 10.9701 15.339 11.8448 14.9791C11.7368 14.3632 11.3135 12.2042 10.288 9.6261ZM13.0719 14.3349C14.7082 13.2668 15.8703 11.5706 16.1945 9.60591C16.0445 9.55916 14.0057 8.93477 11.6535 9.29958C12.6093 11.8407 12.9977 13.9101 13.0719 14.3349ZM10.5676 6.79966C10.7368 7.13585 10.9006 7.47801 11.0518 7.82188C11.1056 7.94524 11.1581 8.06618 11.2093 8.18708C13.7128 7.88233 16.1792 8.39506 16.2846 8.41599C16.2679 6.74483 15.65 5.21108 14.6275 4.01032C14.6137 4.02922 13.4449 5.66294 10.5676 6.79966Z"
+                                    fill="white" />
+                            </svg>
+                        </button>
+                        <button aria-label="twitter"
+                            class="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 opacity-50 w-8 h-8 flex-shrink-0 bg-gray-800 cursor-pointer hover:bg-gray-700 rounded-full flex items-center justify-center">
+                            <svg width="16" height="13" viewBox="0 0 16 13" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                    d="M7.5208 3.59864L7.55438 4.13498L6.99479 4.0693C4.95791 3.81755 3.17843 2.9638 1.66756 1.52992L0.928908 0.818458L0.73865 1.34385C0.33575 2.51503 0.593158 3.75188 1.43253 4.58375C1.8802 5.04346 1.77948 5.10914 1.00725 4.8355C0.73865 4.74793 0.503625 4.68226 0.481242 4.71509C0.4029 4.79171 0.6715 5.78776 0.884142 6.18181C1.17513 6.72909 1.76828 7.26542 2.4174 7.58284L2.96579 7.83459L2.31668 7.84554C1.68994 7.84554 1.66756 7.85648 1.73471 8.08634C1.95854 8.79781 2.84268 9.55305 3.82755 9.88142L4.52143 10.1113L3.91708 10.4615C3.02175 10.965 1.96973 11.2496 0.917717 11.2715C0.414092 11.2825 0 11.3262 0 11.3591C0 11.4685 1.36538 12.0815 2.15999 12.3223C4.54382 13.0338 7.37531 12.7273 9.50173 11.5123C11.0126 10.6476 12.5235 8.92915 13.2286 7.26542C13.6091 6.37883 13.9896 4.75888 13.9896 3.98174C13.9896 3.47824 14.0232 3.41257 14.6499 2.81056C15.0192 2.4603 15.3662 2.0772 15.4333 1.96775C15.5452 1.75978 15.534 1.75978 14.9633 1.94586C14.012 2.27422 13.8777 2.23044 14.3477 1.73789C14.6947 1.38763 15.1088 0.752784 15.1088 0.566709C15.1088 0.533872 14.9409 0.5886 14.7506 0.68711C14.5492 0.796566 14.1015 0.96075 13.7658 1.05926L13.1614 1.24534L12.613 0.884131C12.3108 0.68711 11.8856 0.468198 11.6617 0.402524C11.0909 0.249286 10.218 0.271177 9.70318 0.446307C8.30422 0.938859 7.42008 2.20855 7.5208 3.59864Z"
+                                    fill="white" />
+                            </svg>
+                        </button>
+                        <button aria-label="youtube"
+                            class="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 opacity-50 w-8 h-8 flex-shrink-0 bg-gray-800 cursor-pointer hover:bg-gray-700 rounded-full flex items-center justify-center">
+                            <svg width="18" height="13" viewBox="0 0 18 13" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                    d="M15.6677 1.17143C16.4021 1.36664 16.9804 1.94183 17.1767 2.67227C17.5333 3.99611 17.5333 6.75832 17.5333 6.75832C17.5333 6.75832 17.5333 9.52043 17.1767 10.8444C16.9804 11.5748 16.4021 12.15 15.6677 12.3453C14.3369 12.7 9.00001 12.7 9.00001 12.7C9.00001 12.7 3.66309 12.7 2.33218 12.3453C1.59783 12.15 1.0195 11.5748 0.823232 10.8444C0.466675 9.52043 0.466675 6.75832 0.466675 6.75832C0.466675 6.75832 0.466675 3.99611 0.823232 2.67227C1.0195 1.94183 1.59783 1.36664 2.33218 1.17143C3.66309 0.81665 9.00001 0.81665 9.00001 0.81665C9.00001 0.81665 14.3369 0.81665 15.6677 1.17143ZM7.40002 4.43326V9.59993L11.6667 7.01669L7.40002 4.43326Z"
+                                    fill="white" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="sm:ml-0 ml-8 flex flex-col">
+                    <h2 class="text-base font-semibold leading-4 text-gray-800 dark:text-white">Chức năng</h2>
+                    <a href="javascript:void(0)"
+                        class="focus:outline-none focus:underline hover:text-gray-500 text-base leading-4 mt-6 text-gray-800 dark:text-white cursor-pointer">Đánh
+                        giá</a>
+                    <a href="javascript:void(0)"
+                        class="focus:outline-none focus:underline hover:text-gray-500 text-base leading-4 mt-6 text-gray-800 dark:text-white cursor-pointer">Dịch
+                        vụ</a>
+                    <a href="javascript:void(0)"
+                        class="focus:outline-none focus:underline hover:text-gray-500 text-base leading-4 mt-6 text-gray-800 dark:text-white cursor-pointer">Nhà
+                        hàng/Quán ăn</a>
+                    <a href="javascript:void(0)"
+                        class="focus:outline-none focus:underline hover:text-gray-500 text-base leading-4 mt-6 text-gray-800 dark:text-white cursor-pointer">Đăng
+                        ký </a>
+                    <a href="javascript:void(0)"
+                        class="focus:outline-none focus:underline hover:text-gray-500 text-base leading-4 mt-6 text-gray-800 dark:text-white cursor-pointer">Đăng
+                        nhập</a>
+                </div>
+                <div class="flex flex-col">
+                    <h2 class="text-base font-semibold leading-4 text-gray-800 dark:text-white">Hỗ trợ</h2>
+                    <a href="javascript:void(0)"
+                        class="focus:outline-none focus:underline hover:text-gray-500 text-base leading-4 mt-6 text-gray-800 dark:text-white cursor-pointer">Chính
+                        sách
+                    </a>
+                    <a href="javascript:void(0)"
+                        class="focus:outline-none focus:underline hover:text-gray-500 text-base leading-4 mt-6 text-gray-800 dark:text-white cursor-pointer">Thông
+                        tin cá nhân
+                    </a>
+                    <a href="javascript:void(0)"
+                        class="focus:outline-none focus:underline hover:text-gray-500 text-base leading-4 mt-6 text-gray-800 dark:text-white cursor-pointer">Bảo
+                        mật thông tin
+                    </a>
+                    <a href="javascript:void(0)"
+                        class="focus:outline-none focus:underline hover:text-gray-500 text-base leading-4 mt-6 text-gray-800 dark:text-white cursor-pointer">Tài
+                        khoản
+                    </a>
+                </div>
+                <!-- Destop -->
+                <div class="mt-10 lg:block hidden">
+                    <label class="text-xl font-medium leading-5 text-gray-800 dark:text-white">Nhận thông tin cập
+                        nhật</label>
+                    <div
+                        class="cursor-pointer flex items-center justify-between border border-gray-800 dark:border-white mt-4">
+                        <input type="text"
+                            class="text-base leading-4 p-4 w-full focus:outline-none text-gray-800 dark:text-white dark:placeholder-white dark:bg-gray-900 dark:border-white placeholder-gray-800"
+                            placeholder="Enter email của bạn" />
+                        <button aria-label="send"
+                            class="mr-4 fill-current text-gray-800 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800">
+                            <svg class="dark:text-white dark:hover:text-gray-200" width="16" height="17"
+                                viewBox="0 0 16 17" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M14.8934 7.39673L14.8884 7.39457L1.54219 1.9166C1.42993 1.87011 1.30778 1.85187 1.18666 1.86353C1.06554 1.87519 0.949225 1.91637 0.848125 1.9834C0.741311 2.05266 0.653573 2.14711 0.592805 2.25826C0.532037 2.36941 0.500145 2.49376 0.5 2.62013V6.12357C0.50006 6.29633 0.561019 6.46366 0.67237 6.59671C0.783722 6.72976 0.938491 6.82021 1.11 6.85246L8.38906 8.18438C8.41767 8.18974 8.44348 8.20482 8.46205 8.22701C8.48062 8.2492 8.49078 8.2771 8.49078 8.30591C8.49078 8.33472 8.48062 8.36263 8.46205 8.38481C8.44348 8.407 8.41767 8.42208 8.38906 8.42744L1.11031 9.75936C0.938851 9.79153 0.784092 9.88185 0.67269 10.0148C0.561288 10.1477 0.500219 10.3149 0.5 10.4876V13.9917C0.499917 14.1124 0.530111 14.2312 0.587871 14.3374C0.645632 14.4437 0.729152 14.5341 0.830938 14.6006C0.953375 14.6811 1.09706 14.7241 1.24406 14.7243C1.34626 14.7242 1.4474 14.7039 1.54156 14.6646L14.8875 9.21787L14.8934 9.21509C15.0731 9.13869 15.2262 9.01185 15.3337 8.85025C15.4413 8.68866 15.4986 8.49941 15.4986 8.30591C15.4986 8.11241 15.4413 7.92316 15.3337 7.76157C15.2262 7.59997 15.0731 7.47313 14.8934 7.39673Z"
+                                    fill="currentColor" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <!--  -->
+            </div>
+            <!-- mobile -->
+            <div class="mt-10 lg:hidden">
+                <label class="text-xl font-medium leading-5 text-gray-800 dark:text-white">Nhận thông tin cập
+                    nhật</label>
+                <div class="flex items-center justify-between border border-gray-800 dark:border-white mt-4">
+                    <input type="text"
+                        class="text-base leading-4 p-4 relative z-0 w-full focus:outline-none text-gray-800 placeholder-gray-800 dark:text-white dark:placeholder-white dark:border-white dark:bg-gray-900"
+                        placeholder="Email của bạn" />
+                    <button aria-label="send"
+                        class="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 cursor-pointer mr-4 cursor-pointer relative z-40">
+                        <svg class="fill-current text-gray-800 hover:text-gray-500 dark:text-white dark:hover:text-gray-200"
+                            width="16" height="17" viewBox="0 0 16 17" fill="currentColor"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M14.8934 7.39673L14.8884 7.39457L1.54219 1.9166C1.42993 1.87011 1.30778 1.85187 1.18666 1.86353C1.06554 1.87519 0.949225 1.91637 0.848125 1.9834C0.741311 2.05266 0.653573 2.14711 0.592805 2.25826C0.532037 2.36941 0.500145 2.49376 0.5 2.62013V6.12357C0.50006 6.29633 0.561019 6.46366 0.67237 6.59671C0.783722 6.72976 0.938491 6.82021 1.11 6.85246L8.38906 8.18438C8.41767 8.18974 8.44348 8.20482 8.46205 8.22701C8.48062 8.2492 8.49078 8.2771 8.49078 8.30591C8.49078 8.33472 8.48062 8.36263 8.46205 8.38481C8.44348 8.407 8.41767 8.42208 8.38906 8.42744L1.11031 9.75936C0.938851 9.79153 0.784092 9.88185 0.67269 10.0148C0.561288 10.1477 0.500219 10.3149 0.5 10.4876V13.9917C0.499917 14.1124 0.530111 14.2312 0.587871 14.3374C0.645632 14.4437 0.729152 14.5341 0.830938 14.6006C0.953375 14.6811 1.09706 14.7241 1.24406 14.7243C1.34626 14.7242 1.4474 14.7039 1.54156 14.6646L14.8875 9.21787L14.8934 9.21509C15.0731 9.13869 15.2262 9.01185 15.3337 8.85025C15.4413 8.68866 15.4986 8.49941 15.4986 8.30591C15.4986 8.11241 15.4413 7.92316 15.3337 7.76157C15.2262 7.59997 15.0731 7.47313 14.8934 7.39673Z"
+                                fill="currentColor" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <!--  -->
+        </div>
     </footer>
+    <script>
+        document.addEventListener('touchstart', function (event) {
+            if (event.touches.length > 1) {
+                event.preventDefault();
+            }
+        }, { passive: false });
+
+        document.addEventListener('gesturestart', function (event) {
+            event.preventDefault();
+        });
+
+    </script>
 </body>
+
 </html>

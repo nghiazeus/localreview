@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail</title>
+    <link href="dist/output.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@latest/dist/tailwind.min.css" />
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans:200,400&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/emoji-button@4.6.0/dist/index.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        /* Ẩn nội dung thêm */
+        .hidden {
+            display: none;
+        }
+
+        /* Hiển thị nút Xem thêm */
+        .text-red-500 {
+            color: #f56565;
+        }
+
+        .text-gray-600 {
+            color: #718096;
+        }
+
+        /* Ẩn thanh cuộn nhưng vẫn giữ tính năng cuộn */
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            /* IE and Edge */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        /* From Uiverse.io by SouravBandyopadhyay */
+        .containerer {
+            width: 100%;
+            height: 100px;
+            position: relative;
+            background: #f0f0f0;
+        }
+
+        .containerer::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg,
+                    #3498db 25%,
+                    transparent 25%,
+                    transparent 50%,
+                    #3498db 50%,
+                    #3498db 75%,
+                    transparent 75%,
+                    transparent),
+                linear-gradient(-45deg,
+                    #3498db 25%,
+                    transparent 25%,
+                    transparent 50%,
+                    #3498db 50%,
+                    #3498db 75%,
+                    transparent 75%,
+                    transparent);
+            background-size: 20px 20px;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="relative">
+        <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+            <!-- Container Flex -->
+            <div class="flex flex-col md:flex-row">
+                <!-- Hình ảnh (Carousel) -->
+                <div class="w-full md:w-2/3 p-4"> <!-- Sử dụng w-full cho mobile và w-1/2 cho desktop -->
+                    <div class="relative w-full h-70">
+                        <!-- Carousel -->
+                        <div class="carousel relative container mx-auto" style="max-width:1600px;">
+                            <div class="carousel-inner relative overflow-hidden w-full">
+                                <!-- Slide 1 -->
+                                <input class="carousel-open" type="radio" id="carousel-1" name="carousel"
+                                    aria-hidden="true" hidden="" checked="checked">
+                                <div class="carousel-item absolute opacity-0 rounded-lg overflow-hidden"
+                                    style="height:40vh;">
+                                    <div class="block h-full w-full mx-auto flex pt-6 md:pt-0 md:items-center bg-cover bg-right"
+                                        style="background-image: url('https://i.pinimg.com/564x/e6/ca/a1/e6caa1baa0f67fda68e98ec5ce60e8ed.jpg');">
+                                    </div>
+                                </div>
+                                <!-- Điều khiển Slide 1 -->
+                                <label for="carousel-3"
+                                    class="prev control-1 w-10 h-10 ml-2 md:ml-10 absolute cursor-pointer hidden text-3xl font-bold text-black hover:text-white rounded-full bg-white hover:bg-gray-900 leading-tight text-center z-10 inset-y-0 left-0 my-auto">‹</label>
+                                <label for="carousel-2"
+                                    class="next control-1 w-10 h-10 mr-2 md:mr-10 absolute cursor-pointer hidden text-3xl font-bold text-black hover:text-white rounded-full bg-white hover:bg-gray-900 leading-tight text-center z-10 inset-y-0 right-0 my-auto">›</label>
+
+                                <!-- Slide 2 -->
+                                <input class="carousel-open" type="radio" id="carousel-2" name="carousel"
+                                    aria-hidden="true" hidden="">
+                                <div class="carousel-item absolute opacity-0 rounded-lg overflow-hidden"
+                                    style="height:40vh;">
+                                    <div class="block h-full w-full mx-auto flex pt-6 md:pt-0 md:items-center bg-cover bg-right"
+                                        style="background-image: url('https://i.pinimg.com/564x/f2/ab/b1/f2abb166e8aeea7184fcad79ae00683c.jpg');">
+                                    </div>
+                                </div>
+                                <!-- Điều khiển Slide 2 -->
+                                <label for="carousel-1"
+                                    class="prev control-2 w-10 h-10 ml-2 md:ml-10 absolute cursor-pointer hidden text-3xl font-bold text-black hover:text-white rounded-full bg-white hover:bg-gray-900 leading-tight text-center z-10 inset-y-0 left-0 my-auto">‹</label>
+                                <label for="carousel-3"
+                                    class="next control-2 w-10 h-10 mr-2 md:mr-10 absolute cursor-pointer hidden text-3xl font-bold text-black hover:text-white rounded-full bg-white hover:bg-gray-900 leading-tight text-center z-10 inset-y-0 right-0 my-auto">›</label>
+
+                                <!-- Slide 3 -->
+                                <input class="carousel-open" type="radio" id="carousel-3" name="carousel"
+                                    aria-hidden="true" hidden="">
+                                <div class="carousel-item absolute opacity-0 rounded-lg overflow-hidden"
+                                    style="height:40vh;">
+                                    <div class="block h-full w-full mx-auto flex pt-6 md:pt-0 md:items-center bg-cover bg-right"
+                                        style="background-image: url('https://i.pinimg.com/564x/77/88/81/7788817e9b092b15ebb90f05349d3585.jpg');">
+                                    </div>
+                                </div>
+                                <!-- Điều khiển Slide 3 -->
+                                <label for="carousel-2"
+                                    class="prev control-3 w-10 h-10 ml-2 md:ml-10 absolute cursor-pointer hidden text-3xl font-bold text-black hover:text-white rounded-full bg-white hover:bg-gray-900 leading-tight text-center z-10 inset-y-0 left-0 my-auto">‹</label>
+                                <label for="carousel-1"
+                                    class="next control-3 w-10 h-10 mr-2 md:mr-10 absolute cursor-pointer hidden text-3xl font-bold text-black hover:text-white rounded-full bg-white hover:bg-gray-900 leading-tight text-center z-10 inset-y-0 right-0 my-auto">›</label>
+
+                                <!-- Chỉ báo (Indicators) -->
+                                <ol class="carousel-indicators">
+                                    <li class="inline-block mr-3">
+                                        <label for="carousel-1"
+                                            class="carousel-bullet cursor-pointer block text-4xl text-gray-400 hover:text-gray-900">•</label>
+                                    </li>
+                                    <li class="inline-block mr-3">
+                                        <label for="carousel-2"
+                                            class="carousel-bullet cursor-pointer block text-4xl text-gray-400 hover:text-gray-900">•</label>
+                                    </li>
+                                    <li class="inline-block mr-3">
+                                        <label for="carousel-3"
+                                            class="carousel-bullet cursor-pointer block text-4xl text-gray-400 hover:text-gray-900">•</label>
+                                    </li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Thông tin nhà hàng -->
+                <div class="w-full md:w-1/2 p-8 flex flex-col justify-center">
+                    <!-- Sử dụng w-full cho mobile và w-1/2 cho desktop -->
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Nhà hàng: <strong class="text-red-400">Hùng
+                            Vương</strong></h2>
+                    <p class="text-gray-600 mb-4"><i class="bi bi-geo-alt-fill text-red-600"></i> TP.Hồ Chí Minh</p>
+                    <p class="text-gray-600 mb-4"><strong>Địa chỉ: </strong>737 Tân Sơn Nhất, Quận Tân Bình, TP Hồ Chí
+                        Minh.</p>
+                    <span class="text-yellow-500 text-2xl">★★★★☆</span>
+                </div>
+            </div>
+        </div>
+<!-- --------------------- -->
+        <!-- Card Menu -->
+        <div class="mt-8 bg-white rounded-lg p-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Card món ăn -->
+                <div class="bg-gray-100 rounded-lg p-4 shadow-md">
+                    <h3 class="text-lg font-semibold text-gray-800 font-bold">THỰC ĐƠN</h3>
+                    <br>
+                    <div class="khaivi">
+                        <strong>Khai vị:</strong>
+                        <ul class="text-gray-800 mt-2">
+                            <li>Gỏi Cuốn: Cuốn bánh tráng với tôm, thịt heo, rau sống và bún.</li>
+                            <li>Chả Giò: Cuốn chả giò giòn rụm với nhân thịt heo, nấm, và rau củ.</li>
+                            <li>Súp Ngô: Súp ngô ngọt với thịt gà và rau củ.</li>
+                        </ul>
+                        <br>
+                        <div id="dishList">
+                            <strong>Món Chính:</strong>
+                            <ul class="text-gray-800 mt-2">
+                                <li>Phở: Món phở truyền thống với nước dùng thơm ngon, thịt bò hoặc gà, cùng bánh phở
+                                    mềm.</li>
+                                <li>Bún Chả: Bún chả với thịt nướng thơm lừng, nước mắm chua ngọt và rau sống.</li>
+                                <li>Bò Kho: Món bò kho mềm mại với nước sốt đậm đà, ăn kèm với bánh mì hoặc cơm.</li>
+                            </ul>
+                            <br>
+                            <strong>Món Hải Sản:</strong>
+                            <ul class="text-gray-800 mt-2">
+                                <li>Tôm Nướng: Tôm nướng trên lửa than, gia vị đậm đà.</li>
+                                <li>Mực Xào Sa Tế: Mực xào với sa tế, ớt và các loại gia vị.</li>
+                                <li>Cá Kho Tộ: Cá kho tộ với nước sốt đậm đà và hành tím.</li>
+                            </ul>
+                            <br>
+                            <strong>Món Tráng Miệng:</strong>
+                            <ul class="text-gray-800 mt-2">
+                                <li>Chè Ba Màu: Chè với ba lớp màu sắc khác nhau, gồm đậu xanh, thạch, và nước cốt dừa.
+                                </li>
+                                <li>Bánh Flan: Bánh flan mềm mịn với lớp caramel ngọt ngào.</li>
+                                <li>Kem Xôi: Xôi với kem tươi mát lạnh.</li>
+                            </ul>
+                        </div>
+                        <button id="toggleDish" class="text-red-500 mt-2">Xem thêm</button>
+                    </div>
+                </div>
+
+                <!-- Card món nước -->
+                <div class="bg-gray-100 rounded-lg p-4 shadow-md">
+                    <h3 class="text-lg font-semibold text-gray-800 font-bold">MÓN NƯỚC</h3>
+                    <br>
+                    <div class="drink-content">
+                        <strong>Nước Ngọt:</strong>
+                        <ul class="text-gray-800 mt-2">
+                            <li>Coca Cola: Nước ngọt có gas.</li>
+                            <li>Pepsi: Lựa chọn nước ngọt có gas.</li>
+                            <li>7Up: Lựa chọn nước ngọt có gas.</li>
+                        </ul>
+                        <br>
+                        <div id="drinkList">
+                            <strong>Nước Trái Cây:</strong>
+                            <ul class="text-gray-800 mt-2">
+                                <li>Nước Cam: Nước cam tươi ngon, có thể thêm đá hoặc không.</li>
+                                <li>Nước Dưa Hấu: Nước dưa hấu mát lạnh và ngọt ngào.</li>
+                                <li>Nước Táo: Nước táo tự nhiên, có thể thêm một ít chanh để thêm phần thơm ngon.</li>
+                            </ul>
+                            <br>
+                            <strong>Nước Uống Bestseller:</strong>
+                            <ul class="text-gray-800 mt-2">
+                                <li>Trà Sữa: Truyền thốn hoặc matcha...</li>
+                                <li>Nước Mía: Nước mía tươi mát, có thể thêm chút chanh để tăng thêm hương vị.</li>
+                                <li>Sinh Tố: Sinh tố từ các loại trái cây như bơ, chuối, hoặc dâu tây.</li>
+                            </ul>
+                            <br>
+                            <strong>Rượu và Cocktail:</strong>
+                            <ul class="text-gray-800 mt-2">
+                                <li>Rượu Vang: Rượu vang đỏ hoặc trắng tùy theo sở thích.</li>
+                                <li>Mojito: Cocktail với bạc hà, chanh, rượu rum và soda.</li>
+                                <li>Margarita: Cocktail với tequila, nước chanh và chút muối trên miệng ly.</li>
+                            </ul>
+                        </div>
+                        <button id="toggleDrink" class="text-red-500 mt-2">Xem thêm</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const dishList = document.getElementById('dishList');
+                const toggleDish = document.getElementById('toggleDish');
+                const drinkList = document.getElementById('drinkList');
+                const toggleDrink = document.getElementById('toggleDrink');
+
+                // Chỉnh sửa để ẩn bớt nội dung
+                if (dishList) {
+                    dishList.classList.add('hidden');
+                }
+
+                if (drinkList) {
+                    drinkList.classList.add('hidden');
+                }
+
+                // Xử lý sự kiện nhấp chuột cho nút Xem thêm
+                toggleDish.addEventListener('click', function () {
+                    if (dishList.classList.contains('hidden')) {
+                        dishList.classList.remove('hidden');
+                        toggleDish.textContent = 'Ẩn bớt';
+                    } else {
+                        dishList.classList.add('hidden');
+                        toggleDish.textContent = 'Xem thêm';
+                    }
+                });
+
+                toggleDrink.addEventListener('click', function () {
+                    if (drinkList.classList.contains('hidden')) {
+                        drinkList.classList.remove('hidden');
+                        toggleDrink.textContent = 'Ẩn bớt';
+                    } else {
+                        drinkList.classList.add('hidden');
+                        toggleDrink.textContent = 'Xem thêm';
+                    }
+                });
+            });
+
+        </script>
+    </div>
+
+    <!-- Croll -->
+    <div class="mt-8 bg-white shadow-lg rounded-lg p-4">
+        <div class="flex space-x-4 overflow-x-scroll scrollbar-hide cursor-grab" id="scroll-container">
+            <div class="flex-none w-60">
+                <img src="https://cdn.tgdd.vn/Files/2021/08/23/1377184/15-mon-an-dac-san-trung-quoc-noi-tieng-ma-ban-khong-nen-bo-lo-202108231441032708.jpg"
+                    alt="Gallery Image 1" class="object-cover w-full h-40 rounded-lg">
+            </div>
+            <div class="flex-none w-60">
+                <img src="https://images2.thanhnien.vn/zoom/686_429/Uploaded/ttt/images/Content/tan-huong/mon-ngon-nha-hang/2017_07_w3/6.jpg"
+                    alt="Gallery Image 2" class="object-cover w-full h-40 rounded-lg">
+            </div>
+            <div class="flex-none w-60">
+                <img src="https://cdn.alongwalk.info/vn/wp-content/uploads/2022/04/05175641/image-ngon-mieng-voi-top-20-mon-an-ngon-o-seoul-noi-tieng-164913100195925.jpg"
+                    alt="Gallery Image 3" class="object-cover w-full h-40 rounded-lg">
+            </div>
+            <div class="flex-none w-60">
+                <img src="https://cdn.alongwalk.info/vn/wp-content/uploads/2022/03/10000142/image-mr-bbq-am-thuc-han-quoc-chuan-vi-han-quoc-giai-nhiet-ngay-nong-tai-quan-7-164682010213951.jpg"
+                    alt="Gallery Image 4" class="object-cover w-full h-40 rounded-lg">
+            </div>
+            <div class="flex-none w-60">
+                <img src="https://assets.grab.com/wp-content/uploads/sites/11/2020/05/31175018/chubehanoi_96868579_158391732331537_35234746899292690_n-e1590918624125.jpg"
+                    alt="Gallery Image 5" class="object-cover w-full h-40 rounded-lg">
+            </div>
+            <div class="flex-none w-60">
+                <img src="https://pastaxi-manager.onepas.vn/content/uploads/articles/2amthuc/nhahang/hoaithu/top-10-quan-an-han-quoc-ngon-duoc-yeu-thich-o-ha-noi-anh5.jpg"
+                    alt="Gallery Image 6" class="object-cover w-full h-40 rounded-lg">
+            </div>
+            <div class="flex-none w-60">
+                <img src="https://cdn.tgdd.vn/Files/2021/08/23/1377184/15-mon-an-dac-san-trung-quoc-noi-tieng-ma-ban-khong-nen-bo-lo-202108231441032708.jpg"
+                    alt="Gallery Image 1" class="object-cover w-full h-40 rounded-lg">
+            </div>
+            <div class="flex-none w-60">
+                <img src="https://images2.thanhnien.vn/zoom/686_429/Uploaded/ttt/images/Content/tan-huong/mon-ngon-nha-hang/2017_07_w3/6.jpg"
+                    alt="Gallery Image 2" class="object-cover w-full h-40 rounded-lg">
+            </div>
+            <div class="flex-none w-60">
+                <img src="https://cdn.alongwalk.info/vn/wp-content/uploads/2022/04/05175641/image-ngon-mieng-voi-top-20-mon-an-ngon-o-seoul-noi-tieng-164913100195925.jpg"
+                    alt="Gallery Image 3" class="object-cover w-full h-40 rounded-lg">
+            </div>
+        </div>
+        <script>
+            const slider = document.getElementById('scroll-container');
+            let isDown = false;
+            let startX;
+            let scrollLeft;
+
+            slider.addEventListener('mousedown', (e) => {
+                isDown = true;
+                slider.classList.add('active');
+                startX = e.pageX - slider.offsetLeft;
+                scrollLeft = slider.scrollLeft;
+            });
+
+            slider.addEventListener('mouseleave', () => {
+                isDown = false;
+                slider.classList.remove('active');
+            });
+
+            slider.addEventListener('mouseup', () => {
+                isDown = false;
+                slider.classList.remove('active');
+            });
+
+            slider.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - slider.offsetLeft;
+                const walk = (x - startX) * 2; // Độ dài cuộn (kéo dài hơn để tăng tốc độ cuộn)
+                slider.scrollLeft = scrollLeft - walk;
+            });
+
+        </script>
+    </div>
+    <!--  -->
+    <br>
+    <br>
+    <!--  -->
+    <div class="bg-white rounded-lg overflow-hidden">
+        <strong class="text-2xl ml-8 text-black pt-4">MÓN ĂN</strong>
+        <div class="grid grid-cols-2 md:grid-cols-6 gap-6 p-6">
+            <!-- Card 1 -->
+            <div class="bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 backdrop-blur-sm bg-opacity-70">
+                <img src="https://i.pinimg.com/564x/a9/8c/69/a98c692cc1f19dda2a101ba95108496b.jpg" alt="Món saimi"
+                    class="w-full h-48 object-cover rounded-lg">
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold text-gray-800">Món Sashimi</h3>
+                    <p class="text-gray-600 mt-2">Chất lượng tuyệt vời, Ngon.</p>
+                    <div class="mt-4 flex justify-between items-center">
+                        <span class="text-gray-800 font-bold">122.000<sup>đ</sup></span>
+                        <span class="text-yellow-500">★★★★☆</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Card 2 -->
+            <div class="bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 backdrop-blur-sm bg-opacity-70">
+                <img src="https://images2.thanhnien.vn/zoom/686_429/Uploaded/ttt/images/Content/tan-huong/mon-ngon-nha-hang/2017_07_w3/6.jpg"
+                    alt="Dish 2" class="w-full h-48 object-cover rounded-lg">
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold text-gray-800">Bò kho</h3>
+                    <p class="text-gray-600 mt-2">Chất lượng tuyệt vời, Ngon.</p>
+                    <div class="mt-4 flex justify-between items-center">
+                        <span class="text-gray-800 font-bold">100.000<sup>đ</sup></span>
+                        <span class="text-yellow-500">★★★★★</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Card 3 -->
+            <div class="bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 backdrop-blur-sm bg-opacity-70">
+                <img src="https://i.pinimg.com/564x/41/77/15/4177152d793abca3f0de2cbf985e54d7.jpg" alt="Dish 2"
+                    class="w-full h-48 object-cover rounded-lg">
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold text-gray-800">Cơm tấm</h3>
+                    <p class="text-gray-600 mt-2">Chất lượng tuyệt vời, Ngon. Thịt mền rất ngon</p>
+                    <div class="mt-4 flex justify-between items-center">
+                        <span class="text-gray-800 font-bold">40.000<sup>đ</sup></span>
+                        <span class="text-yellow-500">★★★★★</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Card 4 -->
+            <div class="bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 backdrop-blur-sm bg-opacity-70">
+                <img src="https://i.pinimg.com/564x/71/be/38/71be38e661f54b84d359cf5bb4250624.jpg" alt="Món saimi"
+                    class="w-full h-48 object-cover rounded-lg">
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold text-gray-800">Phở</h3>
+                    <p class="text-gray-600 mt-2">Chất lượng tuyệt vời, Ngon.</p>
+                    <div class="mt-4 flex justify-between items-center">
+                        <span class="text-gray-800 font-bold">50.000<sup>đ</sup></span>
+                        <span class="text-yellow-500">★★★★☆</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Card 5 -->
+            <div class="bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 backdrop-blur-sm bg-opacity-70">
+                <img src="https://images2.thanhnien.vn/zoom/686_429/Uploaded/ttt/images/Content/tan-huong/mon-ngon-nha-hang/2017_07_w3/6.jpg"
+                    alt="Dish 2" class="w-full h-48 object-cover rounded-lg">
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold text-gray-800">Tôm nướng</h3>
+                    <p class="text-gray-600 mt-2">Ngon đậm đà.</p>
+                    <div class="mt-4 flex justify-between items-center">
+                        <span class="text-gray-800 font-bold">250.000<sup>đ</sup></span>
+                        <span class="text-yellow-500">★★★★★</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Card 6 -->
+            <div class="bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 backdrop-blur-sm bg-opacity-70">
+                <img src="https://i.pinimg.com/564x/9e/e3/46/9ee346d28ede7bb464b9079d82df9020.jpg" alt="Món saimi"
+                    class="w-full h-48 object-cover rounded-lg">
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold text-gray-800">Chả giò</h3>
+                    <p class="text-gray-600 mt-2">Chất lượng tuyệt vời, Ngon.</p>
+                    <div class="mt-4 flex justify-between items-center">
+                        <span class="text-gray-800 font-bold">100.000<sup>đ</sup></span>
+                        <span class="text-yellow-500">★★★★☆</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <br>
+        <!-- Thức uống -->
+        <strong class="text-2xl ml-8 text-black pt-4">Đồ UỐNG</strong>
+        <div class="grid grid-cols-2 md:grid-cols-6 gap-6 p-6">
+            <!-- Card 1 -->
+            <div class="bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 backdrop-blur-sm bg-opacity-70">
+                <img src="https://i.pinimg.com/564x/bd/b4/9a/bdb49aafd79e5261907339621121e295.jpg" alt="Món saimi"
+                    class="w-full h-48 object-cover rounded-lg">
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold text-gray-800">Trà Mili</h3>
+                    <p class="text-gray-600 mt-2">Chất lượng tuyệt vời, Ngon.</p>
+                    <div class="mt-4 flex justify-between items-center">
+                        <span class="text-gray-800 font-bold">32.000<sup>đ</sup></span>
+                        <span class="text-yellow-500">★★★★☆</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Card 2 -->
+            <div class="bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 backdrop-blur-sm bg-opacity-70">
+                <img src="https://i.pinimg.com/564x/d6/54/ae/d654ae7b818571a7ef9feecd8386f7a0.jpg" alt="Dish 2"
+                    class="w-full h-48 object-cover rounded-lg">
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold text-gray-800">Trà ô long</h3>
+                    <p class="text-gray-600 mt-2">Chất lượng tuyệt vời, Ngon.</p>
+                    <div class="mt-4 flex justify-between items-center">
+                        <span class="text-gray-800 font-bold">20.000<sup>đ</sup></span>
+                        <span class="text-yellow-500">★★★★★</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Card 3 -->
+            <div class="bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 backdrop-blur-sm bg-opacity-70">
+                <img src="https://i.pinimg.com/564x/25/41/4d/25414d283649b1f8a871acf94f5df481.jpg" alt="Dish 2"
+                    class="w-full h-48 object-cover rounded-lg">
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold text-gray-800">Cocktail</h3>
+                    <p class="text-gray-600 mt-2">Chất lượng tuyệt vời, Ngon. Thịt mền rất ngon</p>
+                    <div class="mt-4 flex justify-between items-center">
+                        <span class="text-gray-800 font-bold">140.000<sup>đ</sup></span>
+                        <span class="text-yellow-500">★★★★★</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Card 4 -->
+            <div class="bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 backdrop-blur-sm bg-opacity-70">
+                <img src="https://i.pinimg.com/736x/45/8a/14/458a14b0d6e1041e50659be7cb7e1e26.jpg" alt="Món saimi"
+                    class="w-full h-48 object-cover rounded-lg">
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold text-gray-800">Cocktail</h3>
+                    <p class="text-gray-600 mt-2">Chất lượng tuyệt vời, Ngon.</p>
+                    <div class="mt-4 flex justify-between items-center">
+                        <span class="text-gray-800 font-bold">100.000<sup>đ</sup></span>
+                        <span class="text-yellow-500">★★★★☆</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Card 5 -->
+            <div class="bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 backdrop-blur-sm bg-opacity-70">
+                <img src="https://i.pinimg.com/564x/fe/9d/67/fe9d6754d6fb6b95fce971226000d4b9.jpg" alt="Dish 2"
+                    class="w-full h-48 object-cover rounded-lg">
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold text-gray-800">Cocktail</h3>
+                    <p class="text-gray-600 mt-2">Ngon đậm đà.</p>
+                    <div class="mt-4 flex justify-between items-center">
+                        <span class="text-gray-800 font-bold">200.000<sup>đ</sup></span>
+                        <span class="text-yellow-500">★★★★★</span>
+                    </div>
+                </div>
+            </div>
+            <!-- C6 -->
+            <div class="bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 backdrop-blur-sm bg-opacity-70">
+                <img src="https://i.pinimg.com/564x/aa/96/82/aa9682723882073da9b7a8ff784f566e.jpg" alt="Dish 2"
+                    class="w-full h-48 object-cover rounded-lg">
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold text-gray-800">Cocktail</h3>
+                    <p class="text-gray-600 mt-2">Chất lượng tuyệt vời, Ngon.</p>
+                    <div class="mt-4 flex justify-between items-center">
+                        <span class="text-gray-800 font-bold">150.000<sup>đ</sup></span>
+                        <span class="text-yellow-500">★★★★★</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <!--  -->
+    <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+        <strong class="text-2xl ml-8 text-black">Bình luận</strong>
+        <section class="article bg-gray-50 mt-10 flex flex-col md:flex-row">
+            <div class="md:w-7/12 w-full scrollable-container py-6 px-8">
+                <div class="space-y-4">
+                    <!-- Card 1 -->
+                    <div class="card">
+                        <div class="p-4">
+                            <div class="flex items-center">
+                                <img class="avatar" src="https://via.placeholder.com/150" alt="User Avatar">
+                                <div class="ml-4">
+                                    <h3 class="text-lg font-semibold">Nguyễn Văn A</h3>
+                                    <p class="text-sm text-gray-600">Có những nhà hàng ăn ngon như Kasaki</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="card">
+                        <div class="p-4">
+                            <div class="flex items-center">
+                                <img class="avatar" src="https://via.placeholder.com/150" alt="User Avatar">
+                                <div class="ml-4">
+                                    <h3 class="text-lg font-semibold">Trần Thị B</h3>
+                                    <p class="text-sm text-gray-600">Có các nhà hàng, quán ăn không ngon như giới thiệu
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="card">
+                        <div class="p-4">
+                            <div class="flex items-center">
+                                <img class="avatar" src="https://via.placeholder.com/150" alt="User Avatar">
+                                <div class="ml-4">
+                                    <h3 class="text-lg font-semibold">Nguyễn Văn A</h3>
+                                    <p class="text-sm text-gray-600">Có những nhà hàng ăn ngon như Kasaki</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="card">
+                        <div class="p-4">
+                            <div class="flex items-center">
+                                <img class="avatar" src="https://via.placeholder.com/150" alt="User Avatar">
+                                <div class="ml-4">
+                                    <h3 class="text-lg font-semibold">Trần Thị B</h3>
+                                    <p class="text-sm text-gray-600">Có các nhà hàng, quán ăn không ngon như giới thiệu
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cột bên phải chứa quảng cáo (3 phần) -->
+            <div class="md:w-3/12 w-full md:ml-20 mt-8 md:mt-6">
+                <div class="bg-white border border-slate-200 rounded-xl p-4 text-sm">
+                    <h1 class="text-center text-slate-800 text-xl font-bold mb-2">Gửi cảm nhận của bạn</h1>
+                    <textarea id="feedback" placeholder="Cảm nhận của bạn..."
+                        class="bg-slate-100 text-slate-600 h-40 w-full placeholder:text-slate-600 placeholder:opacity-50 border border-slate-200 resize-none outline-none rounded-lg p-2 duration-300 focus:border-slate-600"></textarea>
+                    <div class="flex space-x-2 mt-2">
+                        <button
+                            class="flex-grow fill-slate-600 flex justify-center items-center rounded-lg p-2 duration-300 bg-slate-100 hover:border-slate-600 focus:fill-blue-200 focus:bg-blue-400 border border-slate-200">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 0 512 512">
+                                <path
+                                    d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm177.6 62.1C192.8 334.5 218.8 352 256 352s63.2-17.5 78.4-33.9c9-9.7 24.2-10.4 33.9-1.4s10.4 24.2 1.4 33.9c-22 23.8-60 49.4-113.6 49.4s-91.7-25.5-113.6-49.4c-9-9.7-8.4-24.9 1.4-33.9s24.9-8.4 33.9 1.4zM144.4 208a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm192-32a32 32 0 1 1 0 64 32 32 0 1 1 0-64z">
+                                </path>
+                            </svg>
+                        </button>
+                        <button id="emoji-button"
+                            class="flex-grow fill-slate-600 flex justify-center items-center rounded-lg p-2 duration-300 bg-slate-100 hover:border-slate-600 focus:fill-blue-200 focus:bg-blue-400 border border-slate-200">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 0 512 512">
+                                <path
+                                    d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm177.6 62.1C192.8 334.5 218.8 352 256 352s63.2-17.5 78.4-33.9c9-9.7 24.2-10.4 33.9-1.4s10.4 24.2 1.4 33.9c-22 23.8-60 49.4-113.6 49.4s-91.7-25.5-113.6-49.4c-9-9.7-8.4-24.9 1.4-33.9s24.9-8.4 33.9 1.4zM144.4 208a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm192-32a32 32 0 1 1 0 64 32 32 0 1 1 0-64z">
+                                </path>
+                            </svg>
+                        </button>
+                        <button
+                            class="flex items-center bg-black text-white gap-1 px-4 py-2 cursor-pointer text-yellow-400 font-semibold tracking-widest rounded-md hover:bg-yellow-400 hover:text-black duration-300 hover:gap-2 hover:translate-x-3">
+                            Gửi
+                            <svg class="w-5 h-5" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"
+                                fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
+                                    stroke-linejoin="round" stroke-linecap="round"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <br>
+    <!-- footer -->
+    <div class="containerer"></div>
+    <!-- ------- -->
+    <script>
+        document.addEventListener('touchstart', function (event) {
+            if (event.touches.length > 1) {
+                event.preventDefault();
+            }
+        }, { passive: false });
+
+        document.addEventListener('gesturestart', function (event) {
+            event.preventDefault();
+        });
+
+    </script>
+
+</body>
+
+</html>

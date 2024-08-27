@@ -1,6 +1,5 @@
 package com.localreview.entity;
 
-
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -17,23 +16,23 @@ import com.localreview.entityEnum.UserRole;
 
 import lombok.Data;
 
-
-
 @Entity
 @Data
 @Table(name = "Users")
 public class User {
 
-	@Id
+    @Id
     @Column(name = "user_id", columnDefinition = "CHAR(36)")
     private String userId = UUID.randomUUID().toString(); // Tạo UUID tự động
-
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @Column(name = "name", nullable = false)
     private String name;
+
+    @Column(name = "avatar")
+    private String avatar; // Thêm trường avatar để khớp với bảng SQL
 
     @Column(name = "google_id", unique = true)
     private String googleId;
@@ -45,7 +44,7 @@ public class User {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false)
+    @Column(name = "role", nullable = false, columnDefinition = "ENUM('user', 'store_owner', 'admin') DEFAULT 'user'")
     private UserRole role;
 
     @Column(name = "created_at", updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
@@ -53,5 +52,6 @@ public class User {
 
     @Column(name = "updated_at", insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private java.sql.Timestamp updatedAt;
+
     // Getters and Setters
 }

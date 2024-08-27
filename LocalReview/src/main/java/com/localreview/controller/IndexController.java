@@ -36,5 +36,10 @@ public class IndexController {
         return "detailstore";
     }
     
+    @GetMapping("/user")
+    public String user() {
+        return "index"; // Trả về trang index.html
+    }
+    
 }
 

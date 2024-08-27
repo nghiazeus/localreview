@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.localreview.entity.User;
+import com.localreview.entityEnum.UserRole;
 import com.localreview.repository.UserRepository;
 import com.localreview.service.UserService;
 
@@ -38,6 +39,21 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
     
+
+    public User findOrCreateUser(String email, String name, String googleId) {
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            user = new User();
+            user.setEmail(email);
+            user.setName(name);
+            user.setGoogleId(googleId);
+            user.setRole(UserRole.user);
+            userRepository.save(user);
+        }
+        return user;
+    }
+
+
 
     
 }

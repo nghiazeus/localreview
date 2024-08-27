@@ -36,6 +36,9 @@ public class Review {
 
     @Column(name = "comment")
     private String comment;
+    
+    @Column(name = "photo", length = 155)
+    private String photo;
 
     @Column(name = "review_date")
     private LocalDateTime reviewDate;

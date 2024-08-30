@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>DVHCVN: Map Demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@goongmaps/goong-js@1.0.6/dist/goong-js.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        #map {
+            height: 100%;
+        }
+        nav {
+            z-index: 9999;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 400px;
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="container-fluid">
+        <form action="">
+            <div class="form-group col-md-4">
+                <div class="mb-3">
+                    <label for="level1" class="form-label"><strong>Tỉnh/Thành phố</strong></label>
+                    <select id="level1" class="form-select"></select>
+                </div>
+                <div class="mb-3">
+                    <label for="level2" class="form-label"><strong>Quận/Huyện</strong></label>
+                    <select id="level2" class="form-select"></select>
+                </div>
+                <div class="mb-3">
+                    <label for="district" class="form-label"><strong>Phường/Xã</strong></label>
+                    <select id="district" class="form-select"></select>
+                </div>
+            </div>
+        </form>
+    </nav>
+    <div id="map"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@goongmaps/goong-js@1.0.6/dist/goong-js.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="//demo/demo.js"></script>
+    <script>
+        const populateNav = async (initialLevel1Id, initialLevel2Id, initialDistrictId) => {
+            const sorted = await fetch("/data/sorted.json").then(r => r.json());
+            if (!sorted) return console.error("Unexpected data", sorted);
+
+            const select1 = document.getElementById("level1");
+            sorted.forEach(level1 => {
+                const option1 = document.createElement("OPTION");
+                option1.value = level1[0];
+                option1.innerText = `${level1[2]} ${level1[1]}`;
+                option1.selected = option1.value === initialLevel1Id;
+                select1.appendChild(option1);
+            });
+            select1.onchange = () => updateSelect2();
+
+            const select2 = document.getElementById("level2");
+            const selectDistrict = document.getElementById("district");
+
+            const updateSelect2 = (level2Id) => {
+                select2.innerHTML = "";
+                selectDistrict.innerHTML = "";
+
+                const option2Zero = document.createElement("OPTION");
+                select2.appendChild(option2Zero);
+
+                const selectedLevel1 = sorted.find(level1 => level1[0] === select1.value);
+                if (!selectedLevel1) return;
+
+                selectedLevel1[4].forEach(level2 => {
+                    const option2 = document.createElement("OPTION");
+                    option2.value = level2[0];
+                    option2.innerText = `${level2[2]} ${level2[1]}`;
+                    option2.selected = option2.value === level2Id;
+                    select2.appendChild(option2);
+                });
+            };
+
+            const updateSelectDistrict = (districtId) => {
+                selectDistrict.innerHTML = "";
+                const selectedLevel1 = sorted.find(level1 => level1[0] === select1.value);
+                const selectedLevel2 = selectedLevel1[4].find(level2 => level2[0] === select2.value);
+                if (!selectedLevel2) return;
+
+                selectedLevel2[4].forEach(district => {
+                    const optionDistrict = document.createElement("OPTION");
+                    optionDistrict.value = district[0];
+                    optionDistrict.innerText = `${district[2]} ${district[1]}`;
+                    optionDistrict.selected = optionDistrict.value === districtId;
+                    selectDistrict.appendChild(optionDistrict);
+                });
+            };
+
+            select2.onchange = () => updateSelectDistrict();
+
+            updateSelect2(initialLevel2Id);
+            updateSelectDistrict(initialDistrictId);
+        };
+        
+
+        (async () => {
+            const level1Id = getQueryValue("level1_id", "89");
+            const level2Id = getQueryValue("level2_id", "886");
+            const districtId = getQueryValue("district_id", "30337");
+            console.log(`ids: ${level1Id} -> ${level2Id} -> ${districtId}`);
+
+            const jsonPath = `/data/gis/${level1Id}.json`;
+            const e1 = await fetch(jsonPath).then(
+                (r) => r.json(),
+                (reason) => console.error(reason)
+            );
+            if (!e1 || !e1.level2s) return console.error("Unexpected data", e1);
+
+            let level1, level2;
+            e1.level2s.forEach((e2) => {
+                if (e2.level2_id === level2Id) {
+                    level1 = e1;
+                    level2 = e2;
+                    console.log(`names: ${level1.name} -> ${level2.name}`);
+                }
+            });
+            if (!level1 || !level2) return console.error("Data missing");
+            populateNav(level1Id, level2Id, districtId);
+
+            goongjs.accessToken = "84HpwEr9FSs9EURBGcBuOaK9bTFMrKzPQI7d1pdh";
+            const map = new goongjs.Map({
+                container: "map",
+                center: [
+                    (level2.bbox[0] + level2.bbox[2]) / 2,
+                    (level2.bbox[1] + level2.bbox[3]) / 2,
+                ],
+                style: "https://tiles.goong.io/assets/goong_map_web.json",
+                zoom: 8,
+            });
+
+            map.on("load", () => {
+                const polygon = (data, color) => {
+                    const id = `polygon-${data.level1_id}`;
+                    map.addSource(id, { type: "geojson", data });
+                    map.addLayer({
+                        id,
+                        type: "fill",
+                        source: id,
+                        paint: {
+                            "fill-color": color,
+                            "fill-opacity": 0.5,
+                        },
+                    });
+                };
+                polygon(level1, "#00f");
+                polygon(level2, "#f00");
+
+                const bbox = (e, color) => {
+                    const id = `bbox-${e.level1_id}`;
+                    const {
+                        bbox: [west, north, east, south],
+                    } = e;
+
+                    map.addSource(id, {
+                        type: "geojson",
+                        data: {
+                            type: "Feature",
+                            geometry: {
+                                type: "Polygon",
+                                coordinates: [
+                                    [
+                                        [west, north],
+                                        [east, north],
+                                        [east, south],
+                                        [west, south],
+                                        [west, north],
+                                    ],
+                                ],
+                            },
+                        },
+                    });
+                    map.addLayer({
+                        id,
+                        type: "line",
+                        source: id,
+                        paint: {
+                            "line-color": color,
+                            "line-width": 2,
+                        },
+                    });
+                };
+                bbox(level1, "#aaa");
+                bbox(level2, "#000");
+            });
+        })();
+    </script>
+</body>
+</html>

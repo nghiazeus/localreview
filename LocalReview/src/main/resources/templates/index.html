@@ -76,7 +76,8 @@
                     </div>
 
                     <!-- Icon người dùng -->
-                    <div th:if="${#request.remoteUser}" class="relative inline-block text-left">
+                    <div class="relative inline-block text-left">
+                        <h7 tootip="${#request.remoteUser}"></h7>
                         <i class="bi bi-person-circle text-yellow-500 text-2xl cursor-pointer"
                             onclick="toggleMenu()"></i>
 
@@ -87,14 +88,14 @@
                                 <a href="/login" class="block px-4 py-2 text-sm text-gray-700 hover:text-yellow-400"
                                     role="menuitem" tabindex="-1" id="menu-item-0"><i
                                         class="bi bi-box-arrow-in-right"></i> Đăng nhập</a>
-                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:text-yellow-400"
+                                <a th:href="@{/register}" class="block px-4 py-2 text-sm text-gray-700 hover:text-yellow-400"
                                     role="menuitem" tabindex="-1" id="menu-item-1"><i class="bi bi-person-fill-add"></i>
                                     Đăng ký</a>
-                                <a href="register" class="block px-4 py-2 text-sm text-gray-700 hover:text-yellow-400"
+                                <a th:href="@{/register-store}" class="block px-4 py-2 text-sm text-gray-700 hover:text-yellow-400"
                                     role="menuitem" tabindex="-1" id="menu-item-2"><i class="bi bi-house-add"></i> Đăng
                                     ký cửa hàng</a>
                                 <!-- Đăng xuất -->
-                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:text-yellow-400"
+                                <a th:href="@{/logout}" href="#" class="block px-4 py-2 text-sm text-gray-700 hover:text-yellow-400"
                                     role="menuitem" tabindex="-1" id="menu-item-2"><i class="bi bi-box-arrow-right"></i>
                                     Đăng xuất</a>
                             </div>
@@ -331,71 +332,12 @@
 
                     </div>
                 </nav>
-                <!-- ----------------------- -->
-                <!-- <div class="w-full md:w-1/3 xl:w-1/4 p-4 flex flex-col">
-                    <a href="detail.html">
-                        <div
-                            class="flex flex-col gap-1 dark:text-white bg-white dark:bg-neutral-900 p-4 rounded-md shadow-md hover:scale-105 transition duration-150 ease-in-out">
-                            <div class="flex justify-between items-center">
-                                <div class="bg-black dark:bg-neutral-700 rounded-md w-40 text-center text-yellow-300">
-                                    <i class="bi bi-house-heart-fill text-white"></i> Hùng Vương
-                                </div>
-                                <div class="bg-black dark:bg-neutral-700 rounded-md w-20 text-center text-yellow-300">
-                                    5<i class="bi bi-stars"></i>
-                                </div>
-                            </div>
-                            <div class="flex justify-between items-center mt-2">
-                                <div class="bg-gray-200 dark:bg-neutral-700 rounded-md w-40 text-center text-black">
-                                    <i class="bi bi-geo-alt-fill text-red-600"></i> TP.Hồ Chí Minh
-                                </div>
-                                <div class="text-xs">
-                                    <div class="flex flex-row">
-                                        <svg fill="currentColor" viewBox="0 0 20 20" class="h-4 w-4 text-yellow-400"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M9.049 2.927c.3-.916 1.603-.916 1.902 0l1.286 3.953a1.5 1.5 0 001.421 1.033h4.171c.949 0 1.341 1.154.577 1.715l-3.38 2.458a1.5 1.5 0 00-.54 1.659l1.286 3.953c.3.916-.757 1.67-1.539 1.145l-3.38-2.458a1.5 1.5 0 00-1.76 0l-3.38 2.458c-.782.525-1.838-.229-1.539-1.145l1.286-3.953a1.5 1.5 0 00-.54-1.659l-3.38-2.458c-.764-.561-.372-1.715.577-1.715h4.171a1.5 1.5 0 001.421-1.033l1.286-3.953z">
-                                            </path>
-                                        </svg>
-                                        <svg fill="currentColor" viewBox="0 0 20 20" class="h-4 w-4 text-yellow-400"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M9.049 2.927c.3-.916 1.603-.916 1.902 0l1.286 3.953a1.5 1.5 0 001.421 1.033h4.171c.949 0 1.341 1.154.577 1.715l-3.38 2.458a1.5 1.5 0 00-.54 1.659l1.286 3.953c.3.916-.757 1.67-1.539 1.145l-3.38-2.458a1.5 1.5 0 00-1.76 0l-3.38 2.458c-.782.525-1.838-.229-1.539-1.145l1.286-3.953a1.5 1.5 0 00-.54-1.659l-3.38-2.458c-.764-.561-.372-1.715.577-1.715h4.171a1.5 1.5 0 001.421-1.033l1.286-3.953z">
-                                            </path>
-                                        </svg>
-                                        <svg fill="currentColor" viewBox="0 0 20 20" class="h-4 w-4 text-yellow-400"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M9.049 2.927c.3-.916 1.603-.916 1.902 0l1.286 3.953a1.5 1.5 0 001.421 1.033h4.171c.949 0 1.341 1.154.577 1.715l-3.38 2.458a1.5 1.5 0 00-.54 1.659l1.286 3.953c.3.916-.757 1.67-1.539 1.145l-3.38-2.458a1.5 1.5 0 00-1.76 0l-3.38 2.458c-.782.525-1.838-.229-1.539-1.145l1.286-3.953a1.5 1.5 0 00-.54-1.659l-3.38-2.458c-.764-.561-.372-1.715.577-1.715h4.171a1.5 1.5 0 001.421-1.033l1.286-3.953z">
-                                            </path>
-                                        </svg>
-                                        <svg fill="currentColor" viewBox="0 0 20 20" class="h-4 w-4 text-yellow-400"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M9.049 2.927c.3-.916 1.603-.916 1.902 0l1.286 3.953a1.5 1.5 0 001.421 1.033h4.171c.949 0 1.341 1.154.577 1.715l-3.38 2.458a1.5 1.5 0 00-.54 1.659l1.286 3.953c.3.916-.757 1.67-1.539 1.145l-3.38-2.458a1.5 1.5 0 00-1.76 0l-3.38 2.458c-.782.525-1.838-.229-1.539-1.145l1.286-3.953a1.5 1.5 0 00-.54-1.659l-3.38-2.458c-.764-.561-.372-1.715.577-1.715h4.171a1.5 1.5 0 001.421-1.033l1.286-3.953z">
-                                            </path>
-                                        </svg>
-
-                                        <svg fill="currentColor" viewBox="0 0 20 20" class="h-4 w-4 text-yellow-200"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M9.049 2.927c.3-.916 1.603-.916 1.902 0l1.286 3.953a1.5 1.5 0 001.421 1.033h4.171c.949 0 1.341 1.154.577 1.715l-3.38 2.458a1.5 1.5 0 00-.54 1.659l1.286 3.953c.3.916-.757 1.67-1.539 1.145l-3.38-2.458a1.5 1.5 0 00-1.76 0l-3.38 2.458c-.782.525-1.838-.229-1.539-1.145l1.286-3.953a1.5 1.5 0 00-.54-1.659l-3.38-2.458c-.764-.561-.372-1.715.577-1.715h4.171a1.5 1.5 0 001.421-1.033l1.286-3.953z">
-                                            </path>
-                                        </svg>
-                                    </div>
-                                </div>
-                            </div>
-                            <img class="rounded-md w-full h-48 object-cover mt-3"
-                                src="https://noithattugia.com/wp-content/uploads/2022/10/thiet-ke-nha-hang-16.jpg"
-                                alt="">
-                        </div>
-                    </a>
-                </div> -->
-                <!-- ----------------------- -->
+                <!--  -->
             </div>
         </section>
     </div>
 
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 p-4">
+    <!-- <div class="grid grid-cols-2 md:grid-cols-4 gap-4 p-4">
         <div th:each="store : ${stores}" class="h-full">
             <a th:href="@{/storedetail}" class="h-full">
                 <div
@@ -426,9 +368,44 @@
                 </div>
             </a>
         </div>
+    </div> -->
+
+    <!-- Store List -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 p-4">
+        <div th:each="store : ${stores}" class="h-full">
+            <a th:href="@{/storedetail/{storeId}(storeId=${store.storeId})}" class="h-full">
+                <div
+                    class="flex flex-col justify-between gap-1 dark:text-white bg-white dark:bg-neutral-900 p-4 rounded-md shadow-md border-2 border-gray-200 dark:border-neutral-700 hover:scale-105 transition duration-150 ease-in-out h-full min-h-[250px]">
+                    <div class="flex justify-between items-center space-x-2">
+                        <div class="bg-black dark:bg-neutral-700 rounded-md w-40 text-center text-yellow-300">
+                            <i class="bi bi-house-heart-fill text-white"></i>
+                            <span th:text="${store.storeName}">Store Name</span>
+                        </div>
+                        <div class="bg-black dark:bg-neutral-700 rounded-md w-20 text-center text-yellow-300">
+                            <span th:text="${store.storeSize}">Size</span> <i class="bi bi-stars"></i>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center mt-2 space-x-2">
+                        <div class="bg-gray-200 dark:bg-neutral-700 rounded-md w-40 text-center text-black">
+                            <i class="bi bi-geo-alt-fill text-red-600"></i>
+                            <span th:text="${store.addressCity}">Address</span>
+                            <!-- <span th:text="${store.addressCity} + ', ' + ${store.addressDistrict} + ', ' + ${store.addressCommune} + ', ' + ${store.addressStreet}">Address</span> -->
+                        </div>
+                        <div class="text-xs">
+                            <div class="bg-black dark:bg-neutral-700 rounded-md text-center text-yellow-300">
+                                <span th:text="${store.storeSize}">Size</span>
+                            </div>
+                        </div>
+                    </div>
+                    <img class="rounded-md w-full h-36 object-cover mt-2"
+                        th:src="@{https://noithattugia.com/wp-content/uploads/2022/10/thiet-ke-nha-hang-16.jpg}"
+                        alt="Store Image">
+                </div>
+            </a>
+        </div>
     </div>
     <br>
-    <div class="ml-8 bg-gray-50">
+    <div class="ml-8">
         <button
             class="text-yellow-300 bg-black tracking-wide no-underline font-bold py-2 px-4 rounded-md transition duration-300 ease-in-out">
             MỘT SỐ NHẬN XÉT ĐÁNG CHÚ Ý!

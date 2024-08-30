@@ -11,4 +11,7 @@ public interface UserRepository extends JpaRepository<User, String> {
     User findByEmail(String email);
     User findByUserId(String userId); // Tìm theo user_id kiểu String
     
+    User findByGoogleId(String googleId);
+
+    
 }

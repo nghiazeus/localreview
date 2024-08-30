@@ -27,13 +27,18 @@ public class IndexController {
     @GetMapping("/index")
     public String store(Model model) {
         List<Store> list = storesv.getAllStores();
-        model.addAttribute("stores", list); 
+        model.addAttribute("stores", list);
         return "index";
     }
     
     @GetMapping("/storedetail")
     public String Storedetail() {
         return "detailstore";
+    }
+    
+    @GetMapping("/user")
+    public String user() {
+        return "index"; // Trả về trang index.html
     }
     
 }

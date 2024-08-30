@@ -40,58 +40,31 @@ public class AuthController {
     private PasswordEncoder passwordEncoder; // Tiêm bean PasswordEncoder
 
     @PostMapping("/register")
-    public String registerUserAndStore(@RequestParam("email") String email,
-                                        @RequestParam("name") String name,
-                                        @RequestParam("password") String password,
-                                        @RequestParam("store_name") String storeName,
-                                        @RequestParam("addressCity") String addressCity,
-                                        @RequestParam("addressDistrict") String addressDistrict,
-                                        @RequestParam("addressCommune") String addressCommune,
-                                        @RequestParam("addressStreet") String addressStreet,
-                                        @RequestParam("phone_number") String phoneNumber,
-                                        RedirectAttributes redirectAttributes) {
-        
+    public String registerUser(@RequestParam("email") String email,
+                                @RequestParam("name") String name,
+                                @RequestParam("password") String password,
+                                @RequestParam("phone_number") String phoneNumber,
+                                RedirectAttributes redirectAttributes) {
+
         try {
-            // Tạo và lưu người dùng
+           
             User user = new User();
             user.setEmail(email);
             user.setName(name);
             user.setPhoneNumber(phoneNumber);
             user.setPassword(password);
-            user.setRole(UserRole.store_owner);
+            user.setAvatar(null);
+            user.setRole(UserRole.user); 
             userService.saveUser(user);
 
-            // Tạo và lưu cửa hàng
-            Store store = new Store();
-            store.setStoreName(storeName);
-            store.setAddressCity(addressCity);
-            store.setAddressDistrict(addressDistrict);
-            store.setAddressCommune(addressCommune);
-            store.setAddressStreet(addressStreet);
-            store.setOwnerId(user.getUserId());
-            store.setPhoneNumber(phoneNumber);
-            storeRepository.save(store);
+            return "redirect:/login";
 
-            // Tạo mã QR
-            QRCodeScans qrCodeScans = qrCodeScansService.createQRCodeScan(user, store);
-
-            // Tạo nội dung email
-            String subject = "Đăng ký thành công hệ thống đánh giá System Review!";
-
-            // Gửi email
-            emailService.sendRegistrationEmail(user.getEmail(), subject, name, storeName, qrCodeScans.getQrCodeUrl());
-            
-            // Thêm thông báo và chuyển hướng
-            redirectAttributes.addFlashAttribute("message", "Đăng ký thành công với mã QR: " + qrCodeScans.getQrId());
-            return "redirect:/index";
-            
         } catch (Exception e) {
-            e.printStackTrace(); // Hoặc sử dụng logger để ghi lỗi
+            e.printStackTrace(); 
             redirectAttributes.addFlashAttribute("error", "Đã xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại.");
-            return "redirect:/register"; // Chuyển hướng đến trang đăng ký nếu có lỗi
+            return "redirect:/register"; 
         }
     }
-
 
     @GetMapping("/register")
     public String showRegisterForm() {

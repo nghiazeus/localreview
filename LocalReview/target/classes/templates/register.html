@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>Đăng Ký</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký</title>
     <link href="dist/output.css" rel="stylesheet">
     <link rel="stylesheet" href="../css/index.css">
     <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css" />
@@ -12,80 +14,77 @@
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 <body>
-	<div
-		class="container h-12 flex pl-20 pt-4">
-		<a href="/index"
-			class="text-2xl font-bold  hover:text-blue-600 transition duration-300 ease-in-out">
-			<i class="bi bi-house-fill"></i> TRANG CHỦ
-		</a>
-	</div>
-	<div class="p-4 justify-center items-center rounded-lg">
-        <div class="bg-white p-6">
-            <div class="flex flex-col justify-center items-center space-y-4">
-                <h2 class="text-2xl font-bold text-blue-500">ĐĂNG KÝ CỬA HÀNG</h2>
-                <p class="text-slate-500">
+    <div class="container mx-auto px-4 py-6">
+        <!-- Header -->
+        <div class="flex items-center mb-6">
+            <a href="/index" class="text-2xl font-bold hover:text-blue-600 transition duration-300 ease-in-out">
+                <i class="bi bi-house-fill"></i> TRANG CHỦ
+            </a>
+        </div>
+
+        <!-- Form Container -->
+        <div class="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-blue-500">ĐĂNG KÝ NGƯỜI DÙNG</h2>
+                <p class="text-slate-500 mt-2">
                     Chào bạn đến <strong class="text-yellow-400">RE</strong><strong>VIEW</strong>
                 </p>
             </div>
-            <form th:action="@{/register}" method="post" class="space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Email:</label>
-                        <input type="email" id="email" name="email" required placeholder="email@example.com"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5">
-                    </div>
 
-                    <div>
-                        <label for="name" class="block mb-2 text-sm font-medium text-gray-900">Tên:</label>
-                        <input type="text" id="name" name="name" required placeholder="Tên của bạn"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5">
-                    </div>
-
-                    <div>
-                        <label for="password" class="block mb-2 text-sm font-medium text-gray-900">Mật khẩu:</label>
-                        <input type="password" id="password" name="password" required placeholder="••••••••"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5">
-                    </div>
-
-                    <div>
-                        <label for="store_name" class="block mb-2 text-sm font-medium text-gray-900">Tên cửa hàng:</label>
-                        <input type="text" id="store_name" name="store_name" required placeholder="Tên cửa hàng"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5">
-                    </div>
-
-                    <div>
-                        <label for="address" class="block mb-2 text-sm font-medium text-gray-900">Địa chỉ:</label>
-                        <input type="text" id="address" name="address" required placeholder="Địa chỉ của bạn"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5">
-                    </div>
-
-                    <div>
-                        <label for="phone_number" class="block mb-2 text-sm font-medium text-gray-900">Số điện thoại:</label>
-                        <input type="text" id="phone_number" name="phone_number" required placeholder="Số điện thoại"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5">
-                    </div>
+            <!-- Registration Form -->
+            <form thaction="@{/register}" method="post" class="space-y-4">
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                    <input class="outline-none border-2 rounded-md px-3 py-2 w-full text-gray-700 focus:border-blue-300"
+                        placeholder="Email của bạn" id="email" name="email" type="email" required />
                 </div>
-
-                <div class="flex items-start mt-4">
-                    <div class="flex items-center h-5">
-                        <input type="checkbox" id="terms"
-                            class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300">
-                    </div>
-                    <div class="ml-3 text-sm">
-                        <label for="terms" class="font-light text-gray-500"> Tôi chấp nhận các điều khoản
-                            <a href="#" class="font-medium text-blue-500 hover:underline">dịch vụ</a>
-                        </label>
-                    </div>
+                <div>
+                    <label for="name" class="block text-sm font-medium text-gray-700">Tên</label>
+                    <input class="outline-none border-2 rounded-md px-3 py-2 w-full text-gray-700 focus:border-blue-300"
+                        placeholder="Tên của bạn" id="name" name="name" type="text" required />
                 </div>
-
-                <button type="submit"
-                    class="w-full bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center text-white mt-4">
+                <div>
+                    <label for="phone_number" class="block text-sm font-medium text-gray-700">Số điện thoại</label>
+                    <input class="outline-none border-2 rounded-md px-3 py-2 w-full text-gray-700 focus:border-blue-300"
+                        placeholder="Số điện thoại" id="phone_number" name="phone_number" type="text" />
+                </div>
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700">Mật khẩu</label>
+                    <input class="outline-none border-2 rounded-md px-3 py-2 w-full text-gray-700 focus:border-blue-300"
+                        placeholder="Mật khẩu" id="password" name="password" type="password" required />
+                </div>
+                <div class="flex items-center">
+                    <input class="mr-2 w-4 h-4" id="terms" name="terms" type="checkbox" required />
+                    <label for="terms" class="text-gray-700">Tôi đồng ý với <a href="#"
+                            class="text-blue-500 hover:underline">điều khoản và điều kiện</a></label>
+                </div>
+                <button
+                    class="w-full py-2 bg-gray-300 hover:bg-gray-400 active:bg-gray-500 rounded-md text-white ring-2 focus:outline-none focus:ring-2 focus:ring-blue-300 disabled:opacity-50"
+                    id="register" name="register" type="submit" disabled>
                     Đăng ký
                 </button>
+                <p class="text-center text-gray-700 mt-4">
+                    Bạn đã có tài khoản? <a class="text-blue-500 hover:underline" href="/login">Đăng nhập</a>
+                </p>
             </form>
         </div>
     </div>
+
     <script>
+        // Kích hoạt nút đăng ký chỉ khi checkbox điều khoản được chọn
+        const termsCheckbox = document.getElementById('terms');
+        const registerButton = document.getElementById('register');
+
+        termsCheckbox.addEventListener('change', function () {
+            registerButton.disabled = !this.checked;
+            registerButton.classList.toggle('bg-gray-300', !this.checked);
+            registerButton.classList.toggle('bg-blue-500', this.checked);
+            registerButton.classList.toggle('hover:bg-gray-400', !this.checked);
+            registerButton.classList.toggle('hover:bg-blue-600', this.checked);
+            registerButton.classList.toggle('active:bg-gray-500', !this.checked);
+            registerButton.classList.toggle('active:bg-blue-700', this.checked);
+        });
+
         document.addEventListener('touchstart', function (event) {
             if (event.touches.length > 1) {
                 event.preventDefault();
@@ -95,7 +94,6 @@
         document.addEventListener('gesturestart', function (event) {
             event.preventDefault();
         });
-
     </script>
 </body>
 </html>

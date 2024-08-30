@@ -13,16 +13,20 @@ import com.localreview.service.StoreService;
 public class StoreServiceImpl implements StoreService{
 	
 	@Autowired
-	StoreRepository storere;
+	StoreRepository storeRepository;
 
 	@Override
 	public List<Store> getAllStores() {
-		return storere.findAll();
+		return storeRepository.findAll();
 	}
 
 	@Override
     public void saveStore(Store store) {
-        storere.save(store);
+		storeRepository.save(store);
+    }
+	
+	public Store findStoreById(String id) {
+        return storeRepository.findById(id).orElse(null);
     }
 
 }

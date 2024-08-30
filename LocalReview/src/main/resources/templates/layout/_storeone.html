@@ -1,0 +1,36 @@
+<!-- Store Card -->
+<div th:each="store : ${stores}" class="h-full w-full md:w-1/4 flex-shrink-0">
+    <a th:href="@{/store/detail/{id}(id=${store.storeId})}" class="h-full">
+        <div
+            class="flex flex-col justify-between gap-1 dark:text-white bg-gray-20 dark:bg-neutral-900 p-4 
+            rounded-md shadow-md border-2 border-red-50 dark:border-neutral-700 hover:scale-105 
+            transition duration-150 ease-in-out h-full min-h-[250px]">
+            <div class="flex justify-between items-center space-x-2 text-ellipsis">
+                <div class="dark:bg-neutral-700 w-30 text-center font-semibold text-black text-ellipsis text-1xl">
+                    <i class="bi bi-shop text-white font-semibold bg-blue-300 dark:bg-neutral-700 rounded-md px-2 py-1"></i>
+                    <span th:text="${store.storeName}" 
+                    class="text-ellipsis rounded-md text-ellipsis truncate">
+                    Store Name</span>
+                </div>
+                <div class="w-16 text-white text-sm dark:bg-neutral-700 rounded-md bg-blue-300 px-1 text-center">
+                    <span>4.5</span> <i class="bi bi-stars"></i>
+                </div>
+            </div>
+            <div class="flex justify-between items-center mt-2 space-x-2">
+                <div class="w-30 text-center text-white text-sm">
+                    <i class="bi bi-geo-alt text-white bg-red-300 dark:bg-neutral-700 rounded-md px-2 py-1"></i>
+                    <span th:text="${store.addressCity}" class="text-black">Address</span>
+                </div>
+                <div class="text-xs">
+                    <div class="text-center text-white">
+                        <span th:text="${store.storeSize}" class="bg-red-300 dark:bg-neutral-700 rounded-md px-2">Size</span>
+                    </div>
+                </div>
+            </div>
+            <img class="rounded-md w-full h-36 object-cover mt-2"
+                th:src="@{https://noithattugia.com/wp-content/uploads/2022/10/thiet-ke-nha-hang-16.jpg}"
+                alt="Store Image">
+        </div>
+    </a>
+</div>
+<!-- End of Store Card -->

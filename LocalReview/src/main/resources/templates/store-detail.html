@@ -13,33 +13,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/emoji-button@4.6.0/dist/index.min.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
     <style>
-        /* Ẩn nội dung thêm */
-        .hidden {
-            display: none;
-        }
-
-        /* Hiển thị nút Xem thêm */
-        .text-red-500 {
-            color: #f56565;
-        }
-
-        .text-gray-600 {
-            color: #718096;
-        }
-
-        /* Ẩn thanh cuộn nhưng vẫn giữ tính năng cuộn */
-        .scrollbar-hide::-webkit-scrollbar {
-            display: none;
-        }
-
-        .scrollbar-hide {
-            -ms-overflow-style: none;
-            /* IE and Edge */
-            scrollbar-width: none;
-            /* Firefox */
-        }
-
+ 
         /* From Uiverse.io by SouravBandyopadhyay */
         .containerer {
             width: 100%;
@@ -74,98 +50,518 @@
             background-size: 20px 20px;
             opacity: 0.8;
         }
+
+
+
+        .scrollable-container {
+            max-height: 20rem;
+            /* Adjust to fit 5 cards */
+            overflow-y: auto;
+        }
+
+        .card {
+            width: 100%;
+            background-color: #ffffff;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .avatar {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 9999px;
+            object-fit: cover;
+        }
+
+        .ml-4 {
+            margin-left: 1rem;
+        }
+
+        .text-lg {
+            font-size: 1.125rem;
+        }
+
+        .font-semibold {
+            font-weight: 600;
+        }
+
+        .text-sm {
+            font-size: 0.875rem;
+        }
+
+
+        .card {
+            width: 100%;
+            background-color: #ffffff;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .avatar {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 9999px;
+            object-fit: cover;
+        }
+
+        .scrollable-container {
+            overflow: auto;
+            /* Cho phép cuộn */
+            -ms-overflow-style: none;
+            /* Ẩn thanh cuộn trên Internet Explorer */
+            scrollbar-width: none;
+            /* Ẩn thanh cuộn trên Firefox */
+        }
+
+        .scrollable-container::-webkit-scrollbar {
+            display: none;
+            /* Ẩn thanh cuộn trên Chrome, Safari */
+        }
+
+        /*  */
+        .carousel-container {
+            display: flex;
+            overflow: hidden;
+            position: relative;
+            height: 35vh;
+            /* Giảm chiều cao carousel xuống phân nửa */
+        }
+
+        .carousel-slide {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .carousel-item {
+            min-width: 100%;
+            box-sizing: border-box;
+        }
+
+        .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* Đảm bảo hình ảnh bao phủ toàn bộ phần tử */
+        }
+
+        .carousel-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .carousel-button.left {
+            left: 0;
+        }
+
+        .carousel-button.right {
+            right: 0;
+        }
     </style>
 </head>
 
 <body>
+    <div class="fixed top-0 left-0 w-full shadow-sm z-50">
+        <nav id="header" class="w-full z-30 top-0 py-2 bg-gray-50 dark:bg-neutral-800">
+            <div class="container mx-auto flex items-center justify-between px-5 relative">
+                <!-- Tiêu đề mobile -->
+                <div class="block md:hidden flex items-center">
+                    <a href="index.html" class="font-bold text-xl">
+                        <strong class="text-yellow-400">RE</strong>VIEW
+                    </a>
+                </div>
+
+                <!-- Tiêu đề laptop -->
+                <div class="hidden md:flex md:items-center md:w-auto">
+                    <a class="flex items-center tracking-wide no-underline hover:no-underline font-bold text-xl"
+                        href="#">
+                        <strong class="text-yellow-400">RE</strong>VIEW
+                    </a>
+                </div>
+
+                <!-- Thanh tìm kiếm cho desktop -->
+                <div class="flex-grow mx-4 hidden md:flex items-center justify-center relative">
+                    <div class="relative flex items-center w-full max-w-2xl">
+                        <input id="searchInput" type="text" placeholder="Tìm kiếm..."
+                            class="w-full py-3 pl-4 pr-10 text-sm bg-white border border-gray-300 rounded-full shadow-sm dark:bg-neutral-800 dark:border-neutral-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300 ease-in-out">
+                        <button id="searchButton" class="absolute right-0 mr-3 text-blue-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Thanh tìm kiếm cho mobile -->
+                <div class="flex-grow mx-4 md:hidden flex items-center justify-center relative">
+                    <div class="relative flex items-center w-full max-w-xs">
+                        <input id="searchInputMobile" type="text" placeholder="Tìm kiếm..."
+                            class="w-full py-3 pl-4 pr-10 text-sm bg-white border border-gray-300 rounded-full shadow-sm dark:bg-neutral-800 dark:border-neutral-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300 ease-in-out">
+                        <button id="searchButtonMobile" class="absolute right-0 mr-3 text-blue-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </button>
+                    </div>
+                    <!-- Lịch sử tìm kiếm trên mobile -->
+                    <div id="searchHistoryMobile"
+                        class="absolute inset-x-0 top-full mt-1 w-full max-w-xs bg-white border border-gray-300 rounded-lg shadow-lg hidden">
+                        <ul id="searchHistoryListMobile" class="divide-y divide-gray-200">
+
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Lọc -->
+                <div class="relative inline-block text-left">
+                    <button class="flex pl-3 inline-block no-underline hover:text-black" id="openModal1">
+                        <svg class="fill-current hover:text-black" xmlns="http://www.w3.org/2000/svg" width="30"
+                            height="30" viewBox="0 0 24 24">
+                            <path d="M7 11H17V13H7zM4 7H20V9H4zM10 15H14V17H10z" />
+                        </svg>
+                    </button>
+
+                    <!-- Modal -->
+                    <div id="modal-container"
+                        class="fixed inset-0 bg-gray-400 bg-opacity-75 flex justify-center items-center z-50 hidden">
+                        <!-- Modal Container -->
+                        <div class="bg-white rounded-lg shadow-lg">
+                            <!-- Modal Header -->
+                            <div
+                                class="flex justify-between items-center bg-gray-100 p-4 rounded-t-lg md-7 space-x-5">
+                                <h2 class="font-bold">(Nhà hàng/Quán ăn được đánh giá tốt)</h2>
+                                <button class="text-gray-500 hover:text-gray-700 focus:outline-none"
+                                    id="closeModal">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <!-- Modal Body -->
+                            <div class="p-6">
+                                <!-- Filter Option 1: Category -->
+                                <div class="mb-4">
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Nhà hàng/Quán
+                                        ăn</label>
+                                    <select
+                                        class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        <option value="">Chọn nhà hàng/quán ăn</option>
+                                        <option value="star">(5 SAO) 🌟🌟🌟🌟🌟</option>
+                                        <option value="star">(4 SAO) 🌟🌟🌟🌟</option>
+                                        <option value="star">(3 SAO) 🌟🌟🌟</option>
+                                        <option value="star">(2 SAO) 🌟🌟</option>
+                                        <option value="star">(1 SAO) 🌟</option>
+                                    </select>
+                                </div>
+                                <!-- Filter Option 3: Availability -->
+                                <div class="mb-4">
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Phổ biến</label>
+                                    <div class="flex items-center">
+                                        <input type="checkbox" id="in-stock" class="mr-2">
+                                        <label for="in-stock" class="text-gray-600">Được xem nhiều</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Modal Footer -->
+                            <div class="flex justify-end p-4 bg-gray-100 rounded-b-lg">
+                                <button
+                                    class="bg-red-500 text-white px-4 py-2 rounded-md mr-2 hover:bg-red-600 transition duration-300"
+                                    id="closeModal2">Hủy</button>
+                                <button
+                                    class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300">Áp
+                                    dụng</button>
+                            </div>
+                        </div>
+                    </div>
+                    <script>
+                        // Lấy các phần tử
+                        const openModalButton = document.getElementById('openModal1');
+                        const modalContainer = document.getElementById('modal-container');
+                        const closeModalButtons = document.querySelectorAll('#closeModal, #closeModal2');
+
+                        // Mở modal
+                        openModalButton.addEventListener('click', () => {
+                            modalContainer.classList.remove('hidden');
+                        });
+
+                        // Đóng modal
+                        closeModalButtons.forEach(button => {
+                            button.addEventListener('click', () => {
+                                modalContainer.classList.add('hidden');
+                            });
+                        });
+                    </script>
+                </div>
+
+            </div>
+
+            <!-- Lịch sử tìm kiếm trên desktop -->
+            <div id="searchHistory"
+                class="absolute inset-x-0 mt-2 w-full max-w-2xl mx-auto bg-white border border-gray-300 rounded-lg shadow-lg hidden">
+                <ul id="searchHistoryList" class="divide-y divide-gray-200">
+                    <!-- Các mục lịch sử tìm kiếm sẽ được thêm vào đây -->
+                </ul>
+            </div>
+
+        </nav>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const searchInput = document.getElementById('searchInput');
+                const searchButton = document.getElementById('searchButton');
+                const searchInputMobile = document.getElementById('searchInputMobile');
+                const searchButtonMobile = document.getElementById('searchButtonMobile');
+                const searchHistory = document.getElementById('searchHistory');
+                const searchHistoryList = document.getElementById('searchHistoryList');
+                const searchHistoryMobile = document.getElementById('searchHistoryMobile');
+                const searchHistoryListMobile = document.getElementById('searchHistoryListMobile');
+
+                let searchTerms = JSON.parse(localStorage.getItem('searchHistory')) || [];
+
+                // Hiển thị lịch sử tìm kiếm khi nhấn vào input
+                function toggleSearchHistory(inputElement, historyElement) {
+                    historyElement.classList.toggle('hidden');
+                    updateSearchHistory();
+                }
+
+                searchInput.addEventListener('focus', () => toggleSearchHistory(searchInput, searchHistory));
+                searchInputMobile.addEventListener('focus', () => toggleSearchHistory(searchInputMobile, searchHistoryMobile));
+
+                // Xử lý khi nhấn nút tìm kiếm
+                function handleSearch(inputElement) {
+                    const term = inputElement.value.trim();
+                    if (term !== '') {
+                        searchTerms = [term, ...searchTerms.filter(item => item !== term)].slice(0, 5);
+                        localStorage.setItem('searchHistory', JSON.stringify(searchTerms));
+                        updateSearchHistory();
+                    }
+                    inputElement.value = '';
+                }
+
+                searchButton.addEventListener('click', () => handleSearch(searchInput));
+                searchButtonMobile.addEventListener('click', () => handleSearch(searchInputMobile));
+
+                // Xử lý khi nhấn phím Enter
+                searchInput.addEventListener('keydown', function (event) {
+                    if (event.key === 'Enter') {
+                        handleSearch(searchInput);
+                    }
+                });
+
+                searchInputMobile.addEventListener('keydown', function (event) {
+                    if (event.key === 'Enter') {
+                        handleSearch(searchInputMobile);
+                    }
+                });
+
+                // Cập nhật danh sách lịch sử tìm kiếm
+                function updateSearchHistory() {
+                    searchHistoryList.innerHTML = '';
+                    searchHistoryListMobile.innerHTML = '';
+                    if (searchTerms.length > 0) {
+                        searchTerms.forEach((term, index) => {
+                            const li = document.createElement('li');
+                            li.classList.add('flex', 'justify-between', 'items-center', 'border-b', 'py-2');
+
+                            const icon = document.createElement('i');
+                            icon.classList.add('bi', 'bi-stopwatch', 'mr-2');
+
+                            const termSpan = document.createElement('span');
+                            termSpan.textContent = term;
+                            termSpan.classList.add('flex-grow', 'cursor-pointer');
+                            termSpan.addEventListener('click', function () {
+                                searchInput.value = term;
+                                searchInputMobile.value = term;
+                                searchHistory.classList.add('hidden');
+                                searchHistoryMobile.classList.add('hidden');
+                            });
+
+                            const deleteButton = document.createElement('button');
+                            deleteButton.innerHTML = '&times;';
+                            deleteButton.classList.add('delete-button');
+                            deleteButton.addEventListener('click', function (event) {
+                                event.stopPropagation(); // Ngăn sự kiện click trên nút xóa được truyền lên
+                                searchTerms.splice(index, 1);
+                                localStorage.setItem('searchHistory', JSON.stringify(searchTerms));
+                                updateSearchHistory();
+                            });
+
+                            // Thêm icon và termSpan vào li
+                            li.appendChild(icon);
+                            li.appendChild(termSpan);
+                            li.appendChild(deleteButton);
+                            searchHistoryList.appendChild(li);
+                            searchHistoryListMobile.appendChild(li.cloneNode(true));
+                        });
+                        searchHistory.classList.remove('hidden');
+                        searchHistoryMobile.classList.remove('hidden');
+                    } else {
+                        searchHistory.classList.add('hidden');
+                        searchHistoryMobile.classList.add('hidden');
+                    }
+                }
+
+                // Ẩn bảng lịch sử khi nhấp ra ngoài
+                function clickOutsideHandler(event) {
+                    if (!searchHistory.contains(event.target) && event.target !== searchInput && !searchHistoryMobile.contains(event.target) && event.target !== searchInputMobile) {
+                        searchHistory.classList.add('hidden');
+                        searchHistoryMobile.classList.add('hidden');
+                    }
+                }
+
+                document.addEventListener('click', clickOutsideHandler);
+            });
+
+        </script>
+    </div>
+    <nav class="mb-4 ml-4 relative mt-20">
+        <ol class="flex flex-wrap items-center space-x-2 text-gray-700 dark:text-gray-300">
+            <li th:each="breadcrumb, iterStat : ${breadcrumbs}" class="flex items-center">
+
+                <a th:if="${not #strings.isEmpty(breadcrumb.url) and !iterStat.last}" th:href="${breadcrumb.url}"
+                    class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+                    th:text="${breadcrumb.title}"></a>
+
+                <span th:if="${#strings.isEmpty(breadcrumb.url) or iterStat.last}"
+                    class="text-gray-500 dark:text-gray-400" th:text="${breadcrumb.title}"></span>
+
+                <i th:if="${!iterStat.last}"
+                    class="bi bi-chevron-compact-right text-gray-500 dark:text-gray-400"></i>
+            </li>
+        </ol>
+    </nav>
     <div class="relative">
+        <!-- --------------------- -->
         <div class="bg-white shadow-lg rounded-lg overflow-hidden">
             <!-- Container Flex -->
             <div class="flex flex-col md:flex-row">
                 <!-- Hình ảnh (Carousel) -->
                 <div class="w-full md:w-2/3 p-4"> <!-- Sử dụng w-full cho mobile và w-1/2 cho desktop -->
-                    <div class="relative w-full h-70">
+                    <div class="relative w-full h-35">
                         <!-- Carousel -->
-                        <div class="carousel relative container mx-auto" style="max-width:1600px;">
-                            <div class="carousel-inner relative overflow-hidden w-full">
-                                <!-- Slide 1 -->
-                                <input class="carousel-open" type="radio" id="carousel-1" name="carousel"
-                                    aria-hidden="true" hidden="" checked="checked">
-                                <div class="carousel-item absolute opacity-0 rounded-lg overflow-hidden"
-                                    style="height:40vh;">
-                                    <div class="block h-full w-full mx-auto flex pt-6 md:pt-0 md:items-center bg-cover bg-right"
-                                        style="background-image: url('https://i.pinimg.com/564x/e6/ca/a1/e6caa1baa0f67fda68e98ec5ce60e8ed.jpg');">
-                                    </div>
+                        <div class="carousel-container" id="carousel">
+                            <div class="carousel-slide">
+                                <div class="carousel-item">
+                                    <img src="https://noithattugia.com/wp-content/uploads/2022/10/thiet-ke-nha-hang-16.jpg"
+                                        alt="Slide 1" class="rounded-lg">
                                 </div>
-                                <!-- Điều khiển Slide 1 -->
-                                <label for="carousel-3"
-                                    class="prev control-1 w-10 h-10 ml-2 md:ml-10 absolute cursor-pointer hidden text-3xl font-bold text-black hover:text-white rounded-full bg-white hover:bg-gray-900 leading-tight text-center z-10 inset-y-0 left-0 my-auto">‹</label>
-                                <label for="carousel-2"
-                                    class="next control-1 w-10 h-10 mr-2 md:mr-10 absolute cursor-pointer hidden text-3xl font-bold text-black hover:text-white rounded-full bg-white hover:bg-gray-900 leading-tight text-center z-10 inset-y-0 right-0 my-auto">›</label>
-
-                                <!-- Slide 2 -->
-                                <input class="carousel-open" type="radio" id="carousel-2" name="carousel"
-                                    aria-hidden="true" hidden="">
-                                <div class="carousel-item absolute opacity-0 rounded-lg overflow-hidden"
-                                    style="height:40vh;">
-                                    <div class="block h-full w-full mx-auto flex pt-6 md:pt-0 md:items-center bg-cover bg-right"
-                                        style="background-image: url('https://i.pinimg.com/564x/f2/ab/b1/f2abb166e8aeea7184fcad79ae00683c.jpg');">
-                                    </div>
+                                <div class="carousel-item">
+                                    <img src="https://noithattugia.com/wp-content/uploads/2022/10/thiet-ke-nha-hang-16.jpg"
+                                        alt="Slide 2" class="rounded-lg">
                                 </div>
-                                <!-- Điều khiển Slide 2 -->
-                                <label for="carousel-1"
-                                    class="prev control-2 w-10 h-10 ml-2 md:ml-10 absolute cursor-pointer hidden text-3xl font-bold text-black hover:text-white rounded-full bg-white hover:bg-gray-900 leading-tight text-center z-10 inset-y-0 left-0 my-auto">‹</label>
-                                <label for="carousel-3"
-                                    class="next control-2 w-10 h-10 mr-2 md:mr-10 absolute cursor-pointer hidden text-3xl font-bold text-black hover:text-white rounded-full bg-white hover:bg-gray-900 leading-tight text-center z-10 inset-y-0 right-0 my-auto">›</label>
-
-                                <!-- Slide 3 -->
-                                <input class="carousel-open" type="radio" id="carousel-3" name="carousel"
-                                    aria-hidden="true" hidden="">
-                                <div class="carousel-item absolute opacity-0 rounded-lg overflow-hidden"
-                                    style="height:40vh;">
-                                    <div class="block h-full w-full mx-auto flex pt-6 md:pt-0 md:items-center bg-cover bg-right"
-                                        style="background-image: url('https://i.pinimg.com/564x/77/88/81/7788817e9b092b15ebb90f05349d3585.jpg');">
-                                    </div>
+                                <div class="carousel-item">
+                                    <img src="https://noithattugia.com/wp-content/uploads/2022/10/thiet-ke-nha-hang-16.jpg"
+                                        alt="Slide 3" class="rounded-lg">
                                 </div>
-                                <!-- Điều khiển Slide 3 -->
-                                <label for="carousel-2"
-                                    class="prev control-3 w-10 h-10 ml-2 md:ml-10 absolute cursor-pointer hidden text-3xl font-bold text-black hover:text-white rounded-full bg-white hover:bg-gray-900 leading-tight text-center z-10 inset-y-0 left-0 my-auto">‹</label>
-                                <label for="carousel-1"
-                                    class="next control-3 w-10 h-10 mr-2 md:mr-10 absolute cursor-pointer hidden text-3xl font-bold text-black hover:text-white rounded-full bg-white hover:bg-gray-900 leading-tight text-center z-10 inset-y-0 right-0 my-auto">›</label>
-
-                                <!-- Chỉ báo (Indicators) -->
-                                <ol class="carousel-indicators">
-                                    <li class="inline-block mr-3">
-                                        <label for="carousel-1"
-                                            class="carousel-bullet cursor-pointer block text-4xl text-gray-400 hover:text-gray-900">•</label>
-                                    </li>
-                                    <li class="inline-block mr-3">
-                                        <label for="carousel-2"
-                                            class="carousel-bullet cursor-pointer block text-4xl text-gray-400 hover:text-gray-900">•</label>
-                                    </li>
-                                    <li class="inline-block mr-3">
-                                        <label for="carousel-3"
-                                            class="carousel-bullet cursor-pointer block text-4xl text-gray-400 hover:text-gray-900">•</label>
-                                    </li>
-                                </ol>
                             </div>
+                            
+                            <button class="carousel-button left" onclick="prevSlide()">&#10094;</button>
+                            <button class="carousel-button right" onclick="nextSlide()">&#10095;</button>
                         </div>
+
+                        <script>
+                            const carousel = document.getElementById('carousel');
+                            const slides = carousel.querySelector('.carousel-slide');
+                            let index = 0;
+
+                            function showSlide(n) {
+                                const totalSlides = carousel.querySelectorAll('.carousel-item').length;
+                                if (n >= totalSlides) index = 0;
+                                else if (n < 0) index = totalSlides - 1;
+                                else index = n;
+                                const offset = -index * 100;
+                                slides.style.transform = `translateX(${offset}%)`;
+                            }
+
+                            function nextSlide() {
+                                showSlide(index + 1);
+                            }
+
+                            function prevSlide() {
+                                showSlide(index - 1);
+                            }
+                        </script>
                     </div>
                 </div>
 
                 <!-- Thông tin nhà hàng -->
                 <div class="w-full md:w-1/2 p-8 flex flex-col justify-center">
                     <!-- Sử dụng w-full cho mobile và w-1/2 cho desktop -->
-                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Nhà hàng: <strong class="text-red-400">Hùng
-                            Vương</strong></h2>
-                    <p class="text-gray-600 mb-4"><i class="bi bi-geo-alt-fill text-red-600"></i> TP.Hồ Chí Minh</p>
-                    <p class="text-gray-600 mb-4"><strong>Địa chỉ: </strong>737 Tân Sơn Nhất, Quận Tân Bình, TP Hồ Chí
-                        Minh.</p>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">
+                        Nhà hàng:
+                        <strong class="text-red-400" th:text="${store.storeName}"></strong>
+                    </h2>
+                    <p class="flex items-center mb-4">
+                        <i class="bi bi-geo-alt-fill text-red-600 mr-2"></i>
+                        <span th:text="${store.addressCity}" class="font-bold text-green-500"></span>
+                    </p>
+                    <p class="text-gray-600 mb-4">
+                        <strong>Địa chỉ: </strong>
+                        <span th:text="${store.addressStreet}"></span>,
+                        <span th:text="${store.addressCommune}"></span>,
+                        <span th:text="${store.addressDistrict}"></span>,
+                        <span th:text="${store.addressCity}"></span>.
+                    </p>
                     <span class="text-yellow-500 text-2xl">★★★★☆</span>
                 </div>
             </div>
         </div>
-<!-- --------------------- -->
+        <!-- --------------------- -->
+        <!-- Croll -->
+        <div class="mt-8 bg-white shadow-lg rounded-lg p-4">
+            <div class="flex space-x-4 overflow-x-scroll scrollbar-hide cursor-grab" id="scroll-container">
+                <div class="flex-none w-60">
+                    <img src="https://cdn.tgdd.vn/Files/2021/08/23/1377184/15-mon-an-dac-san-trung-quoc-noi-tieng-ma-ban-khong-nen-bo-lo-202108231441032708.jpg"
+                        alt="Gallery Image 1" class="object-cover w-full h-40 rounded-lg">
+                </div>
+                <div class="flex-none w-60">
+                    <img src="https://images2.thanhnien.vn/zoom/686_429/Uploaded/ttt/images/Content/tan-huong/mon-ngon-nha-hang/2017_07_w3/6.jpg"
+                        alt="Gallery Image 2" class="object-cover w-full h-40 rounded-lg">
+                </div>
+                <div class="flex-none w-60">
+                    <img src="https://cdn.alongwalk.info/vn/wp-content/uploads/2022/04/05175641/image-ngon-mieng-voi-top-20-mon-an-ngon-o-seoul-noi-tieng-164913100195925.jpg"
+                        alt="Gallery Image 3" class="object-cover w-full h-40 rounded-lg">
+                </div>
+                <div class="flex-none w-60">
+                    <img src="https://cdn.alongwalk.info/vn/wp-content/uploads/2022/03/10000142/image-mr-bbq-am-thuc-han-quoc-chuan-vi-han-quoc-giai-nhiet-ngay-nong-tai-quan-7-164682010213951.jpg"
+                        alt="Gallery Image 4" class="object-cover w-full h-40 rounded-lg">
+                </div>
+                <div class="flex-none w-60">
+                    <img src="https://assets.grab.com/wp-content/uploads/sites/11/2020/05/31175018/chubehanoi_96868579_158391732331537_35234746899292690_n-e1590918624125.jpg"
+                        alt="Gallery Image 5" class="object-cover w-full h-40 rounded-lg">
+                </div>
+                <div class="flex-none w-60">
+                    <img src="https://pastaxi-manager.onepas.vn/content/uploads/articles/2amthuc/nhahang/hoaithu/top-10-quan-an-han-quoc-ngon-duoc-yeu-thich-o-ha-noi-anh5.jpg"
+                        alt="Gallery Image 6" class="object-cover w-full h-40 rounded-lg">
+                </div>
+                <div class="flex-none w-60">
+                    <img src="https://cdn.tgdd.vn/Files/2021/08/23/1377184/15-mon-an-dac-san-trung-quoc-noi-tieng-ma-ban-khong-nen-bo-lo-202108231441032708.jpg"
+                        alt="Gallery Image 1" class="object-cover w-full h-40 rounded-lg">
+                </div>
+                <div class="flex-none w-60">
+                    <img src="https://images2.thanhnien.vn/zoom/686_429/Uploaded/ttt/images/Content/tan-huong/mon-ngon-nha-hang/2017_07_w3/6.jpg"
+                        alt="Gallery Image 2" class="object-cover w-full h-40 rounded-lg">
+                </div>
+                <div class="flex-none w-60">
+                    <img src="https://cdn.alongwalk.info/vn/wp-content/uploads/2022/04/05175641/image-ngon-mieng-voi-top-20-mon-an-ngon-o-seoul-noi-tieng-164913100195925.jpg"
+                        alt="Gallery Image 3" class="object-cover w-full h-40 rounded-lg">
+                </div>
+            </div>
+        </div>
+        <!--  -->
         <!-- Card Menu -->
         <div class="mt-8 bg-white rounded-lg p-4">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -288,82 +684,6 @@
 
         </script>
     </div>
-
-    <!-- Croll -->
-    <div class="mt-8 bg-white shadow-lg rounded-lg p-4">
-        <div class="flex space-x-4 overflow-x-scroll scrollbar-hide cursor-grab" id="scroll-container">
-            <div class="flex-none w-60">
-                <img src="https://cdn.tgdd.vn/Files/2021/08/23/1377184/15-mon-an-dac-san-trung-quoc-noi-tieng-ma-ban-khong-nen-bo-lo-202108231441032708.jpg"
-                    alt="Gallery Image 1" class="object-cover w-full h-40 rounded-lg">
-            </div>
-            <div class="flex-none w-60">
-                <img src="https://images2.thanhnien.vn/zoom/686_429/Uploaded/ttt/images/Content/tan-huong/mon-ngon-nha-hang/2017_07_w3/6.jpg"
-                    alt="Gallery Image 2" class="object-cover w-full h-40 rounded-lg">
-            </div>
-            <div class="flex-none w-60">
-                <img src="https://cdn.alongwalk.info/vn/wp-content/uploads/2022/04/05175641/image-ngon-mieng-voi-top-20-mon-an-ngon-o-seoul-noi-tieng-164913100195925.jpg"
-                    alt="Gallery Image 3" class="object-cover w-full h-40 rounded-lg">
-            </div>
-            <div class="flex-none w-60">
-                <img src="https://cdn.alongwalk.info/vn/wp-content/uploads/2022/03/10000142/image-mr-bbq-am-thuc-han-quoc-chuan-vi-han-quoc-giai-nhiet-ngay-nong-tai-quan-7-164682010213951.jpg"
-                    alt="Gallery Image 4" class="object-cover w-full h-40 rounded-lg">
-            </div>
-            <div class="flex-none w-60">
-                <img src="https://assets.grab.com/wp-content/uploads/sites/11/2020/05/31175018/chubehanoi_96868579_158391732331537_35234746899292690_n-e1590918624125.jpg"
-                    alt="Gallery Image 5" class="object-cover w-full h-40 rounded-lg">
-            </div>
-            <div class="flex-none w-60">
-                <img src="https://pastaxi-manager.onepas.vn/content/uploads/articles/2amthuc/nhahang/hoaithu/top-10-quan-an-han-quoc-ngon-duoc-yeu-thich-o-ha-noi-anh5.jpg"
-                    alt="Gallery Image 6" class="object-cover w-full h-40 rounded-lg">
-            </div>
-            <div class="flex-none w-60">
-                <img src="https://cdn.tgdd.vn/Files/2021/08/23/1377184/15-mon-an-dac-san-trung-quoc-noi-tieng-ma-ban-khong-nen-bo-lo-202108231441032708.jpg"
-                    alt="Gallery Image 1" class="object-cover w-full h-40 rounded-lg">
-            </div>
-            <div class="flex-none w-60">
-                <img src="https://images2.thanhnien.vn/zoom/686_429/Uploaded/ttt/images/Content/tan-huong/mon-ngon-nha-hang/2017_07_w3/6.jpg"
-                    alt="Gallery Image 2" class="object-cover w-full h-40 rounded-lg">
-            </div>
-            <div class="flex-none w-60">
-                <img src="https://cdn.alongwalk.info/vn/wp-content/uploads/2022/04/05175641/image-ngon-mieng-voi-top-20-mon-an-ngon-o-seoul-noi-tieng-164913100195925.jpg"
-                    alt="Gallery Image 3" class="object-cover w-full h-40 rounded-lg">
-            </div>
-        </div>
-        <script>
-            const slider = document.getElementById('scroll-container');
-            let isDown = false;
-            let startX;
-            let scrollLeft;
-
-            slider.addEventListener('mousedown', (e) => {
-                isDown = true;
-                slider.classList.add('active');
-                startX = e.pageX - slider.offsetLeft;
-                scrollLeft = slider.scrollLeft;
-            });
-
-            slider.addEventListener('mouseleave', () => {
-                isDown = false;
-                slider.classList.remove('active');
-            });
-
-            slider.addEventListener('mouseup', () => {
-                isDown = false;
-                slider.classList.remove('active');
-            });
-
-            slider.addEventListener('mousemove', (e) => {
-                if (!isDown) return;
-                e.preventDefault();
-                const x = e.pageX - slider.offsetLeft;
-                const walk = (x - startX) * 2; // Độ dài cuộn (kéo dài hơn để tăng tốc độ cuộn)
-                slider.scrollLeft = scrollLeft - walk;
-            });
-
-        </script>
-    </div>
-    <!--  -->
-    <br>
     <br>
     <!--  -->
     <div class="bg-white rounded-lg overflow-hidden">
@@ -652,6 +972,16 @@
 
     </script>
 
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"
+        integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+"
+        crossorigin="anonymous"></script>
 </body>
 
 </html>

@@ -9,26 +9,53 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.localreview.entity.Store;
+import com.localreview.entity.User;
 import com.localreview.repository.StoreRepository;
 import com.localreview.service.StoreService;
+import com.localreview.service.UserService;
+
 import org.springframework.web.bind.annotation.RequestParam;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 
 
 @Controller
 public class IndexController {
 
-    private final StoreService storesv;
-
+	@Autowired
+    private  StoreService storesv;
+    
     @Autowired
-    public IndexController(StoreService storesv) {
-        this.storesv = storesv;
-    }
+    private  UserService usersv;
+
+
 
     @GetMapping("/index")
     public String store(Model model) {
+        // Lấy thông tin xác thực hiện tại
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentEmail = null;
+
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            currentEmail = userDetails.getUsername(); // Lấy email của người dùng hiện tại
+        }
+
+        // Lấy thông tin người dùng từ email
+        User currentUser = usersv.findByEmail(currentEmail);
+        if (currentUser != null) {
+            model.addAttribute("name", currentUser.getName()); // Thêm tên vào model
+        }
+
+        // Lấy danh sách các cửa hàng
         List<Store> list = storesv.getAllStores();
-        model.addAttribute("stores", list);
-        return "index";
+        model.addAttribute("stores", list); // Thêm danh sách cửa hàng vào model
+
+        return "index"; // Trả về tên của trang Thymeleaf
     }
     
     @GetMapping("/storedetail")

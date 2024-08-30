@@ -1,5 +1,6 @@
 package com.localreview.controller;
 
+import com.localreview.entity.Breadcrumb;
 import com.localreview.entity.QRCodeScans;
 import com.localreview.entity.Store;
 import com.localreview.entity.User;
@@ -10,6 +11,10 @@ import com.localreview.service.EmailService;
 import com.localreview.service.QRCodeScansService;
 import com.localreview.service.StoreService;
 import com.localreview.service.UserService;
+
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,6 +22,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -108,5 +114,34 @@ public class StoreController {
 			return "redirect:/register-store";
 		}
 	}
+//	--Store detail
+	
+	@GetMapping("/store/detail/{id}")
+	public String showStoreDetail(@PathVariable("id") String id, Model model) {
+	    try {
+	        Store store = storeService.findStoreById(id);
+	        if (store != null) {
+	            model.addAttribute("store", store);
+
+	            // Thêm thông tin breadcrumb
+	            List<Breadcrumb> breadcrumbs = Arrays.asList(
+	                new Breadcrumb("Trang chủ", "/index"),
+	                new Breadcrumb("Cửa hàng", "/stores"),
+	                new Breadcrumb(store.getStoreName(), "/store/detail/" + store.getStoreId())
+	            );
+	            model.addAttribute("breadcrumbs", breadcrumbs);
+
+	            return "store-detail"; // Tên của view HTML
+	        } else {
+	            model.addAttribute("error", "Cửa hàng không tồn tại.");
+	            return "error";
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        model.addAttribute("error", "Đã xảy ra lỗi khi lấy thông tin cửa hàng.");
+	        return "error";
+	    }
+	}
+
 
 }

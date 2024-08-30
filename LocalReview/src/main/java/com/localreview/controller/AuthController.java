@@ -95,7 +95,7 @@ public class AuthController {
         userService.findOrCreateUser(email, name, googleId);
 
         // Chuyển hướng đến trang chính sau khi đăng nhập thành công
-        return "redirect:/user";
+        return "redirect:/index";
     }
    
    

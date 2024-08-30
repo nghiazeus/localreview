@@ -27,8 +27,8 @@ public class Store {
     @Column(name = "store_name", nullable = false)
     private String storeName;
 
-    @Column(name = "store_size", nullable = false)
-    private String storeSize;
+    @Column(name = "store_categories", nullable = false)
+    private String storeCategories;
 
     @Column(name = "address_city", nullable = false)
     private String addressCity;

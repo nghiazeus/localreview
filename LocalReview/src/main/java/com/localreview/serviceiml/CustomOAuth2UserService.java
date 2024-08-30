@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.localreview.entity.User;
 import com.localreview.repository.UserRepository;
+import com.localreview.service.UserService;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -22,7 +23,7 @@ import java.util.Set;
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) {
@@ -30,11 +31,11 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         OAuth2User oAuth2User = delegate.loadUser(userRequest);
 
         String email = oAuth2User.getAttribute("email");
-        User userEntity = userRepository.findByEmail(email);
+        String name = oAuth2User.getAttribute("name");
+        String googleId = oAuth2User.getName(); // ID Google của người dùng
 
-        if (userEntity == null) {
-            throw new RuntimeException("User not found");
-        }
+        // Tìm hoặc tạo người dùng trong cơ sở dữ liệu
+        User userEntity = userService.findOrCreateUser(email, name, googleId);
 
         Set<SimpleGrantedAuthority> authorities = new HashSet<>();
         authorities.add(new SimpleGrantedAuthority(userEntity.getRole().name()));

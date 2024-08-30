@@ -34,10 +34,7 @@ public class HomeController {
 //	}
 
 
-	 @GetMapping("/index")
-	    public String index() {
-	        return "index"; // Trả về trang index.html
-	    }
+
 	 
 	 @GetMapping("/user")
 	    public String user() {

@@ -12,4 +12,10 @@ public interface UserService {
     User findByUserId(String userId); // Thay đổi để tìm theo user_id kiểu String
     User saveUser(User user);
     User findOrCreateUser(String email, String name, String googleId);
+    
+    User getUserById(String userId);
+    
+    User getUserByEmail(String email);
+    
+    
 }

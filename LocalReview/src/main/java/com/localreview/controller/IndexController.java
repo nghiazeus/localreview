@@ -27,7 +27,7 @@ public class IndexController {
     @GetMapping("/index")
     public String store(Model model) {
         List<Store> list = storesv.getAllStores();
-        model.addAttribute("stores", list); 
+        model.addAttribute("stores", list);
         return "index";
     }
     

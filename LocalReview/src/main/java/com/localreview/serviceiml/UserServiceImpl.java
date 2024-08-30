@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,7 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+    
 
     @Override
     public User findByEmail(String email) {
@@ -52,6 +54,17 @@ public class UserServiceImpl implements UserService {
         }
         return user;
     }
+
+	@Override
+	public User getUserById(String userId) {
+		return userRepository.findById(userId).orElse(null);
+	}
+
+	
+	@Override
+	public User getUserByEmail(String email) {
+	    return userRepository.findByEmail(email);
+	}
 
 
 

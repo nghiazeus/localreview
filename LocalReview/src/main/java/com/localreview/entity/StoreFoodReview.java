@@ -28,6 +28,10 @@ public class StoreFoodReview {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "food_id", nullable = false, columnDefinition = "CHAR(36)")
     private StoreFood storeFood; // Liên kết tới StoreFood
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "drink_id", nullable = false, columnDefinition = "CHAR(36)")
+    private StoreFood storeDrink; // Liên kết tới StoreFood
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false, columnDefinition = "CHAR(36)")

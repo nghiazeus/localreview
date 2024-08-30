@@ -20,4 +20,9 @@ public class StoreServiceImpl implements StoreService{
 		return storere.findAll();
 	}
 
+	@Override
+    public void saveStore(Store store) {
+        storere.save(store);
+    }
+
 }

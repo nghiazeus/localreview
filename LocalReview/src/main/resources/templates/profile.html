@@ -1,54 +1,57 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Carousel Example</title>
-  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@latest/dist/tailwind.min.css" />
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans:200,400&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/emoji-button@4.6.0/dist/index.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/creativetimofficial/tailwind-starter-kit/compiled-tailwind.min.css" />
 </head>
-
-<body>
-  <div class="max-w-6xl mx-auto p-8">
+<body class="text-gray-800 antialiased">
+  <div class="bg-white shadow-lg rounded-lg mt-8 p-2">
+</div>
+  <div class="mx-auto p-8">
     <!-- Profile Header -->
     <div class="bg-white shadow-lg rounded-lg overflow-hidden">
         <div class="relative">
-            <img class="w-full h-48 object-cover" src="https://via.placeholder.com/1500x500" alt="Profile Background">
+            <img class="w-full h-48 object-cover" 
+            src="https://i.pinimg.com/564x/25/06/05/2506053a53717e121f504a45e1d15dd2.jpg" 
+            alt="Profile Background">
             <div class="absolute top-1/2 left-4 transform -translate-y-1/2">
-                <img class="w-32 h-32 object-cover rounded-full border-4 border-white shadow-lg" src="https://via.placeholder.com/128" alt="Profile Picture">
+              <!-- avata th:src="${profile.avatar}" -->
+                <img class="w-32 h-32 object-cover rounded-full border-4 border-white shadow-lg"
+                 src="https://i.pinimg.com/564x/b2/11/04/b21104d2403f29042630ca36cbec3484.jpg" alt="Profile Picture">
                 <button class="absolute bottom-0 right-0 bg-white border border-gray-300 rounded-full p-2 shadow-lg hover:bg-gray-100 focus:outline-none">
-                    <i class="fas fa-pencil-alt text-gray-600"></i>
-                    <span class="sr-only">Change Profile Picture</span>
+                    <i class="fas fa-pencil-alt text-gray-600"></i>               
                 </button>
             </div>
         </div>
         <div class="pt-16 px-6 pb-8">
-            <h1 class="text-3xl font-bold text-gray-900">John Doe</h1>
-            <p class="text-gray-600 mt-2">Web Developer | Designer | Tech Enthusiast</p>
+            <h2 class="text-2xl font-bold text-gray-900"th:text="${profile.name}">User Name</h2>
             <div class="mt-4 flex space-x-4">
-                <a href="mailto:john.doe@example.com" class="text-blue-500 hover:text-blue-700">john.doe@example.com</a>
-                <a href="tel:+1234567890" class="text-blue-500 hover:text-blue-700">+123 456 7890</a>
-            </div>
-            <div class="mt-4 flex space-x-6">
-                <a href="#" class="text-gray-600 hover:text-gray-800"><i class="fab fa-twitter fa-2x"></i></a>
-                <a href="#" class="text-gray-600 hover:text-gray-800"><i class="fab fa-facebook fa-2x"></i></a>
-                <a href="#" class="text-gray-600 hover:text-gray-800"><i class="fab fa-linkedin fa-2x"></i></a>
-                <a href="#" class="text-gray-600 hover:text-gray-800"><i class="fab fa-github fa-2x"></i></a>
+             <a th:href="@{/index}" class="text-gray-600 hover:text-gray-800">
+             <i class="bi bi-house fa-1x"></i></a> 
+              <a href="" class="text-blue-500 hover:text-blue-700 ">Đánh giá của bạn</a>
+              <p>|</p>
+              <a href="" class="text-blue-500 hover:text-blue-700 ">Yêu thích</a>
+          </div>
+            <div class="mt-4 flex space-x-4">
+                <a href="mailto:john.doe@example.com" class="text-blue-500 hover:text-blue-700" th:text="${profile.email}">user@example.com</a>
+                <p>|</p>
+                <a href="tel:+1234567890" class="text-blue-500 hover:text-blue-700"th:text="${profile.phoneNumber}">123-456-7890</a>
             </div>
         </div>
     </div>
-
-    <!-- About Me Section -->
-    <div class="bg-white shadow-lg rounded-lg mt-8 p-6">
-        <h2 class="text-2xl font-semibold text-gray-800">About Me</h2>
-        <p class="text-gray-600 mt-2">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vehicula est at ex lacinia, id aliquam mauris ultricies. Nam et malesuada lacus. Sed euismod tortor sit amet sem tristique, sit amet fringilla lorem vestibulum.
-        </p>
-    </div>
-
     <!-- Skills Section -->
-    <div class="bg-white shadow-lg rounded-lg mt-8 p-6">
+    <div class="bg-white shadow-lg border-slate-200 rounded-xl mt-8 p-6">
         <h2 class="text-2xl font-semibold text-gray-800">Skills</h2>
         <div class="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div class="bg-gray-100 rounded-lg p-4 text-center">
@@ -100,6 +103,5 @@
         </div>
     </div>
 </div>
-</body>
-
+  </body>
 </html>

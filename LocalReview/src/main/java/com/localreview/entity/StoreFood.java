@@ -18,7 +18,7 @@ import javax.persistence.Table;
 public class StoreFood {
 
     @Id
-    @Column(name = "foof_id", columnDefinition = "CHAR(36)")
+    @Column(name = "food_id", columnDefinition = "CHAR(36)")
     private String foodId = UUID.randomUUID().toString(); // Tạo UUID tự động
 
     @ManyToOne(fetch = FetchType.LAZY)

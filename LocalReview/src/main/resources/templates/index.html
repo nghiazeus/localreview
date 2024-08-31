@@ -20,12 +20,12 @@
 
     <div class="containe work-sans leading-normal text-base tracking-normal">
         <!--Nav-->
-        <div class="fixed top-0 left-0 w-full shadow-md z-50">
-            <nav id="header" class="w-full z-30 top-0 py-2 bg-gray-100 dark:bg-neutral-800">
+        <div class="fixed top-0 left-0 w-full shadow-sm z-50">
+            <nav id="header" class="w-full z-30 top-0 py-2 bg-gray-50 dark:bg-neutral-800">
                 <div class="container mx-auto flex items-center justify-between px-5 relative">
                     <!-- Tiêu đề mobile -->
                     <div class="block md:hidden flex items-center">
-                        <a href="index.html" class="font-bold text-xl">
+                        <a th:href="@{/index}" class="font-bold text-xl">
                             <strong class="text-yellow-400">RE</strong>VIEW
                         </a>
                     </div>
@@ -33,7 +33,7 @@
                     <!-- Tiêu đề laptop -->
                     <div class="hidden md:flex md:items-center md:w-auto">
                         <a class="flex items-center tracking-wide no-underline hover:no-underline font-bold text-xl"
-                            href="#">
+                            th:href="@{/index}">
                             <strong class="text-yellow-400">RE</strong>VIEW
                         </a>
                     </div>
@@ -77,28 +77,50 @@
 
                     <!-- Icon người dùng -->
                     <div class="relative inline-block text-left">
-                        <h7 tootip="${#request.remoteUser}"></h7>
-                        <i class="bi bi-person-circle text-yellow-500 text-2xl cursor-pointer"
-                            onclick="toggleMenu()"></i>
-
+                        <div class="flex flex-col items-center space-y-1">
+                            <h1 th:if="${#request.remoteUser}"
+                                class="text-xs font-medium text-gray-700 text-center max-w-xs overflow-hidden text-ellipsis">
+                                Welcome, <span th:text="${currentUser.name}">User</span>!
+                            </h1>
+                            <i class="bi bi-person-circle text-yellow-500 text-3xl cursor-pointer"
+                                onclick="toggleMenu()"></i>
+                        </div>
                         <!-- Dropdown menu -->
                         <div class="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none hidden"
                             role="menu" aria-orientation="vertical" aria-labelledby="menu-button" id="dropdown-menu">
-                            <div class="py-1" role="none">
-                                <a href="/login" class="block px-4 py-2 text-sm text-gray-700 hover:text-yellow-400"
-                                    role="menuitem" tabindex="-1" id="menu-item-0"><i
-                                        class="bi bi-box-arrow-in-right"></i> Đăng nhập</a>
-                                <a th:href="@{/register}" class="block px-4 py-2 text-sm text-gray-700 hover:text-yellow-400"
-                                    role="menuitem" tabindex="-1" id="menu-item-1"><i class="bi bi-person-fill-add"></i>
-                                    Đăng ký</a>
-                                <a th:href="@{/register-store}" class="block px-4 py-2 text-sm text-gray-700 hover:text-yellow-400"
-                                    role="menuitem" tabindex="-1" id="menu-item-2"><i class="bi bi-house-add"></i> Đăng
-                                    ký cửa hàng</a>
+                            <!--  -->
+                            <th:block th:if="${#request.remoteUser}" class="py-1" role="none">
+                                <p>
+                                    <a th:href="@{/profile/{userId}(userId=${currentUser.userId})}"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:text-yellow-400">
+                                        <i class="bi bi-house-add"></i> Tài khoản
+                                    </a>
+                                </p>
+
+                                <a th:href="@{/register-store}"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:text-yellow-400" role="menuitem"
+                                    tabindex="-1" id="menu-item-2"><i class="bi bi-house-add"></i>
+                                    Đăng ký cửa hàng
+                                </a>
+                                <!--  -->
                                 <!-- Đăng xuất -->
-                                <a th:href="@{/logout}" href="#" class="block px-4 py-2 text-sm text-gray-700 hover:text-yellow-400"
-                                    role="menuitem" tabindex="-1" id="menu-item-2"><i class="bi bi-box-arrow-right"></i>
-                                    Đăng xuất</a>
-                            </div>
+                                <a th:href="@{/logout}"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:text-yellow-400" role="menuitem"
+                                    tabindex="-1" id="menu-item-2"><i class="bi bi-box-arrow-right"></i>
+                                    Đăng xuất
+                                </a>
+                            </th:block>
+                            <!--  -->
+                            <th:block th:unless="${#request.remoteUser}">
+                                <a th:href="@{/login}"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:text-yellow-400" role="menuitem"
+                                    tabindex="-1" id="menu-item-0"><i class="bi bi-box-arrow-in-right"></i> Đăng
+                                    nhập</a>
+                                <a th:href="@{/register}"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:text-yellow-400" role="menuitem"
+                                    tabindex="-1" id="menu-item-1"><i class="bi bi-person-fill-add"></i>
+                                    Đăng ký</a>
+                            </th:block>
                         </div>
                         <script>
                             function toggleMenu() {
@@ -121,12 +143,12 @@
 
                 <!-- Lịch sử tìm kiếm trên desktop -->
                 <div id="searchHistory"
-                    class="absolute inset-x-0 mt-2 w-full max-w-2xl mx-auto bg-white border border-gray-300 rounded-lg shadow-lg hidden">
+                    class="absolute inset-x-0 mt-2 mr-15 max-w-2xl mx-auto bg-white border border-gray-300 rounded-lg shadow-lg hidden">
                     <ul id="searchHistoryList" class="divide-y divide-gray-200">
-                        <!-- Các mục lịch sử tìm kiếm sẽ được thêm vào đây -->
+                        <!--  <li class="flex justify-between items-center border-b py-2">Diamon</li>
+                        <li class="flex justify-between items-center border-b py-2">Diamon</li> -->
                     </ul>
                 </div>
-
             </nav>
             <script>
                 document.addEventListener('DOMContentLoaded', function () {
@@ -237,9 +259,10 @@
 
             </script>
         </div>
+        <br>
 
         <!-- ---------------- -->
-        <section class="body bg-gray-50 mt-10">
+        <section class="body mt-10">
             <div class="container mx-auto flex items-center flex-wrap pt-4">
                 <nav id="store" class="w-full z-30 top-0 px-6 py-1">
                     <div class="w-full container mx-auto flex flex-wrap items-center justify-between mt-0 px-2 py-3">
@@ -263,7 +286,7 @@
                                     <!-- Modal Header -->
                                     <div
                                         class="flex justify-between items-center bg-gray-100 p-4 rounded-t-lg md-7 space-x-5">
-                                        <h2 class="font-bold">(Nhà hàng/Quán ăn được đánh giá tốt)</h2>
+                                        <h2 class="font-bold">Lọc nhà hàng/quán ăn</h2>
                                         <button class="text-gray-500 hover:text-gray-700 focus:outline-none"
                                             id="closeModal">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
@@ -337,82 +360,28 @@
         </section>
     </div>
 
-    <!-- <div class="grid grid-cols-2 md:grid-cols-4 gap-4 p-4">
-        <div th:each="store : ${stores}" class="h-full">
-            <a th:href="@{/storedetail}" class="h-full">
-                <div
-                    class="flex flex-col justify-between gap-1 dark:text-white bg-white dark:bg-neutral-900 p-4 rounded-md shadow-md border-2 border-gray-200 dark:border-neutral-700 hover:scale-105 transition duration-150 ease-in-out h-full min-h-[250px]">
-                    <div class="flex justify-between items-center space-x-2">
-                        <div class="bg-black dark:bg-neutral-700 rounded-md w-40 text-center text-yellow-300">
-                            <i class="bi bi-house-heart-fill text-white"></i>
-                            <span th:text="${store.storeName}">Store Name</span>
-                        </div>
-                        <div class="bg-black dark:bg-neutral-700 rounded-md w-20 text-center text-yellow-300">
-                            5<i class="bi bi-stars"></i>
-                        </div>
-                    </div>
-                    <div class="flex justify-between items-center mt-2 space-x-2">
-                        <div class="bg-gray-200 dark:bg-neutral-700 rounded-md w-40 text-center text-black">
-                            <i class="bi bi-geo-alt-fill text-red-600"></i>
-                            <span th:text="${store.address}">Address</span>
-                        </div>
-                        <div class="text-xs">
-                            <div class="bg-black dark:bg-neutral-700 rounded-md text-center text-yellow-300">
-                                SMALL
-                            </div>
-                        </div>
-                    </div>
-                    <img class="rounded-md w-full h-36 object-cover mt-2"
-                        src="https://noithattugia.com/wp-content/uploads/2022/10/thiet-ke-nha-hang-16.jpg"
-                        alt="Store Image">
-                </div>
-            </a>
+    <!-- Container for Horizontal Scroll -->
+    <div class="flex ml-8 text-sm text-blue-500 gap-2">
+        <i class="bi bi-emoji-smile text-pink-400"></i>
+        <p>Cửa hàng được bình chọn tốt nhất!</p>
+    </div>
+    <div class="overflow-x-auto py-4">
+        <div class="flex space-x-4 px-4">
+            <!-- Store Card -->
+            <div th:replace="/layout/_storeone.html"></div>
+            <!-- End of Store Card -->
         </div>
-    </div> -->
+    </div>
 
-    <!-- Store List -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 p-4">
-        <div th:each="store : ${stores}" class="h-full">
-            <a th:href="@{/storedetail/{storeId}(storeId=${store.storeId})}" class="h-full">
-                <div
-                    class="flex flex-col justify-between gap-1 dark:text-white bg-white dark:bg-neutral-900 p-4 rounded-md shadow-md border-2 border-gray-200 dark:border-neutral-700 hover:scale-105 transition duration-150 ease-in-out h-full min-h-[250px]">
-                    <div class="flex justify-between items-center space-x-2">
-                        <div class="bg-black dark:bg-neutral-700 rounded-md w-40 text-center text-yellow-300">
-                            <i class="bi bi-house-heart-fill text-white"></i>
-                            <span th:text="${store.storeName}">Store Name</span>
-                        </div>
-                        <div class="bg-black dark:bg-neutral-700 rounded-md w-20 text-center text-yellow-300">
-                            <span th:text="${store.storeSize}">Size</span> <i class="bi bi-stars"></i>
-                        </div>
-                    </div>
-                    <div class="flex justify-between items-center mt-2 space-x-2">
-                        <div class="bg-gray-200 dark:bg-neutral-700 rounded-md w-40 text-center text-black">
-                            <i class="bi bi-geo-alt-fill text-red-600"></i>
-                            <span th:text="${store.addressCity}">Address</span>
-                            <!-- <span th:text="${store.addressCity} + ', ' + ${store.addressDistrict} + ', ' + ${store.addressCommune} + ', ' + ${store.addressStreet}">Address</span> -->
-                        </div>
-                        <div class="text-xs">
-                            <div class="bg-black dark:bg-neutral-700 rounded-md text-center text-yellow-300">
-                                <span th:text="${store.storeSize}">Size</span>
-                            </div>
-                        </div>
-                    </div>
-                    <img class="rounded-md w-full h-36 object-cover mt-2"
-                        th:src="@{https://noithattugia.com/wp-content/uploads/2022/10/thiet-ke-nha-hang-16.jpg}"
-                        alt="Store Image">
-                </div>
-            </a>
-        </div>
-    </div>
+
+    <!-- Store -->
+    <div th:replace="/layout/_store.html"></div>
+    <!-- ---- -->
+
     <br>
-    <div class="ml-8">
-        <button
-            class="text-yellow-300 bg-black tracking-wide no-underline font-bold py-2 px-4 rounded-md transition duration-300 ease-in-out">
-            MỘT SỐ NHẬN XÉT ĐÁNG CHÚ Ý!
-        </button>
-    </div>
     <br>
-    <section class="article bg-gray-50 flex flex-col md:flex-row">
+
+    <section class="article flex flex-col md:flex-row bg-white shadow-lg shadow-sm rounded-lg mt-8 p-2">
         <!-- Phần chính (7 phần) -->
         <div class="md:w-7/12 w-full scrollable-container py-6 px-8">
             <div class="space-y-4">
@@ -471,38 +440,28 @@
         </div>
 
         <!-- Cột bên phải chứa quảng cáo (3 phần) -->
-        <div class="md:w-3/12 w-full md:ml-20 mt-8 md:mt-6">
-            <div class="bg-white border border-slate-200 rounded-xl p-4 text-sm">
-                <h1 class="text-center text-slate-800 text-xl font-bold mb-2">Gửi cảm nhận của bạn</h1>
-                <textarea id="feedback" placeholder="Cảm nhận của bạn..."
-                    class="bg-slate-100 text-slate-600 h-40 w-full placeholder:text-slate-600 placeholder:opacity-50 border border-slate-200 resize-none outline-none rounded-lg p-2 duration-300 focus:border-slate-600"></textarea>
-                <div class="flex space-x-2 mt-2">
-                    <button
-                        class="flex-grow fill-slate-600 flex justify-center items-center rounded-lg p-2 duration-300 bg-slate-100 hover:border-slate-600 focus:fill-blue-200 focus:bg-blue-400 border border-slate-200">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 0 512 512">
-                            <path
-                                d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm177.6 62.1C192.8 334.5 218.8 352 256 352s63.2-17.5 78.4-33.9c9-9.7 24.2-10.4 33.9-1.4s10.4 24.2 1.4 33.9c-22 23.8-60 49.4-113.6 49.4s-91.7-25.5-113.6-49.4c-9-9.7-8.4-24.9 1.4-33.9s24.9-8.4 33.9 1.4zM144.4 208a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm192-32a32 32 0 1 1 0 64 32 32 0 1 1 0-64z">
-                            </path>
-                        </svg>
-                    </button>
-                    <button id="emoji-button"
-                        class="flex-grow fill-slate-600 flex justify-center items-center rounded-lg p-2 duration-300 bg-slate-100 hover:border-slate-600 focus:fill-blue-200 focus:bg-blue-400 border border-slate-200">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 0 512 512">
-                            <path
-                                d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm177.6 62.1C192.8 334.5 218.8 352 256 352s63.2-17.5 78.4-33.9c9-9.7 24.2-10.4 33.9-1.4s10.4 24.2 1.4 33.9c-22 23.8-60 49.4-113.6 49.4s-91.7-25.5-113.6-49.4c-9-9.7-8.4-24.9 1.4-33.9s24.9-8.4 33.9 1.4zM144.4 208a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm192-32a32 32 0 1 1 0 64 32 32 0 1 1 0-64z">
-                            </path>
-                        </svg>
-                    </button>
-                    <button
-                        class="flex items-center bg-black text-white gap-1 px-4 py-2 cursor-pointer text-yellow-400 font-semibold tracking-widest rounded-md hover:bg-yellow-400 hover:text-black duration-300 hover:gap-2 hover:translate-x-3">
-                        Gửi
-                        <svg class="w-5 h-5" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
-                                stroke-linejoin="round" stroke-linecap="round"></path>
-                        </svg>
-                    </button>
+        <div class="md:w-3/12 w-full md:ml-20 mt-8 md:mt-1">
+            <!-- Thẻ div đầu tiên với khoảng cách dưới -->
+            <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-lg flex items-center mb-4">
+                <a href="#" class="flex-shrink-0">
+                    <img src="https://i.pinimg.com/736x/0d/8c/04/0d8c0476837f5be5577698ee67d2ed62.jpg"
+                        alt="Profile Image" class="rounded-lg w-24 h-24 object-cover">
+                </a>
+                <div class="ml-4">
+                    <h2 class="text-xl font-semibold text-gray-800">Tên Người Dùng</h2>
+                    <p class="text-gray-600">Thông tin chi tiết hoặc mô tả ngắn về người dùng ở đây.</p>
+                </div>
+            </div>
+
+            <!-- Thẻ div thứ hai -->
+            <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-lg flex items-center">
+                <a href="#" class="flex-shrink-0">
+                    <img src="https://i.pinimg.com/736x/0d/8c/04/0d8c0476837f5be5577698ee67d2ed62.jpg"
+                        alt="Profile Image" class="rounded-lg w-24 h-24 object-cover">
+                </a>
+                <div class="ml-4">
+                    <h2 class="text-xl font-semibold text-gray-800">Tên Người Dùng</h2>
+                    <p class="text-gray-600">Thông tin chi tiết hoặc mô tả ngắn về người dùng ở đây.</p>
                 </div>
             </div>
         </div>

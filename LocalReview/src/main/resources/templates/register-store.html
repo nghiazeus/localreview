@@ -5,14 +5,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng ký Cửa Hàng</title>
-    <link href="dist/output.css" rel="stylesheet">
-    <link rel="stylesheet" href="../css/index.css">
+    <!-- Liên kết CSS -->
+    <link href="/dist/output.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/index.css">
     <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css" />
-    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@latest/dist/tailwind.min.css" />
     <link href="https://fonts.googleapis.com/css?family=Work+Sans:200,400&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/emoji-button@4.6.0/dist/index.min.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <!-- Thêm thư viện vn-address -->
+    <script src="https://cdn.jsdelivr.net/npm/vn-address@latest/dist/vn-address.min.js"></script>
 </head>
 
 <body>
@@ -45,81 +47,145 @@
                 <div>
                     <label for="store_name" class="block text-sm font-medium text-gray-700">Tên cửa hàng</label>
                     <input class="outline-none border-2 rounded-md px-3 py-2 w-full text-gray-700 focus:border-blue-300"
-                           placeholder="Tên cửa hàng" id="store_name" name="store_name" type="text" required />
+                        placeholder="Tên cửa hàng" id="store_name" name="store_name" type="text" required />
                 </div>
                 <div>
-                    <label for="store_size" class="block text-sm font-medium text-gray-700">Kích thước cửa hàng</label>
-                    <select class="outline-none border-2 rounded-md px-3 py-2 w-full text-gray-700 focus:border-blue-300"
-                            id="store_size" name="store_size" required>
-                        <option value="BIG">BIG</option>
-                        <option value="SMALL">SMALL</option>
+                    <label for="store_categories" class="block text-sm font-medium text-gray-700">Kích thước cửa
+                        hàng</label>
+                    <select
+                        class="outline-none border-2 rounded-md px-3 py-2 w-full text-gray-700 focus:border-blue-300"
+                        id="store_categories" name="store_categories" required>
+                        <option value="" disabled selected>Chọn danh mục</option>
+                        <th:block th:each="category : ${categories}">
+                            <option th:value="${category.categoriesId}" th:text="${category.categoriesName}"></option>
+                        </th:block>
                     </select>
                 </div>
                 <div>
                     <label for="address_city" class="block text-sm font-medium text-gray-700">Thành phố</label>
                     <input class="outline-none border-2 rounded-md px-3 py-2 w-full text-gray-700 focus:border-blue-300"
-                           placeholder="Thành phố" id="address_city" name="address_city" type="text" required />
+                        placeholder="Thành phố" id="address_city" name="address_city" type="text" required />
                 </div>
                 <div>
                     <label for="address_district" class="block text-sm font-medium text-gray-700">Quận/Huyện</label>
                     <input class="outline-none border-2 rounded-md px-3 py-2 w-full text-gray-700 focus:border-blue-300"
-                           placeholder="Quận/Huyện" id="address_district" name="address_district" type="text" required />
+                        placeholder="Quận/Huyện" id="address_district" name="address_district" type="text" required />
                 </div>
                 <div>
                     <label for="address_commune" class="block text-sm font-medium text-gray-700">Xã/Phường</label>
                     <input class="outline-none border-2 rounded-md px-3 py-2 w-full text-gray-700 focus:border-blue-300"
-                           placeholder="Xã/Phường" id="address_commune" name="address_commune" type="text" required />
+                        placeholder="Xã/Phường" id="address_commune" name="address_commune" type="text" required />
                 </div>
+                <!-- <div>
+                    <label for="address_city" class="block text-sm font-medium text-gray-700">Thành phố</label>
+                    <select
+                        class="outline-none border-2 rounded-md px-3 py-2 w-full text-gray-700 focus:border-blue-300"
+                        id="address_city" name="address_city" required>
+                        <option value="">Chọn Tỉnh/Thành phố</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="address_district" class="block text-sm font-medium text-gray-700">Quận/Huyện</label>
+                    <select
+                        class="outline-none border-2 rounded-md px-3 py-2 w-full text-gray-700 focus:border-blue-300"
+                        id="address_district" name="address_district" required>
+                        <option value="">Chọn Quận/Huyện</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="address_commune" class="block text-sm font-medium text-gray-700">Xã/Phường</label>
+                    <select
+                        class="outline-none border-2 rounded-md px-3 py-2 w-full text-gray-700 focus:border-blue-300"
+                        id="address_commune" name="address_commune" required>
+                        <option value="">Chọn Xã/Phường</option>
+                    </select>
+                </div> -->
+
                 <div>
                     <label for="address_street" class="block text-sm font-medium text-gray-700">Đường</label>
                     <input class="outline-none border-2 rounded-md px-3 py-2 w-full text-gray-700 focus:border-blue-300"
-                           placeholder="Đường" id="address_street" name="address_street" type="text" required />
+                        placeholder="Đường" id="address_street" name="address_street" type="text" required />
                 </div>
                 <div>
                     <label for="phone_number" class="block text-sm font-medium text-gray-700">Số điện thoại</label>
                     <input class="outline-none border-2 rounded-md px-3 py-2 w-full text-gray-700 focus:border-blue-300"
-                           placeholder="Số điện thoại" id="phone_number" name="phone_number" type="text" required />
+                        placeholder="Số điện thoại" id="phone_number" name="phone_number" type="text" required />
                 </div>
-                <button class="w-full py-2 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 rounded-md text-white ring-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
-                        type="submit">
+                <button
+                    class="w-full py-2 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 rounded-md text-white ring-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                    type="submit">
                     Đăng ký cửa hàng
                 </button>
             </form>
-            
-
         </div>
     </div>
 
-    <script>
-        // Kích hoạt nút đăng ký chỉ khi checkbox điều khoản được chọn
-        const termsCheckbox = document.getElementById('terms');
-        const registerButton = document.getElementById('register');
+    <!-- Liên kết JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@goongmaps/goong-js@1.0.6/dist/goong-js.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/demo/demo.js"></script>
+    <!-- <script src="/data/gis/"></script> -->
+    <!-- <script>
+        const populateNav = async (initialLevel1Id, initialLevel2Id, initialDistrictId) => {
+            const sorted = await fetch("/data/sorted.json").then(r => r.json());
+            if (!sorted) return console.error("Unexpected data", sorted);
 
-        termsCheckbox.addEventListener('change', function () {
-            registerButton.disabled = !this.checked;
-            registerButton.classList.toggle('bg-gray-300', !this.checked);
-            registerButton.classList.toggle('bg-blue-500', this.checked);
-            registerButton.classList.toggle('hover:bg-gray-400', !this.checked);
-            registerButton.classList.toggle('hover:bg-blue-600', this.checked);
-            registerButton.classList.toggle('active:bg-gray-500', !this.checked);
-            registerButton.classList.toggle('active:bg-blue-700', this.checked);
-        });
+            const select1 = document.getElementById("address_city");
+            sorted.forEach(level1 => {
+                const option1 = document.createElement("OPTION");
+                option1.value = level1[0];
+                option1.innerText = `${level1[2]} ${level1[1]}`;
+                option1.selected = option1.value === initialLevel1Id;
+                select1.appendChild(option1);
+            });
+            select1.onchange = () => updateSelect2();
 
-        document.addEventListener('touchstart', function (event) {
-            if (event.touches.length > 1) {
-                event.preventDefault();
-            }
-        }, { passive: false });
+            const select2 = document.getElementById("address_district");
+            const selectDistrict = document.getElementById("address_commune");
 
-        let lastTouchEnd = 0;
-        document.addEventListener('touchend', function (event) {
-            const now = new Date().getTime();
-            if (now - lastTouchEnd <= 300) {
-                event.preventDefault();
-            }
-            lastTouchEnd = now;
-        }, false);
-    </script>
+            const updateSelect2 = (level2Id) => {
+                select2.innerHTML = "";
+                selectDistrict.innerHTML = "";
+
+                const option2Zero = document.createElement("OPTION");
+                select2.appendChild(option2Zero);
+
+                const selectedLevel1 = sorted.find(level1 => level1[0] === select1.value);
+                if (!selectedLevel1) return;
+
+                selectedLevel1[4].forEach(level2 => {
+                    const option2 = document.createElement("OPTION");
+                    option2.value = level2[0];
+                    option2.innerText = `${level2[2]} ${level2[1]}`;
+                    option2.selected = option2.value === level2Id;
+                    select2.appendChild(option2);
+                });
+            };
+
+            const updateSelectDistrict = (districtId) => {
+                selectDistrict.innerHTML = "";
+                const selectedLevel1 = sorted.find(level1 => level1[0] === select1.value);
+                const selectedLevel2 = selectedLevel1[4].find(level2 => level2[0] === select2.value);
+                if (!selectedLevel2) return;
+
+                selectedLevel2[4].forEach(district => {
+                    const optionDistrict = document.createElement("OPTION");
+                    optionDistrict.value = district[0];
+                    optionDistrict.innerText = `${district[2]} ${district[1]}`;
+                    optionDistrict.selected = optionDistrict.value === districtId;
+                    selectDistrict.appendChild(optionDistrict);
+                });
+            };
+
+            select2.onchange = () => updateSelectDistrict();
+
+            updateSelect2(initialLevel2Id);
+            updateSelectDistrict(initialDistrictId);
+        };
+
+        // Initialize the address dropdowns
+        populateNav();
+    </script> -->
 </body>
 
 </html>

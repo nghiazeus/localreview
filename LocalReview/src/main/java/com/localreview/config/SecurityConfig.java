@@ -40,7 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
             .csrf().disable() // Vô hiệu hóa CSRF protection nếu cần thiết.
             .authorizeRequests()
-                .antMatchers("/index","/login", "/register", "/css/**", "/js/**", "/images/**").permitAll() // Cho phép truy cập không cần xác thực cho các trang và tài nguyên cụ thể.
+            .antMatchers("/index", "/login", "/register", "/css/**", "/js/**", "/images/**", "/profile/**").permitAll()
                 .antMatchers("/user", "/register-store").hasAnyAuthority("user", "store_owner")
                 .antMatchers("/admin/**").hasRole("admin")
                 .anyRequest().authenticated() // Yêu cầu xác thực cho tất cả các yêu cầu khác.

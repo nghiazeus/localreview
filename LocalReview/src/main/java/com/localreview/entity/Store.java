@@ -1,21 +1,25 @@
 package com.localreview.entity;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 
-import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.sql.Timestamp;
 
-import org.hibernate.annotations.GenericGenerator;
 @Entity
 @Table(name = "Stores")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Store {
 
     @Id
@@ -27,8 +31,9 @@ public class Store {
     @Column(name = "store_name", nullable = false)
     private String storeName;
 
-    @Column(name = "store_categories", nullable = false)
-    private String storeCategories;
+    @ManyToOne(fetch = FetchType.LAZY)  // Định nghĩa mối quan hệ nhiều-một
+    @JoinColumn(name = "store_categories", nullable = false) // Cột khóa ngoại
+    private Categories storeCategories;
 
     @Column(name = "address_city", nullable = false)
     private String addressCity;
@@ -49,8 +54,8 @@ public class Store {
     private String phoneNumber;
 
     @Column(name = "created_at", updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private java.sql.Timestamp createdAt;
+    private Timestamp createdAt;
 
     @Column(name = "updated_at", insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
-    private java.sql.Timestamp updatedAt;
+    private Timestamp updatedAt;
 }

@@ -1,6 +1,10 @@
 package com.localreview.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,15 +30,34 @@ public class ProfileController {
 //        return "index";
 //    }
 
-    @GetMapping("/profile/{user_id}")
-    public String profileById(@PathVariable("user_id") String userId, Model model) {
-        Optional<User> user = userRepository.findById(userId);
-        if (user.isPresent()) {
-            model.addAttribute("profile", user.get());
-        } else {
-            model.addAttribute("error", "User not found");
+    @GetMapping("/profile")
+    public String profile(Model model) {
+        // Lấy thông tin người dùng hiện tại từ session
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUserEmail = null;
+
+        if (authentication != null) {
+            Object principal = authentication.getPrincipal();
+
+            if (principal instanceof UserDetails) {
+                UserDetails userDetails = (UserDetails) principal;
+                currentUserEmail = userDetails.getUsername(); // Lấy email của người dùng hiện tại
+            } else if (principal instanceof DefaultOAuth2User) {
+                DefaultOAuth2User oAuth2User = (DefaultOAuth2User) principal;
+                // Lấy email từ DefaultOAuth2User
+                currentUserEmail = (String) oAuth2User.getAttributes().get("email");
+            }
         }
-        
-        return "profile";
+
+        // Lấy thông tin người dùng từ email
+        if (currentUserEmail != null) {
+            User currentUser = userRepository.findByEmail(currentUserEmail);
+            if (currentUser != null) {
+                model.addAttribute("profile", currentUser); // Thêm người dùng vào model
+            }
+        }
+
+        return "profile"; // Trả về trang profile
     }
+
 }

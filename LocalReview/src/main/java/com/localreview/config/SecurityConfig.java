@@ -8,6 +8,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,6 +32,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
+    
+    @Bean
+    public SessionRegistry sessionRegistry() {
+        return new SessionRegistryImpl();
+    }
 
     public SecurityConfig(UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
@@ -43,6 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/index", "/login", "/register", "/css/**", "/js/**", "/images/**", "/profile/**").permitAll()
                 .antMatchers("/user", "/register-store").hasAnyAuthority("user", "store_owner")
                 .antMatchers("/admin/**").hasRole("admin")
+                .antMatchers("/api/reviews").hasAuthority("store_owner")
                 .anyRequest().authenticated() // Yêu cầu xác thực cho tất cả các yêu cầu khác.
             .and()
             .formLogin()
@@ -69,6 +77,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .sessionCreationPolicy(SessionCreationPolicy.ALWAYS) // Luôn tạo một session mới
             .invalidSessionUrl("/login?invalidSession=true") // URL chuyển hướng khi session không hợp lệ
             .maximumSessions(1) // Giới hạn số lượng session cho mỗi người dùng
+            .sessionRegistry(sessionRegistry()) // Cung cấp SessionRegistry
             .maxSessionsPreventsLogin(false) // Cho phép đăng nhập mới ngay cả khi đã đạt giới hạn session
             .expiredUrl("/login?expired=true"); // URL chuyển hướng khi session hết hạn
     }

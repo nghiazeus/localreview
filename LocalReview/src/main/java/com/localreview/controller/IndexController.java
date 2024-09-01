@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -49,16 +50,25 @@ public class IndexController {
 	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 	    String currentEmail = null;
 
-	    if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-	        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-	        currentEmail = userDetails.getUsername(); // Lấy email của người dùng hiện tại
-	    }
+	    // Kiểm tra nếu authentication là hợp lệ và principal là UserDetails
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            currentEmail = userDetails.getUsername(); // Lấy email của người dùng hiện tại
+        } else if (authentication != null && authentication.getPrincipal() instanceof OAuth2User) {
+            OAuth2User oauthUser = (OAuth2User) authentication.getPrincipal();
+            currentEmail = oauthUser.getAttribute("email"); // Lấy email từ OAuth2
+        }
 
-	    // Lấy thông tin người dùng từ email
-	    User currentUser = usersv.findByEmail(currentEmail);
-	    if (currentUser != null) {
-	        model.addAttribute("currentUser", currentUser); // Thêm người dùng vào model
-	    }
+        // Lấy thông tin người dùng từ email nếu email không phải là null
+        if (currentEmail != null) {
+            User currentUser = usersv.findByEmail(currentEmail);
+            if (currentUser != null) {
+                model.addAttribute("currentUser", currentUser); // Thêm người dùng vào model
+            } else {
+                model.addAttribute("error", "Không tìm thấy thông tin người dùng.");
+            }
+        }
+
 
 	    // Lấy danh sách các cửa hàng
 	    List<Store> list = storesv.getAllStores();

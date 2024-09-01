@@ -10,9 +10,11 @@ import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 @Entity
@@ -22,9 +24,9 @@ import javax.persistence.Table;
 @AllArgsConstructor
 public class Photo {
 
-    @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
+	@Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "photo_id", updatable = false, nullable = false, length = 36)
     private String photoId;
 
@@ -79,4 +81,11 @@ public class Photo {
     @ManyToOne
     @JoinColumn(name = "food_review_id", insertable = false, updatable = false)
     private StoreFoodReview foodReview;
+    
+    @PrePersist
+    protected void onCreate() {
+        if (this.uploadedAt == null) {
+            this.uploadedAt = LocalDateTime.now();
+        }
+    }
 }

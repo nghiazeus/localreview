@@ -1,6 +1,10 @@
 package com.localreview.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +34,7 @@ public class ProfileController {
 
 	@Autowired
 	private StoreRepository storeRepository;
+
 
 	@GetMapping("/{userId}")
     public String profileById(@PathVariable("userId") String userId, Model model) {
@@ -106,5 +111,6 @@ public class ProfileController {
 			return "error";
 		}
 	}
+
 
 }

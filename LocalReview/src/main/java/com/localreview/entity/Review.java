@@ -11,6 +11,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.GenericGenerator;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 
 @Entity
@@ -18,13 +22,15 @@ import lombok.Data;
 @Table(name = "Reviews")
 public class Review {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+	@Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "review_id", columnDefinition = "CHAR(36)")
     private String reviewId;
 
     @ManyToOne
     @JoinColumn(name = "store_id", nullable = false)
+    @JsonIgnore
     private Store store;
 
     @ManyToOne

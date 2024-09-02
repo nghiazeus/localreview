@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>Đăng ký</title>
     <link href="dist/output.css" rel="stylesheet">
     <link rel="stylesheet" href="../css/index.css">
@@ -83,16 +83,6 @@
             registerButton.classList.toggle('hover:bg-blue-600', this.checked);
             registerButton.classList.toggle('active:bg-gray-500', !this.checked);
             registerButton.classList.toggle('active:bg-blue-700', this.checked);
-        });
-
-        document.addEventListener('touchstart', function (event) {
-            if (event.touches.length > 1) {
-                event.preventDefault();
-            }
-        }, { passive: false });
-
-        document.addEventListener('gesturestart', function (event) {
-            event.preventDefault();
         });
     </script>
 </body>

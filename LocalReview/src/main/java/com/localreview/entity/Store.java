@@ -31,8 +31,8 @@ public class Store {
     @Column(name = "store_name", nullable = false)
     private String storeName;
 
-    @ManyToOne(fetch = FetchType.LAZY)  // Định nghĩa mối quan hệ nhiều-một
-    @JoinColumn(name = "store_categories", nullable = false) // Cột khóa ngoại
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "store_categories", nullable = false)
     private Categories storeCategories;
 
     @Column(name = "address_city", nullable = false)

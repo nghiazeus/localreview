@@ -7,23 +7,28 @@ import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "Store_Menu")
 @Data
 public class StoreMenu {
 
-    @Id
+	@Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "menu_id", columnDefinition = "CHAR(36)")
-    private String menuId = UUID.randomUUID().toString(); // Tạo UUID tự động
-
+    private String menuId;
+	
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id", nullable = false, columnDefinition = "CHAR(36)")
-    private Store store; // Liên kết tới Store
+    private Store storeId; // Liên kết tới Store
 
     @Column(name = "food_first")
     private String foodFirst;

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>Đăng ký Cửa Hàng</title>
     <!-- Liên kết CSS -->
     <link href="/dist/output.css" rel="stylesheet">
@@ -50,16 +50,17 @@
                         placeholder="Tên cửa hàng" id="store_name" name="store_name" type="text" required />
                 </div>
                 <div>
-                    <label for="store_categories" class="block text-sm font-medium text-gray-700">Kích thước cửa
-                        hàng</label>
-                    <select
-                        class="outline-none border-2 rounded-md px-3 py-2 w-full text-gray-700 focus:border-blue-300"
-                        id="store_categories" name="store_categories" required>
+                    <label for="store_categories" class="block text-sm font-medium text-gray-700">Loại nhà hàng</label>
+                    <select class="outline-none border-2 rounded-md px-3 py-2 w-full text-gray-700 focus:border-blue-300
+           text-sm sm:text-base md:text-lg lg:text-xl
+           h-12 sm:h-12 md:h-12 lg:h-12" id="store_categories" name="store_categories" required>
                         <option value="" disabled selected>Chọn danh mục</option>
                         <th:block th:each="category : ${categories}">
                             <option th:value="${category.categoriesId}" th:text="${category.categoriesName}"></option>
                         </th:block>
                     </select>
+
+
                 </div>
                 <div>
                     <label for="address_city" class="block text-sm font-medium text-gray-700">Thành phố</label>

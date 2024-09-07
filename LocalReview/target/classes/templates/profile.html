@@ -16,11 +16,13 @@
     <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/gh/creativetimofficial/tailwind-starter-kit/compiled-tailwind.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+        integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
 
 </head>
 
 <body class="bg-gray-100 antialiased">
-    <div class="bg-white fixed top-0 left-0 right-0 z-50 border border-slate-200 p-2">
+    <div class="bg-white fixed top-0 left-0 right-0 z-50 border border-slate-200 p-2 h-10">
         <nav class="mb-4 ml-6 relative">
             <ol class="flex flex-wrap items-center space-x-2 text-gray-700 dark:text-gray-300">
                 <li th:each="breadcrumb, iterStat : ${breadcrumbs}" class="flex items-center">
@@ -38,7 +40,7 @@
         </nav>
     </div>
 
-    <div class="mx-auto p-8 mt-10">
+    <div class="mx-auto p-8 mt-4">
         <!-- Profile Header -->
         <div class="bg-white shadow-md border border-slate-200 rounded-lg overflow-hidden">
             <div class="relative">
@@ -82,484 +84,264 @@
 
         <!-- <div class="bg-white shadow-md border border-slate-200 rounded-xl mt-8 p-6"> -->
         <div class="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <!-- JavaScript Card -->
-            <div class="bg-white shadow-md border border-slate-200 rounded-xl mt-2 p-4 text-center cursor-pointer"
-                onclick="toggleInfo(this)">
-                <div class="flex items-center justify-start space-x-2">
+            <!-- Thẻ 1: Thông tin cá nhân -->
+            <div class="relative bg-white shadow-md border border-slate-200 rounded-xl mt-2 p-4 text-center cursor-pointer"
+                data-toggle="modal" data-target="#exampleModal">
+                <button data-toggle="modal" data-target="#exampleModal"
+                    class="flex items-center justify-start space-x-2">
                     <i class="bi bi-person-circle text-2xl text-white bg-red-400 rounded-full py-1 px-2"></i>
                     <span class="text-lg font-semibold text-gray-700">Thông tin cá nhân</span>
-                </div>
+                </button>
 
-                <!-- Hidden Info Panel -->
-                <div class="info-panel mt-2 p-6 hidden relative">
-                    <!-- Nút đóng -->
-                    <button onclick="closeForm(event, this)"
-                        class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
-                        <i class="bi bi-x-circle"></i>
-                    </button>
-                    <form th:action="@{/profile/update}" method="post" class="space-y-4"
-                        onclick="event.stopPropagation();">
-                        <!-- Id -->
-                        <input type="hidden" name="userId" th:value="${profile.userId}">
-                        <!-- Email -->
-                        <div class="text-left">
-                            <label for="email" class="block text-gray-700 font-medium">Email:</label>
-                            <input type="email" id="email" name="email" th:value="${profile.email}"
-                                class="w-full p-2 border border-gray-300 rounded-lg" required>
-                        </div>
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Thông tin cá nhân</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true"><i class="bi bi-x-circle"></i></span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Nội dung form cập nhật -->
+                                <form th:action="@{/profile/update}" method="post" class="space-y-4"
+                                    onclick="event.stopPropagation();">
+                                    <!-- Id -->
+                                    <input type="hidden" name="userId" th:value="${profile.userId}">
+                                    <!-- Email -->
+                                    <div class="text-left">
+                                        <label for="email" class="block text-gray-700 font-medium">Email:</label>
+                                        <input type="email" id="email" name="email" th:value="${profile.email}"
+                                            class="w-full p-2 border border-gray-300 rounded-lg" required>
+                                    </div>
 
-                        <!-- Tên -->
-                        <div class="text-left">
-                            <label for="name" class="block text-gray-700 font-medium">Tên:</label>
-                            <input type="text" id="name" name="name" th:value="${profile.name}"
-                                class="w-full p-2 border border-gray-300 rounded-lg" required>
-                        </div>
+                                    <!-- Tên -->
+                                    <div class="text-left">
+                                        <label for="name" class="block text-gray-700 font-medium">Tên:</label>
+                                        <input type="text" id="name" name="name" th:value="${profile.name}"
+                                            class="w-full p-2 border border-gray-300 rounded-lg" required>
+                                    </div>
 
-                        <!-- Số điện thoại -->
-                        <div class="text-left">
-                            <label for="phoneNumber" class="block text-gray-700 font-medium">Số điện thoại:</label>
-                            <input type="text" id="phoneNumber" name="phoneNumber" th:value="${profile.phoneNumber}"
-                                class="w-full p-2 border border-gray-300 rounded-lg">
-                        </div>
+                                    <!-- Số điện thoại -->
+                                    <div class="text-left">
+                                        <label for="phoneNumber" class="block text-gray-700 font-medium">Số điện
+                                            thoại:</label>
+                                        <input type="text" id="phoneNumber" name="phoneNumber"
+                                            th:value="${profile.phoneNumber}"
+                                            class="w-full p-2 border border-gray-300 rounded-lg">
+                                    </div>
 
-                        <!-- Google ID -->
-                        <div class="text-left">
-                            <label for="googleId" class="block text-gray-700 font-medium">Google ID:</label>
-                            <input type="text" id="googleId" name="googleId" th:value="${profile.googleId}"
-                                class="w-full p-2 border border-gray-300 rounded-lg">
+                                    <!-- Nút lưu -->
+                                    <div class="flex justify-end space-x-4">
+                                        <button type="submit" class="btn btn-primary">Cập nhật</button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
-
-                        <!-- Nút lưu -->
-                        <div class="text-center">
-                            <button type="submit" onclick="notificationUpdateProfile()"
-                                class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">Lưu thay đổi
-                            </button>
-                        </div>
-                    </form>
-                    <script th:inline="javascript">
-                        /*<![CDATA[*/
-                        function notificationUpdateProfile() {
-                            var profileName = /*[[${profile.name}]]*/ '';
-                            if (profileName) {
-                                alert("Chào: " + profileName + "\nBạn đã cập nhật thành công!");
-                            }
-                        }
-                        /*]]>*/
-                    </script>
+                    </div>
                 </div>
             </div>
 
-            <!-- Card Đánh Giá -->
-            <div class="bg-white shadow-md border border-slate-200 rounded-xl mt-2 p-4 text-center cursor-pointer"
-                onclick="toggleInfo(this)">
+            <!-- Thẻ 2: Xem của hàng -->
+            <a th:href="@{/stores/{userId}(userId=${profile.userId})}"
+                class="relative bg-white nav-link shadow-md border border-slate-200 rounded-xl mt-2 p-4 text-center cursor-pointer">
                 <div class="flex items-center justify-start space-x-4">
                     <i class="bi bi-star text-2xl text-white bg-yellow-400 rounded-full py-1 px-2"></i>
-                    <span class="text-lg font-semibold text-gray-700">Đánh giá</span>
+                    <span class="text-lg font-semibold text-gray-700">Cửa hàng của bạn</span>
                 </div>
+            </a>
 
-                <!-- Hidden Info Panel -->
-                <div class="info-panel mt-2 p-6 hidden relative">
-                    <!-- Nút đóng -->
-                    <button onclick="closeForm(event, this)"
-                        class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
-                        <i class="bi bi-x-circle"></i>
-                    </button>
-                    <form action="/user/update" method="POST" class="space-y-4" onclick="event.stopPropagation();">
-                        <p>Đánh giá</p>
-                    </form>
-                </div>
-            </div>
 
-            <!-- Card Thêm Nhà Hàng -->
-            <div class="bg-white shadow-md border border-slate-200 rounded-xl mt-2 p-4 text-center cursor-pointer"
-                onclick="toggleInfo(this)">
+            <!-- Thẻ 3: Thêm Nhà Hàng -->
+            <a th:href="@{/register-store}"
+                class="relative bg-white nav-link shadow-md border border-slate-200 rounded-xl mt-2 p-4 text-center cursor-pointer">
                 <div class="flex items-center justify-start space-x-4">
                     <i class="bi bi-house-add text-2xl text-white bg-purple-500 rounded-full py-1 px-2"></i>
                     <span class="text-lg font-semibold text-gray-700">Thêm nhà hàng</span>
                 </div>
+            </a>
 
-                <!-- Hidden Info Panel -->
-                <div class="info-panel mt-2 p-6 hidden relative">
-                    <!-- Nút đóng -->
-                    <button onclick="closeForm(event, this)"
-                        class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
-                        <i class="bi bi-x-circle"></i>
-                    </button>
-                    <form action="/user/update" method="POST" class="space-y-4" onclick="event.stopPropagation();">
-                        <p>Nhà hàng</p>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Card Thêm Menu -->
-            <div class="bg-white shadow-md border border-slate-200 rounded-xl mt-2 p-4 text-center cursor-pointer"
-                onclick="toggleInfo(this)">
-                <div class="flex items-center justify-start space-x-4">
-                    <i class="bi bi-file-plus text-2xl text-white bg-green-400 rounded-full py-1 px-2"></i>
-                    <span class="text-lg font-semibold text-gray-700">Thêm menu</span>
-                </div>
-
-                <!-- Hidden Info Panel -->
-                <div class="info-panel mt-2 p-6 hidden relative">
-                    <!-- Nút đóng -->
-                    <button onclick="closeForm(event, this)"
-                        class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
-                        <i class="bi bi-x-circle"></i>
-                    </button>
-                    <form action="/profile/update-menu" method="POST" class="space-y-4" onclick="event.stopPropagation();">
-                        <input type="hidden" name="menuId" value="${menu.menuId}">
-                        
-                        <div>
-                            <label for="foodFirst" class="block text-sm font-medium text-gray-700">Món khai vị</label>
-                            <input type="text" id="foodFirst" name="foodFirst" value="${menu.foodFirst}" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                        </div>
-                    
-                        <div>
-                            <label for="foodMain" class="block text-sm font-medium text-gray-700">Món chính</label>
-                            <input type="text" id="foodMain" name="foodMain" value="${menu.foodMain}" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                        </div>
-                    
-                        <div>
-                            <label for="foodDessert" class="block text-sm font-medium text-gray-700">Món tráng miệng</label>
-                            <input type="text" id="foodDessert" name="foodDessert" value="${menu.foodDessert}" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                        </div>
-                    
-                        <div>
-                            <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                Cập nhật thực đơn
-                            </button>
-                        </div>
-                    </form>
-                    
-                </div>
-            </div>
-
-            <!-- Card Thêm Món Ăn -->
-            <div class="bg-white shadow-md border border-slate-200 rounded-xl mt-2 p-4 text-center cursor-pointer"
-                onclick="toggleInfo(this)">
-                <div class="flex items-center justify-start space-x-4">
-                    <i class="bi bi-egg-fried text-2xl text-white bg-pink-400 rounded-full py-1 px-2"></i>
-                    <span class="text-lg font-semibold text-gray-700">Thêm món ăn</span>
-                </div>
-
-                <!-- Hidden Info Panel -->
-                <div class="info-panel mt-2 p-6 hidden relative">
-                    <!-- Nút đóng -->
-                    <button onclick="closeForm(event, this)"
-                        class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
-                        <i class="bi bi-x-circle"></i>
-                    </button>
-                    <form action="/user/update" method="POST" class="space-y-4" onclick="event.stopPropagation();">
-                        <p>Món ăn</p>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Card Thêm Đồ Uống -->
-            <div class="bg-white shadow-md border border-slate-200 rounded-xl mt-2 p-4 text-center cursor-pointer"
-                onclick="toggleInfo(this)">
-                <div class="flex items-center justify-start space-x-4">
-                    <i class="bi bi-cup-straw text-2xl text-white bg-blue-400 rounded-full py-1 px-2"></i>
-                    <span class="text-lg font-semibold text-gray-700">Thêm đồ uống</span>
-                </div>
-
-                <!-- Hidden Info Panel -->
-                <div class="info-panel mt-2 p-6 hidden relative">
-                    <!-- Nút đóng -->
-                    <button onclick="closeForm(event, this)"
-                        class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
-                        <i class="bi bi-x-circle"></i>
-                    </button>
-                    <form action="/user/update" method="POST" class="space-y-4" onclick="event.stopPropagation();">
-                        <p>Đồ uống</p>
-                    </form>
-                </div>
-            </div>
         </div>
 
-        <script>
-            function toggleInfo(card) {
-                const infoPanel = card.querySelector('.info-panel');
-                infoPanel.classList.toggle('hidden');
-            }
+        <!-- Cửa hàng -->
+        <div class="flex flex-col lg:flex-row lg:space-x-4 mt-4 gap-4">
+            <!-- Bảng bên trái (chỉ hiển thị trên màn hình lớn) -->
+            <div class="bg-white border border-slate-200 shadow-md rounded-lg p-6 lg:w-1/3">
+                <h2 class="text-xl font-semibold text-gray-800">CỬA HÀNG</h2>
 
-            function closeForm(event, button) {
-                event.stopPropagation();
-                const infoPanel = button.closest('.info-panel');
-                infoPanel.classList.add('hidden');
-            }
-        </script>
+                <div class="mt-4 space-y-4">
+                    <!-- Thẻ kích hoạt Modal 1 -->
+                    <div class="bg-gray-100 rounded-lg p-4">
+                        <h3 class="text-xl font-semibold text-gray-800">Thông tin cửa hàng</h3>
 
-    </div>
-    <!-- Cửa hàng -->
-    <div class="flex flex-col lg:flex-row lg:space-x-4 p-6 gap-4">
-        <!-- Bảng bên trái (chỉ hiển thị trên màn hình lớn) -->
-        <div class="bg-white border border-slate-200 shadow-md rounded-lg p-6 lg:w-1/3">
-            <h2 class="text-xl font-semibold text-gray-800">CỬA HÀNG</h2>
-            <!--  -->
-            <div class="mt-4 space-y-4">
-                <!-- Thẻ kích hoạt Modal 1 -->
-                <div class="bg-gray-100 rounded-lg p-4">
-                    <h3 class="text-xl font-semibold text-gray-800">Thông tin của hàng</h3>
+                        <button
+                            class="bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-blue-600 hover:shadow-lg transition duration-300 ease-in-out mt-2 inline-block"
+                            data-toggle="modal" data-target="#exampleModal1">
+                            Xem chi tiết
+                        </button>
+                    </div>
 
-                    <button
-                        class="bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-blue-600 hover:shadow-lg transition duration-300 ease-in-out mt-2 inline-block"
-                        onclick="openModal('modal-info')">
-                        Xem chi tiết
-                    </button>
-
-                </div>
-                <!-- Modal 1 -->
-                <div id="modal-info"
-                    class="fixed inset-0 z-50 bg-gray-400 bg-opacity-75 hidden flex items-center justify-center">
-                    <div class="bg-white rounded-lg shadow-lg w-full max-w-3xl">
-                        <div class="p-4">
-                            <div class="flex justify-between items-center">
-                                <h2 class="text-2xl font-semibold">Thông tin cửa hàng</h2>
-                                <button onclick="closeModal('modal-info')" class="text-gray-500 hover:text-gray-700"
-                                    title="Đóng">
-                                    <i class="bi bi-x-circle"></i>
-                                </button>
-                            </div>
-                            <div class="mt-2 text-gray-600 max-h-96 overflow-y-auto p-4">
-                                <ul>
-                                    <li th:each="store : ${stores}" class="mb-4">
-                                        <div class="border border-gray-300 rounded-md p-4 shadow-lg">
-                                            <form th:action="@{/profile/updatestore}" method="post">
-                                                <span class="text-xl text-blue-500" th:text="${store.storeName}"></span>
-                                                <br>
-                                                <br>
-                                                <div class="mb-4">
-                                                    <label for="storeName"
-                                                        class="block text-gray-700 font-semibold mb-2">Tên cửa
-                                                        hàng:
-                                                    </label>
-                                                    <input type="text" id="storeName" name="storeName"
-                                                        th:value="${store.storeName}"
-                                                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                                                        required>
-                                                </div>
-                                                <div class="mb-4">
-                                                    <label for="addressCity"
-                                                        class="block text-gray-700 font-semibold mb-2">Tỉnh/Thành
-                                                        phố:</label>
-                                                    <input type="text" id="addressCity" name="addressCity"
-                                                        th:value="${store.addressCity}"
-                                                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                                                        required>
-                                                </div>
-                                                <div class="mb-4">
-                                                    <label for="addressDistrict"
-                                                        class="block text-gray-700 font-semibold mb-2">Quận/Huyện:</label>
-                                                    <input type="text" id="addressDistrict" name="addressDistrict"
-                                                        th:value="${store.addressDistrict}"
-                                                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                                                        required>
-                                                </div>
-                                                <div class="mb-4">
-                                                    <label for="addressCommune"
-                                                        class="block text-gray-700 font-semibold mb-2">Xã/Phường:</label>
-                                                    <input type="text" id="addressCommune" name="addressCommune"
-                                                        th:value="${store.addressCommune}"
-                                                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                                                        required>
-                                                </div>
-                                                <div class="mb-4">
-                                                    <label for="addressStreet"
-                                                        class="block text-gray-700 font-semibold mb-2">Đường:</label>
-                                                    <input type="text" id="addressStreet" name="addressStreet"
-                                                        th:value="${store.addressStreet}"
-                                                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                                                        required>
-                                                </div>
-                                                <div class="mb-4">
-                                                    <label for="phoneNumber"
-                                                        class="block text-gray-700 font-semibold mb-2">Số điện
-                                                        thoại:</label>
-                                                    <input type="text" id="phoneNumber" name="phoneNumber"
-                                                        th:value="${store.phoneNumber}"
-                                                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                                                        required>
-                                                </div>
-                                                <input type="hidden" name="storeId" th:value="${store.storeId}">
-                                                <button type="submit"
-                                                    class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Cập
-                                                    nhật</button>
-                                            </form>
+                    <!-- Modal 1 -->
+                    <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModal1"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <div th:each="store : ${stores}" class="modal-header">
+                                    <h5 class="modal-title" id="exampleModal1"> Cửa hàng:
+                                        <span class="text-xl text-blue-500" th:text="${store.storeName}"></span>
+                                    </h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true"><i class="bi bi-x-circle"></i></span>
+                                    </button>
+                                </div>
+                                <div th:each="store : ${stores}" class="modal-body">
+                                    <form th:action="@{/profile/updatestore}" method="post">
+                                        <div class="mb-4">
+                                            <label for="storeName" class="block text-gray-700 font-semibold mb-2">Tên
+                                                cửa
+                                                hàng:
+                                            </label>
+                                            <input type="text" id="storeName" name="storeName"
+                                                th:value="${store.storeName}"
+                                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                                                required>
                                         </div>
-                                    </li>
-                                </ul>
+                                        <div class="mb-4">
+                                            <label for="addressCity"
+                                                class="block text-gray-700 font-semibold mb-2">Tỉnh/Thành
+                                                phố:</label>
+                                            <input type="text" id="addressCity" name="addressCity"
+                                                th:value="${store.addressCity}"
+                                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                                                required>
+                                        </div>
+                                        <div class="mb-4">
+                                            <label for="addressDistrict"
+                                                class="block text-gray-700 font-semibold mb-2">Quận/Huyện:</label>
+                                            <input type="text" id="addressDistrict" name="addressDistrict"
+                                                th:value="${store.addressDistrict}"
+                                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                                                required>
+                                        </div>
+                                        <div class="mb-4">
+                                            <label for="addressCommune"
+                                                class="block text-gray-700 font-semibold mb-2">Xã/Phường:</label>
+                                            <input type="text" id="addressCommune" name="addressCommune"
+                                                th:value="${store.addressCommune}"
+                                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                                                required>
+                                        </div>
+                                        <div class="mb-4">
+                                            <label for="addressStreet"
+                                                class="block text-gray-700 font-semibold mb-2">Đường:</label>
+                                            <input type="text" id="addressStreet" name="addressStreet"
+                                                th:value="${store.addressStreet}"
+                                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                                                required>
+                                        </div>
+                                        <div class="mb-4">
+                                            <label for="phoneNumber" class="block text-gray-700 font-semibold mb-2">Số
+                                                điện
+                                                thoại:</label>
+                                            <input type="text" id="phoneNumber" name="phoneNumber"
+                                                th:value="${store.phoneNumber}"
+                                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                                                required>
+                                        </div>
+                                        <input type="hidden" name="storeId" th:value="${store.storeId}">
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">Thoát</button>
+                                            <button type="submit" class="btn btn-primary">Cập nhật</button>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
-                        </div>
-                        <!--  -->
-                    </div>
-                </div>
-
-                <!-- Thẻ kích hoạt Modal 2 -->
-                <div class="bg-gray-100 rounded-lg p-4">
-                    <h3 class="text-xl font-semibold text-gray-800">Menu</h3>
-                    <button
-                        class="bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-blue-600 hover:shadow-lg transition duration-300 ease-in-out mt-2 inline-block"
-                        onclick="openModal('modal-menu')">Xem chi tiết</button>
-                </div>
-
-                <div id="modal-menu"
-                    class="fixed inset-0 z-50 bg-gray-400 bg-opacity-75 hidden flex items-center justify-center">
-                    <div class="bg-white rounded-lg shadow-lg w-full max-w-3xl">
-                        <div class="p-4">
-                            <div class="flex justify-between items-center">
-                                <h2 class="text-2xl font-semibold">Menu</h2>
-                                <button onclick="closeModal('modal-menu')" class="text-gray-500 hover:text-gray-700"
-                                    title="Đóng">
-                                    <i class="bi bi-x-circle"></i>
-                                </button>
-                            </div>
-                            <p class="mt-2 text-gray-600">Chi tiết về menu.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Thẻ kích hoạt Modal 3 -->
-                <div class="bg-gray-100 rounded-lg p-4">
-                    <h3 class="text-xl font-semibold text-gray-800">Món ăn</h3>
-                    <button
-                        class="bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-blue-600 hover:shadow-lg transition duration-300 ease-in-out mt-2 inline-block"
-                        onclick="openModal('modal-dishes')">Xem chi tiết</button>
-                </div>
-
-                <!-- Modal với Tabs -->
-                <div id="modal-dishes"
-                    class="fixed inset-0 z-50 bg-gray-400 bg-opacity-75 hidden flex items-center justify-center">
-                    <!-- Close Button -->
-
-                    <div class="bg-white rounded-lg shadow-lg w-full max-w-3xl relative">
-                        <div class="header">
-                            <button onclick="closeModal('modal-dishes')"
-                                class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" title="Đóng">
-                                <i class="bi bi-x-circle"></i>
-                            </button>
-                            <br>
-                            <br>
-                        </div>
-                        <!-- Tabs -->
-                        <div class="flex border-b">
-                            <button onclick="showTab('tab1')" class="py-2 px-4 w-1/2 text-center font-semibold"
-                                id="tab1-button">Tab 1</button>
-                            <button onclick="showTab('tab2')" class="py-2 px-4 w-1/2 text-center font-semibold"
-                                id="tab2-button">Tab 2</button>
-                        </div>
-                        <!-- Tab Content -->
-                        <div id="tab1" class="p-4">
-                            <h2 class="text-xl font-semibold">Nội dung Tab 1</h2>
-                            <p class="mt-2 text-gray-600">Chi tiết cho tab 1.</p>
-                        </div>
-                        <div id="tab2" class="p-4 hidden">
-                            <h2 class="text-xl font-semibold">Nội dung Tab 2</h2>
-                            <p class="mt-2 text-gray-600">Chi tiết cho tab 2.</p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <script>
-                function openModal(modalId) {
-                    document.getElementById(modalId).classList.remove('hidden');
-                }
 
-                function closeModal(modalId) {
-                    document.getElementById(modalId).classList.add('hidden');
-                }
+            <!-- Bảng bên phải (hiển thị trên tất cả các màn hình) -->
+            <div class="bg-white border border-slate-200 shadow-md rounded-lg lg:mt-0 lg:w-2/3 p-6">
+                <h2 class="text-xl font-semibold text-gray-800">ĐÁNH GIÁ CỦA CỬA HÀNG</h2>
+                <div class="relative mt-4 space-y-4 h-80 overflow-hidden">
 
-                function showTab(tabId) {
-                    // Ẩn tất cả các tab
-                    document.querySelectorAll('#modal-dishes .p-4').forEach(tab => {
-                        tab.classList.add('hidden');
-                    });
-
-                    // Hiển thị tab đã chọn
-                    document.getElementById(tabId).classList.remove('hidden');
-
-                    // Cập nhật nút tab đã chọn
-                    document.querySelectorAll('#modal-dishes .flex button').forEach(button => {
-                        button.classList.remove('bg-gray-200');
-                    });
-                    document.getElementById(tabId + '-button').classList.add('bg-gray-10');
-                }
-
-                // Hiển thị tab đầu tiên khi modal được mở lần đầu tiên
-                document.addEventListener('DOMContentLoaded', () => {
-                    showTab('tab1');
-                });
-            </script>
-
-            <!--  -->
-        </div>
-
-        <!-- Bảng bên phải (hiển thị trên tất cả các màn hình) -->
-        <div class="bg-white border border-slate-200 shadow-md rounded-lg lg:mt-0 lg:w-2/3 p-6">
-            <h2 class="text-xl font-semibold text-gray-800">ĐÁNH GIÁ CỦA CỬA HÀNG</h2>
-            <div class="relative mt-4 space-y-4 h-80 overflow-hidden">
-
-                <!-- Đánh giá của người dùng -->
-                <div class="bg-gray-100 rounded-lg p-4 space-y-4 overflow-y-auto">
-                    <div class="flex items-start space-x-4">
-                        <!-- Ảnh đại diện -->
-                        <img src="https://via.placeholder.com/50" alt="Avatar"
-                            class="w-12 h-12 rounded-full border border-gray-300">
-
-                        <!-- Nội dung đánh giá -->
-                        <div class="flex-1">
-                            <!-- Tên người dùng -->
-                            <h3 class="text-lg truncate md:truncate-none md:w-auto w-40 font-semibold text-gray-800">Tên
-                                Người Dùng</h3>
-                            <!-- Tên của hàng -->
-                            <div
-                                class="absolute truncate md:truncate-none md:w-80 w-40 text-center top-0 right-0 bg-blue-400 text-white px-2 py-1 text-sm rounded-bl-lg">
-                                Tên Cửa Hàng
-                            </div>
-
-                            <!-- Sao đánh giá -->
-                            <div class="flex items-center mt-1">
-                                <svg class="w-4 h-4 text-yellow-500" fill="currentColor" viewBox="0 0 24 24"
-                                    aria-hidden="true">
-                                    <path
-                                        d="M12 17.27L18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27z">
-                                    </path>
-                                </svg>
-                                <svg class="w-4 h-4 text-yellow-500" fill="currentColor" viewBox="0 0 24 24"
-                                    aria-hidden="true">
-                                    <path
-                                        d="M12 17.27L18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27z">
-                                    </path>
-                                </svg>
-                                <svg class="w-4 h-4 text-yellow-500" fill="currentColor" viewBox="0 0 24 24"
-                                    aria-hidden="true">
-                                    <path
-                                        d="M12 17.27L18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27z">
-                                    </path>
-                                </svg>
-                                <svg class="w-4 h-4 text-yellow-500" fill="currentColor" viewBox="0 0 24 24"
-                                    aria-hidden="true">
-                                    <path
-                                        d="M12 17.27L18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27z">
-                                    </path>
-                                </svg>
-                                <svg class="w-4 h-4 text-gray-300" fill="currentColor" viewBox="0 0 24 24"
-                                    aria-hidden="true">
-                                    <path
-                                        d="M12 17.27L18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27z">
-                                    </path>
-                                </svg>
-                            </div>
+                    <!-- Đánh giá của người dùng -->
+                    <div class="bg-gray-100 rounded-lg p-4 space-y-4 overflow-y-auto">
+                        <div class="flex items-start space-x-4">
+                            <!-- Ảnh đại diện -->
+                            <img src="https://via.placeholder.com/50" alt="Avatar"
+                                class="w-12 h-12 rounded-full border border-gray-300">
 
                             <!-- Nội dung đánh giá -->
-                            <p class="mt-2 text-gray-600">Nội dung đánh giá.</p>
+                            <div class="flex-1">
+                                <!-- Tên người dùng -->
+                                <h3
+                                    class="text-lg truncate md:truncate-none md:w-auto w-40 font-semibold text-gray-800">
+                                    Tên
+                                    Người Dùng</h3>
+                                <!-- Tên của hàng -->
+                                <div
+                                    class="absolute truncate md:truncate-none md:w-80 w-40 text-center top-0 right-0 bg-blue-400 text-white px-2 py-1 text-sm rounded-bl-lg">
+                                    Tên Cửa Hàng
+                                </div>
+
+                                <!-- Sao đánh giá -->
+                                <div class="flex items-center mt-1">
+                                    <svg class="w-4 h-4 text-yellow-500" fill="currentColor" viewBox="0 0 24 24"
+                                        aria-hidden="true">
+                                        <path
+                                            d="M12 17.27L18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27z">
+                                        </path>
+                                    </svg>
+                                    <svg class="w-4 h-4 text-yellow-500" fill="currentColor" viewBox="0 0 24 24"
+                                        aria-hidden="true">
+                                        <path
+                                            d="M12 17.27L18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27z">
+                                        </path>
+                                    </svg>
+                                    <svg class="w-4 h-4 text-yellow-500" fill="currentColor" viewBox="0 0 24 24"
+                                        aria-hidden="true">
+                                        <path
+                                            d="M12 17.27L18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27z">
+                                        </path>
+                                    </svg>
+                                    <svg class="w-4 h-4 text-yellow-500" fill="currentColor" viewBox="0 0 24 24"
+                                        aria-hidden="true">
+                                        <path
+                                            d="M12 17.27L18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27z">
+                                        </path>
+                                    </svg>
+                                    <svg class="w-4 h-4 text-gray-300" fill="currentColor" viewBox="0 0 24 24"
+                                        aria-hidden="true">
+                                        <path
+                                            d="M12 17.27L18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27z">
+                                        </path>
+                                    </svg>
+                                </div>
+
+                                <!-- Nội dung đánh giá -->
+                                <p class="mt-2 text-gray-600">Nội dung đánh giá.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+            integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+            crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"
+            integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+"
+            crossorigin="anonymous"></script>
 </body>
 
 </html>

@@ -129,7 +129,7 @@ public class StoreController {
 			redirectAttributes.addFlashAttribute("message", "Đăng ký thành công với mã QR: " + qrCodeScans.getQrId());
 
 			redirectAttributes.addFlashAttribute("success", "Đăng ký cửa hàng thành công!");
-			return "redirect:/index";
+			return "redirect:/profile/" + currentUser.getUserId();
 
 		} catch (Exception e) {
 			e.printStackTrace();

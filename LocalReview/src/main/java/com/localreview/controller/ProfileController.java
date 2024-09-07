@@ -3,8 +3,6 @@ package com.localreview.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +15,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.localreview.entity.Breadcrumb;
 import com.localreview.entity.Store;
+import com.localreview.entity.StoreMenu;
 import com.localreview.entity.User;
+import com.localreview.repository.StoreMenuRepository;
 import com.localreview.repository.StoreRepository;
 import com.localreview.repository.UserRepository;
 
@@ -29,20 +29,21 @@ import java.util.Optional;
 @RequestMapping("/profile")
 public class ProfileController {
 
-	@Autowired
-	private UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-	@Autowired
-	private StoreRepository storeRepository;
+    @Autowired
+    private StoreRepository storeRepository;
 
+    @Autowired
+    private StoreMenuRepository storeMenuRepository;
 
-	@GetMapping("/{userId}")
+    @GetMapping("/{userId}")
     public String profileById(@PathVariable("userId") String userId, Model model) {
-        // Tìm kiếm người dùng theo ID
-        Optional<User> user = userRepository.findById(userId);
-        if (user.isPresent()) {
-            // Thêm thông tin người dùng vào model
-            model.addAttribute("profile", user.get());
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            model.addAttribute("profile", user);
 
             // Lấy danh sách cửa hàng của người dùng
             List<Store> stores = storeRepository.findByOwnerId(userId);
@@ -52,7 +53,6 @@ public class ProfileController {
             List<Breadcrumb> breadcrumbs = new ArrayList<>();
             breadcrumbs.add(new Breadcrumb("Trang chủ", "/index"));
             breadcrumbs.add(new Breadcrumb("Profile", "/profile/" + userId));
-
             model.addAttribute("breadcrumbs", breadcrumbs);
 
             return "profile"; // Trang profile.html sẽ được sử dụng để hiển thị thông tin cá nhân
@@ -62,55 +62,91 @@ public class ProfileController {
         }
     }
 
-	@PostMapping("/update")
-	public String updateProfile(@RequestParam("userId") String userId, @ModelAttribute("profile") User updatedUser,
-			Model model) {
-		Optional<User> existingUser = userRepository.findById(userId);
 
-		if (existingUser.isPresent()) {
-			User user = existingUser.get();
-			user.setName(updatedUser.getName());
-			user.setEmail(updatedUser.getEmail());
-			user.setPhoneNumber(updatedUser.getPhoneNumber());
+    @PostMapping("/update")
+    public String updateProfile(@RequestParam("userId") String userId, @ModelAttribute("profile") User updatedUser, Model model) {
+        Optional<User> existingUserOptional = userRepository.findById(userId);
 
-			// Xử lý googleId
-			if (updatedUser.getGoogleId() != null && !updatedUser.getGoogleId().isEmpty()) {
-				user.setGoogleId(updatedUser.getGoogleId());
-			} else {
-				user.setGoogleId(null); // Hoặc không thay đổi nếu không cần thiết
-			}
+        if (existingUserOptional.isPresent()) {
+            User existingUser = existingUserOptional.get();
+            existingUser.setName(updatedUser.getName());
+            existingUser.setEmail(updatedUser.getEmail());
+            existingUser.setPhoneNumber(updatedUser.getPhoneNumber());
 
-			userRepository.save(user); // Lưu thông tin người dùng đã cập nhật vào cơ sở dữ liệu
-			model.addAttribute("successMessage", "Thông tin cá nhân đã được cập nhật thành công.");
-		} else {
-			model.addAttribute("errorMessage", "Không tìm thấy người dùng.");
-		}
+            // Xử lý googleId
+            if (updatedUser.getGoogleId() != null && !updatedUser.getGoogleId().isEmpty()) {
+                existingUser.setGoogleId(updatedUser.getGoogleId());
+            } else {
+                existingUser.setGoogleId(null); // Hoặc không thay đổi nếu không cần thiết
+            }
 
-		return "redirect:/profile/" + userId; // Chuyển hướng lại trang profile
-	}
+            userRepository.save(existingUser); // Lưu thông tin người dùng đã cập nhật vào cơ sở dữ liệu
+            model.addAttribute("successMessage", "Thông tin cá nhân đã được cập nhật thành công.");
+        } else {
+            model.addAttribute("errorMessage", "Không tìm thấy người dùng.");
+        }
 
-	@PostMapping("/updatestore")
-	public String updateStore(Store store, Model model) {
-		Store existingStore = storeRepository.findById(store.getStoreId()).orElse(null);
-		if (existingStore != null) {
-			existingStore.setStoreName(store.getStoreName());
-			existingStore.setAddressCity(store.getAddressCity());
-			existingStore.setAddressDistrict(store.getAddressDistrict());
-			existingStore.setAddressCommune(store.getAddressCommune());
-			existingStore.setAddressStreet(store.getAddressStreet());
-			existingStore.setPhoneNumber(store.getPhoneNumber());
+        return "redirect:/profile/" + userId; // Chuyển hướng lại trang profile
+    }
 
-			storeRepository.save(existingStore);
+    @PostMapping("/updatestore")
+    public String updateStore(@ModelAttribute("store") Store store, Model model) {
+        Optional<Store> existingStoreOptional = storeRepository.findById(store.getStoreId());
 
-			model.addAttribute("store", existingStore);
-			model.addAttribute("success", "Store updated successfully");
+        if (existingStoreOptional.isPresent()) {
+            Store existingStore = existingStoreOptional.get();
+            existingStore.setStoreName(store.getStoreName());
+            existingStore.setAddressCity(store.getAddressCity());
+            existingStore.setAddressDistrict(store.getAddressDistrict());
+            existingStore.setAddressCommune(store.getAddressCommune());
+            existingStore.setAddressStreet(store.getAddressStreet());
+            existingStore.setPhoneNumber(store.getPhoneNumber());
 
-			return "redirect:/profile/" + existingStore.getOwnerId();
-		} else {
-			model.addAttribute("error", "Store not found");
-			return "error";
-		}
-	}
+            storeRepository.save(existingStore);
 
+            model.addAttribute("store", existingStore);
+            model.addAttribute("success", "Store updated successfully");
+
+            return "redirect:/profile/" + existingStore.getOwnerId();
+        } else {
+            model.addAttribute("error", "Store not found");
+            return "error";
+        }
+    }
+
+    @PostMapping("/updatestoremenu")
+    public String updateStoreMenu(@RequestParam("menuId") String menuId, 
+                                  @RequestParam("storeId") String storeId, 
+                                  @RequestParam("foodFirst") String foodFirst, 
+                                  @RequestParam("foodMain") String foodMain, 
+                                  @RequestParam("foodDessert") String foodDessert, 
+                                  RedirectAttributes redirectAttributes) {
+        // Lấy đối tượng Store từ cơ sở dữ liệu
+        Optional<Store> storeOptional = storeRepository.findById(storeId);
+        if (!storeOptional.isPresent()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Store not found");
+            return "redirect:/error"; // Chuyển hướng đến trang lỗi
+        }
+
+        Store store = storeOptional.get();
+
+        // Lấy đối tượng StoreMenu từ cơ sở dữ liệu
+        Optional<StoreMenu> menuOptional = storeMenuRepository.findById(menuId);
+        if (!menuOptional.isPresent()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Menu not found");
+            return "redirect:/error"; // Chuyển hướng đến trang lỗi
+        }
+
+        StoreMenu storeMenu = menuOptional.get();
+        storeMenu.setStore(store); // Gán đối tượng Store vào StoreMenu
+        storeMenu.setFoodFirst(foodFirst);
+        storeMenu.setFoodMain(foodMain);
+        storeMenu.setFoodDessert(foodDessert);
+
+        storeMenuRepository.save(storeMenu);
+
+        redirectAttributes.addFlashAttribute("successMessage", "Menu updated successfully");
+        return "redirect:/profile/" + store.getOwnerId(); // Chuyển hướng đến trang profile của người sở hữu cửa hàng
+    }
 
 }

@@ -1,13 +1,355 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Stationeryhub | Tin</title>
+    <link rel="icon" href="../image/Pelfusion-Christmas.png">
+    <link rel="icon" href="https://icons.iconarchive.com/icons/social-media-icons/glossy-social/128/Tudou-icon.png">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!------ Include the above in your HEAD tag ---------->
+    <link rel="stylesheet" href="../cssuser/post.css">
+
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pickr/2.2.3/themes/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pickr/2.2.3/pickr.min.js"></script>
 </head>
+
 <body>
-    <h1>Welcome to the User</h1>
-    <a href="/index">Go to Index</a>
-    <a href="/logout">Logout</a>
+    <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v17.0&appId=3693721280841441&autoLogAppEvents=1" nonce="8V1yEfEX"></script>
+    <div class="chuanmobile">
+        <br>
+        <br>
+        <br>
+        <br>
+    </div>
+    <div class="container-fluid gedf-wrapper">
+        <div class="row">
+            <div class="card-left col-md-3">
+                <div class="gedf-card">
+                    <div class="card-footer t">
+                        <h5 class="card-title">Stationeryhub</h5>
+                        <!-- menu List -->
+                        <div class="list-group-mobile">
+                            <a class="btn" href="index">Trang chủ</a><br>
+                            <button class="btn small btn-sm" id="scrollToTopButton">Quay lại đầu trang</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 gedf-main">
+                <!--- \\\\\\\Post-->
+                <div class="card gedf-card cardtrangthai">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="mr-2">
+                                    <img class="rounded-circle" width="45" src="https://picsum.photos/50/50" alt="">
+                                </div>
+                                <div class="ml-2">
+                                    <!-- Modal -->
+                                    <form class="form-inline my-2 my-lg-0 ml-auto">
+                                        <div class="navbar-custom search-form">
+                                            <button class="form-control" type="button" data-toggle="modal" data-target="#exampleModal">Nghĩa ơi, Bạn đang nghĩ gì thế ?</button>
+                                        </div>
+                                    </form>
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="h4 modal-title text-primary" id="exampleModalLabel">Tạo bài viết</h5>
+                                                    <button class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="d-flex">
+                                                        <div class="mr-2">
+                                                            <img class="rounded-circle" width="45" src="https://picsum.photos/50/50" alt="">
+                                                        </div>
+                                                        <div class="ml-2">
+                                                            <div class="h7 m-0">Hello</div>
+                                                            <div class="h6 text-muted">Phạm Bảo Nghĩa</div>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <!-- trang thai -->
+                                                    <form action="">
+                                                        <div class="input-wrapper">
+                                                            <input class="input-box" type="text" placeholder="Nghĩa ơi, bạn đang nghĩ gì thế">
+                                                            <span class="underline"></span>
+                                                        </div>
+                                                        <div class="card border">
+                                                            <div class="border-0" style="display: inline-flex;">
+                                                                <b id="addImageButton" style="display: none;" class="btn"><svg xmlns="http://www.w3.org/2000/svg"
+                                                                        width="27" height="27" fill="currentColor"
+                                                                        class="bi bi-plus-circle-dotted"
+                                                                        viewBox="0 0 16 16">
+                                                                        <path
+                                                                            d="M8 0c-.176 0-.35.006-.523.017l.064.998a7.117 7.117 0 0 1 .918 0l.064-.998A8.113 8.113 0 0 0 8 0zM6.44.152c-.346.069-.684.16-1.012.27l.321.948c.287-.098.582-.177.884-.237L6.44.153zm4.132.271a7.946 7.946 0 0 0-1.011-.27l-.194.98c.302.06.597.14.884.237l.321-.947zm1.873.925a8 8 0 0 0-.906-.524l-.443.896c.275.136.54.29.793.459l.556-.831zM4.46.824c-.314.155-.616.33-.905.524l.556.83a7.07 7.07 0 0 1 .793-.458L4.46.824zM2.725 1.985c-.262.23-.51.478-.74.74l.752.66c.202-.23.418-.446.648-.648l-.66-.752zm11.29.74a8.058 8.058 0 0 0-.74-.74l-.66.752c.23.202.447.418.648.648l.752-.66zm1.161 1.735a7.98 7.98 0 0 0-.524-.905l-.83.556c.169.253.322.518.458.793l.896-.443zM1.348 3.555c-.194.289-.37.591-.524.906l.896.443c.136-.275.29-.54.459-.793l-.831-.556zM.423 5.428a7.945 7.945 0 0 0-.27 1.011l.98.194c.06-.302.14-.597.237-.884l-.947-.321zM15.848 6.44a7.943 7.943 0 0 0-.27-1.012l-.948.321c.098.287.177.582.237.884l.98-.194zM.017 7.477a8.113 8.113 0 0 0 0 1.046l.998-.064a7.117 7.117 0 0 1 0-.918l-.998-.064zM16 8a8.1 8.1 0 0 0-.017-.523l-.998.064a7.11 7.11 0 0 1 0 .918l.998.064A8.1 8.1 0 0 0 16 8zM.152 9.56c.069.346.16.684.27 1.012l.948-.321a6.944 6.944 0 0 1-.237-.884l-.98.194zm15.425 1.012c.112-.328.202-.666.27-1.011l-.98-.194c-.06.302-.14.597-.237.884l.947.321zM.824 11.54a8 8 0 0 0 .524.905l.83-.556a6.999 6.999 0 0 1-.458-.793l-.896.443zm13.828.905c.194-.289.37-.591.524-.906l-.896-.443c-.136.275-.29.54-.459.793l.831.556zm-12.667.83c.23.262.478.51.74.74l.66-.752a7.047 7.047 0 0 1-.648-.648l-.752.66zm11.29.74c.262-.23.51-.478.74-.74l-.752-.66c-.201.23-.418.447-.648.648l.66.752zm-1.735 1.161c.314-.155.616-.33.905-.524l-.556-.83a7.07 7.07 0 0 1-.793.458l.443.896zm-7.985-.524c.289.194.591.37.906.524l.443-.896a6.998 6.998 0 0 1-.793-.459l-.556.831zm1.873.925c.328.112.666.202 1.011.27l.194-.98a6.953 6.953 0 0 1-.884-.237l-.321.947zm4.132.271a7.944 7.944 0 0 0 1.012-.27l-.321-.948a6.954 6.954 0 0 1-.884.237l.194.98zm-2.083.135a8.1 8.1 0 0 0 1.046 0l-.064-.998a7.11 7.11 0 0 1-.918 0l-.064.998zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
+                                                                    </svg></b>
+                                                                <b id="clearAllButton" style="display: none;" class="btn"><svg xmlns="http://www.w3.org/2000/svg"
+                                                                        width="25" height="25" fill="currentColor"
+                                                                        class="bi bi-x-circle" viewBox="0 0 16 16">
+                                                                        <path
+                                                                            d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                                        <path
+                                                                            d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                                                    </svg></b>
+                                                            </div>
+                                                            <div class="container mt-4">
+                                                                <label class="custom-file-upload" for="mediaInput">
+                                                                    <div class="icon">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" fill=""
+                                                                            viewBox="0 0 24 24">
+                                                                            <g stroke-width="0" id="SVGRepo_bgCarrier">
+                                                                            </g>
+                                                                            <g stroke-linejoin="round"
+                                                                                stroke-linecap="round"
+                                                                                id="SVGRepo_tracerCarrier"></g>
+                                                                            <g id="SVGRepo_iconCarrier">
+                                                                                <path fill=""
+                                                                                    d="M10 1C9.73478 1 9.48043 1.10536 9.29289 1.29289L3.29289 7.29289C3.10536 7.48043 3 7.73478 3 8V20C3 21.6569 4.34315 23 6 23H7C7.55228 23 8 22.5523 8 22C8 21.4477 7.55228 21 7 21H6C5.44772 21 5 20.5523 5 20V9H10C10.5523 9 11 8.55228 11 8V3H18C18.5523 3 19 3.44772 19 4V9C19 9.55228 19.4477 10 20 10C20.5523 10 21 9.55228 21 9V4C21 2.34315 19.6569 1 18 1H10ZM9 7H6.41421L9 4.41421V7ZM14 15.5C14 14.1193 15.1193 13 16.5 13C17.8807 13 19 14.1193 19 15.5V16V17H20C21.1046 17 22 17.8954 22 19C22 20.1046 21.1046 21 20 21H13C11.8954 21 11 20.1046 11 19C11 17.8954 11.8954 17 13 17H14V16V15.5ZM16.5 11C14.142 11 12.2076 12.8136 12.0156 15.122C10.2825 15.5606 9 17.1305 9 19C9 21.2091 10.7909 23 13 23H20C22.2091 23 24 21.2091 24 19C24 17.1305 22.7175 15.5606 20.9844 15.122C20.7924 12.8136 18.858 11 16.5 11Z"
+                                                                                    clip-rule="evenodd"
+                                                                                    fill-rule="evenodd">
+                                                                                </path>
+                                                                            </g>
+                                                                        </svg>
+                                                                    </div>
+                                                                    <div class="text">
+                                                                        <small>Thêm ảnh/video</small>
+                                                                    </div>
+                                                                    <input type="file" accept="image/*, video/*"
+                                                                        multiple id="mediaInput">
+                                                                </label>
+                                                                <div class="media-container" id="mediaPreview"></div>
+                                                            </div>
+                                                        </div>
+                                                        <br>
+                                                        <button type="button" class="btn btn-primary btn-sm">Đăng</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="emoji-grid">
+                                <div class="emoji-grid" style="display: inline-flex;">
+                                    <!-- Insert emoji here -->
+                                    <div class="emoji">😀</div>
+                                    <div class="emoji">😍</div>
+                                    <div class="emoji">🥰</div>
+                                    <!-- Add more emoji here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="dangbai" style="width: 100%; text-align: center;">
+                            <div class="icondangbai">
+                                <a href="" class="card-link" data-toggle="modal" data-target="#staticBackdrop"><img src="https://static.xx.fbcdn.net/rsrc.php/v3/yh/r/GcjGXg8Bl95.png" width="30" height="30"> Tạo bài viết</a>
+                                <a href="" class="card-link" data-toggle="modal" data-target="#exampleModal"><img src="https://static.xx.fbcdn.net/rsrc.php/v3/yC/r/a6OjkIIE-R0.png" width="23" height="23"> Ảnh/Video</a>
+                                <a href="" class="card-link"><img src="https://static.xx.fbcdn.net/rsrc.php/v3/yS/r/9Wy_ArBx-CG.png" width="23" height="23"> Cảm xúc/Hoạt động</a>
+                            </div>
+                            <!-- Tạo bài viết -->
+                            <!-- Modal -->
+                            <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="h4 modal-title text-primary" id="staticBackdropLabel">Tạo bài viết</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="d-flex">
+                                                <div class="mr-2">
+                                                    <img class="rounded-circle" width="45" src="https://picsum.photos/50/50" alt="">
+                                                </div>
+                                                <div class="ml-2">
+                                                    <div class="h7 m-0">Hello</div>
+                                                    <div class="h6 text-muted">Phạm Bảo Nghĩa</div>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <form action="">
+                                                <div class="input-wrapper">
+                                                    <input class="input-box" type="text" placeholder="Nghĩa ơi, bạn đang nghĩ gì thế">
+                                                    <span class="underline"></span>
+                                                </div>
+                                                <div class="color-container">
+                                                    <div class="preview" id="colorPreview"></div>
+                                                    <input type="color" class="color-input" id="backgroundColorPicker">
+                                                    <input type="color" class="color-input" id="textColorPicker">
+                                                </div>
+                                                <br>
+                                                <br>
+                                                <button type="button" class="btn btn-primary">Đăng</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- --------------- -->
+                        </div>
+                    </div>
+                </div>
+                <!-- Post /////-->
+                <div th:replace="/user/layout/_post.html"></div>
+                <!--- \\\\\\\Post-->
+            </div>
+            <div class="col-md-3 card-left anmobile">
+                <div class="card gedf-card">
+                    <div class="card-body">
+                        <h5 class="card-title">Danh sách bạn bè</h5>
+                        <!-- Friend List -->
+                        <ul class="list-group">
+                            <li class="list-group-item">Friend 1</li>
+                            <li class="list-group-item">Friend 2</li>
+                            <li class="list-group-item">Friend 3</li>
+                            <!-- Add more friends here -->
+                        </ul>
+                    </div>
+                </div>
+                <div class="card gedf-card">
+                    <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="#" class="card-link">Card link</a>
+                        <a href="#" class="card-link">Another link</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const customFileUpload = document.querySelector('.custom-file-upload');
+        const mediaContainer = document.getElementById('mediaPreview');
+        const addImageButton = document.getElementById('addImageButton');
+        const clearAllButton = document.getElementById('clearAllButton');
+        const publishButton = document.getElementById('publishButton');
+
+        document.getElementById('mediaInput').addEventListener('change', function(event) {
+            customFileUpload.style.display = 'none';
+            addImageButton.style.display = 'block'; // Hiển thị nút "Add"
+            clearAllButton.style.display = 'block'; // Hiển thị nút "Clear"
+            const files = event.target.files;
+            const maxVisibleMedia = 5;
+            const remainingMedia = files.length - maxVisibleMedia;
+
+            for (let i = 0; i < Math.min(files.length, maxVisibleMedia); i++) {
+                const file = files[i];
+                const mediaBox = document.createElement('div');
+                mediaBox.classList.add('media-box');
+
+                if (file.type.startsWith('image/')) {
+                    const mediaElement = document.createElement('img');
+                    mediaElement.src = URL.createObjectURL(file);
+                    mediaElement.alt = 'Uploaded Image';
+                    mediaBox.appendChild(mediaElement);
+                } else if (file.type.startsWith('video/')) {
+                    const mediaElement = document.createElement('video');
+                    mediaElement.src = URL.createObjectURL(file);
+                    mediaElement.controls = true;
+                    mediaElement.autoplay = false;
+                    mediaBox.appendChild(mediaElement);
+                }
+
+                mediaContainer.appendChild(mediaBox);
+            }
+
+            if (remainingMedia > 0) {
+                const remainingMediaMessage = document.createElement('div');
+                remainingMediaMessage.textContent = `+${remainingMedia}`;
+                remainingMediaMessage.classList.add('remaining-media');
+                mediaContainer.appendChild(remainingMediaMessage);
+            }
+        });
+
+        addImageButton.addEventListener('click', function() {
+            const mediaInput = document.getElementById('mediaInput');
+            mediaInput.click();
+        });
+
+        clearAllButton.addEventListener('click', function() {
+            mediaContainer.innerHTML = '';
+            customFileUpload.style.display = 'flex';
+        });
+
+        // color
+        const backgroundColorPicker = document.getElementById('backgroundColorPicker');
+        const textColorPicker = document.getElementById('textColorPicker');
+        const colorPreview = document.getElementById('colorPreview');
+        const inputBox = document.querySelector('.input-box');
+
+        backgroundColorPicker.addEventListener('input', (event) => {
+            const selectedColor = event.target.value;
+            inputBox.style.backgroundColor = selectedColor;
+            colorPreview.style.backgroundColor = selectedColor;
+        });
+
+        textColorPicker.addEventListener('input', (event) => {
+            const selectedColor = event.target.value;
+            inputBox.style.color = selectedColor;
+        });
+
+        // poiter
+        // Lấy thẻ văn bản bằng id
+        const clickableText = document.getElementById("clickableText");
+
+        // Biến để kiểm tra trạng thái hiện tại
+        let isClicked = false;
+
+        // Thêm sự kiện click vào thẻ văn bản
+        clickableText.addEventListener("click", function() {
+            if (isClicked) {
+                // Nếu đã được click, loại bỏ lớp "clicked" và đặt lại trạng thái
+                clickableText.classList.remove("clicked");
+                isClicked = false;
+            } else {
+                // Nếu chưa được click, thêm lớp "clicked" và đặt trạng thái
+                clickableText.classList.add("clicked");
+                isClicked = true;
+            }
+        });
+
+        // --------------------------------
+        const scrollToTopButton = document.getElementById("scrollToTopButton");
+
+        // Hàm xử lý cuộn lên đầu trang
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        }
+
+        // Thêm sự kiện click cho nút
+        scrollToTopButton.addEventListener("click", scrollToTop);
+
+        // Thêm sự kiện scroll cho trang
+        window.addEventListener("scroll", () => {
+            // Nếu người dùng cuộn xuống dưới một khoảng cụ thể (ví dụ: 100px), hiển thị nút
+            if (window.scrollY > 100) {
+                scrollToTopButton.style.display = "block";
+            } else {
+                scrollToTopButton.style.display = "none";
+            }
+        });
+    </script>
 </body>
+
 </html>

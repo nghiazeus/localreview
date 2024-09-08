@@ -12,7 +12,10 @@ import com.localreview.entity.StoreMenu;
 @Repository
 public interface StoreMenuRepository extends JpaRepository<StoreMenu, String> {
 	
+	 List<StoreMenu> findByStore(Store store);
+	
 	List<StoreMenu> findByStore_StoreId(String storeId);
+
 	
 }
 

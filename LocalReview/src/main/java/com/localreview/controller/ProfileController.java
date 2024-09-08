@@ -52,7 +52,7 @@ public class ProfileController {
             // Thêm breadcrumb vào model
             List<Breadcrumb> breadcrumbs = new ArrayList<>();
             breadcrumbs.add(new Breadcrumb("Trang chủ", "/index"));
-            breadcrumbs.add(new Breadcrumb("Profile", "/profile/" + userId));
+            breadcrumbs.add(new Breadcrumb("Tài khoản", "/profile/" + userId));
             model.addAttribute("breadcrumbs", breadcrumbs);
 
             return "profile"; // Trang profile.html sẽ được sử dụng để hiển thị thông tin cá nhân
@@ -63,8 +63,12 @@ public class ProfileController {
     }
 
 
-    @PostMapping("/update")
-    public String updateProfile(@RequestParam("userId") String userId, @ModelAttribute("profile") User updatedUser, Model model) {
+    @PostMapping("/updatethongtincanhan")
+    public String updateProfile(
+        @RequestParam("userId") String userId, 
+        @ModelAttribute("profile") User updatedUser, 
+        RedirectAttributes redirectAttributes) {
+
         Optional<User> existingUserOptional = userRepository.findById(userId);
 
         if (existingUserOptional.isPresent()) {
@@ -73,21 +77,22 @@ public class ProfileController {
             existingUser.setEmail(updatedUser.getEmail());
             existingUser.setPhoneNumber(updatedUser.getPhoneNumber());
 
-            // Xử lý googleId
             if (updatedUser.getGoogleId() != null && !updatedUser.getGoogleId().isEmpty()) {
                 existingUser.setGoogleId(updatedUser.getGoogleId());
             } else {
-                existingUser.setGoogleId(null); // Hoặc không thay đổi nếu không cần thiết
+                existingUser.setGoogleId(null);
             }
 
-            userRepository.save(existingUser); // Lưu thông tin người dùng đã cập nhật vào cơ sở dữ liệu
-            model.addAttribute("successMessage", "Thông tin cá nhân đã được cập nhật thành công.");
+            userRepository.save(existingUser);
+            redirectAttributes.addFlashAttribute("successMessage", "Thông tin cá nhân đã được cập nhật thành công.");
         } else {
-            model.addAttribute("errorMessage", "Không tìm thấy người dùng.");
+            redirectAttributes.addFlashAttribute("errorMessage", "Không tìm thấy người dùng.");
         }
 
-        return "redirect:/profile/" + userId; // Chuyển hướng lại trang profile
+        return "redirect:/profile/" + userId;
     }
+
+    
 
     @PostMapping("/updatestore")
     public String updateStore(@ModelAttribute("store") Store store, Model model) {

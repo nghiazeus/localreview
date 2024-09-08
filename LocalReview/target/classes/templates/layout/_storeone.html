@@ -2,17 +2,16 @@
 <div th:each="store : ${stores}" class="h-full w-full md:w-1/4 flex-shrink-0">
     <a th:href="@{/store/detail/{id}(id=${store.storeId})}" class="h-full">
         <div
-            class="flex flex-col justify-between gap-1 dark:text-white bg-gray-20 dark:bg-neutral-900 p-4 
-            rounded-md border-2 border-red-100 dark:border-neutral-700 hover:scale-105 
-            transition duration-150 ease-in-out h-full min-h-[250px]">
+            class="flex flex-col justify-between gap-1 dark:text-white bg-white  p-4 
+            rounded-md h-full min-h-[250px]">
             <div class="flex justify-between items-center space-x-2 text-ellipsis">
                 <div class="dark:bg-neutral-700 truncate w-60 font-semibold text-black text-ellipsis">
-                    <i class="bi bi-shop text-white font-semibold bg-blue-400 dark:bg-neutral-700 rounded-md px-2 py-1"></i>
+                    <i class="bi bi-shop text-white font-semibold bg-blue-400 rounded-md px-2 py-1"></i>
                     <span th:text="${store.storeName}" 
                     class="text-ellipsis rounded-md text-ellipsis truncate text-lg">
                     Store Name</span>
                 </div>
-                <div class="truncate md:truncate-none w-20 text-white text-sm dark:bg-neutral-700 rounded-md bg-blue-400 px-1 text-center">
+                <div class="truncate md:truncate-none w-20 text-white text-sm rounded-md bg-blue-400 px-1 text-center">
                     <span>4.5</span> <i class="bi bi-stars"></i>
                 </div>
             </div>

@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html class="bg-gray-200">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review-Social</title>
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="../static/css/index.css">
+    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css" />
+    <!-- <link rel="stylesheet" href="https://unpkg.com/tailwindcss@latest/dist/tailwind.min.css" /> -->
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans:200,400&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.21.11/dist/css/uikit.min.css" />
+
+    <!-- UIkit JS -->
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.21.11/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.21.11/dist/js/uikit-icons.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/css/loading.css">
+    <script src="/js/loading.js" defer></script>
+    
+</head>
+
+<body>
+    <!-- Loading -->
+    <div id="loadingOverlay"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; z-index: 1000;">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="bg-white shadow fixed top-0 left-0 right-0 z-50">
+            <div class="container mx-auto px-6 gap-4 py-2 flex items-center justify-between">
+                <!-- Logo -->
+                <div class="flex items-center space-x-2">
+                    <a href="#" class="flex items-center">
+                        <img src="https://i.pinimg.com/736x/5f/b4/d0/5fb4d0930f9e186c390c05ce12ad310f.jpg" alt="Logo"
+                            class="rounded-full border-2 border-blue-400 shadow-sm w-12 h-10">
+                    </a>
+                    <!-- Search bar -->
+                    <div class="w-full max-w-sm mx-auto">
+                        <div class="relative">
+                            <input type="text" placeholder="Search..."
+                                class="w-full py-2 px-10 rounded-full bg-gray-100 border border-gray-50 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm">
+                            <i
+                                class="bi bi-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- destop menu -->
+                <!-- Thanh điều hướng dưới cùng -->
+                <aside class="hidden md:flex w-full max-w-sm mr-80">
+                    <nav class="flex justify-between w-full space-x-12 font-bold text-2xl gap-20">
+                        <a href="#" class="text-blue-500 flex flex-col items-center">
+                            <i class="bi bi-house-door-fill"></i>
+                        </a>
+                        <a href="#" class="text-gray-500 flex flex-col items-center">
+                            <i class="bi bi-people-fill"></i>
+                        </a>
+                        <a href="#" class="text-gray-500 flex flex-col items-center">
+                            <i class="bi bi-people"></i>
+                        </a>
+                        <a href="#" class="text-gray-500 flex flex-col items-center">
+                            <i class="bi bi-bell-fill"></i>
+                        </a>
+                    </nav>
+                </aside>
+
+                <!-- Menu items for desktop -->
+                <div class="flex space-x-4 items-center uk-animation-toggle" tabindex="0">
+                    <a href="#" class="relative hover:text-blue-500 uk-animation-shake">
+                        <!-- Số 100 nằm trên icon, nhỏ hơn và không che chuông -->
+                        <span class="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-red-500 text-white text-[7px] font-semibold rounded-full px-1 py-0.5">
+                            100
+                        </span>
+                        <!-- Icon bell -->
+                        <i class="bi bi-bell text-2xl"></i>
+                    </a>                                     
+                    <a href="#" class="hover:text-blue-500 hidden md:flex">
+                        <img src="https://i.pinimg.com/736x/b1/c7/39/b1c7394d1233a343a1833c106d836ccf.jpg"
+                            alt="User Avatar" class="rounded-full border-2 border-blue-500 w-10 h-10">
+                    </a>
+                </div>
+
+                <!-- Hamburger Menu Icon for mobile -->
+                <div class="md:hidden">
+                    <label>
+                        <div class="w-9 h-10 cursor-pointer flex flex-col items-center justify-center">
+                            <input class="hidden peer" type="checkbox" id="menu-btn" />
+                            <div
+                                class="w-[50%] h-[2px] bg-black rounded-sm transition-all duration-300 origin-left translate-y-[0.45rem] peer-checked:rotate-[-45deg]">
+                            </div>
+                            <div
+                                class="w-[50%] h-[2px] bg-black rounded-md transition-all duration-300 origin-center peer-checked:hidden">
+                            </div>
+                            <div
+                                class="w-[50%] h-[2px] bg-black rounded-md transition-all duration-300 origin-left -translate-y-[0.45rem] peer-checked:rotate-[45deg]">
+                            </div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Mobile Menu (Initially Hidden) -->
+            <div id="mobile-menu" class="md:hidden max-h-0 overflow-hidden bg-white menu-transition">
+                <div class="px-4 py-2">
+                    <a href="#" class="block py-2 hover:text-blue-500">Notifications</a>
+                    <a href="#" class="block py-2 hover:text-blue-500">Messages</a>
+                    <a href="#" class="block py-2 hover:text-blue-500">Profile</a>
+                </div>
+            </div>
+
+            <!-- Đặt lớp 'hidden' cho desktop và hiện thị trên mobile -->
+            <!-- <aside class="block md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-lg text-xs">
+                <nav class="flex justify-around py-2">
+                    <a href="#" class="text-blue-500 flex flex-col items-center">
+                        <i class="bi bi-house-door-fill text-lg"></i>
+                        <span>Home</span>
+                    </a>
+                    <a href="#" class="text-gray-500 flex flex-col items-center">
+                        <i class="bi bi-people-fill text-lg"></i>
+                        <span>Friends</span>
+                    </a>
+                    <a href="#" class="text-gray-500 flex flex-col items-center">
+                        <i class="bi bi-people text-lg"></i>
+                        <span>Groups</span>
+                    </a>
+                    <a href="#" class="text-gray-500 flex flex-col items-center">
+                        <i class="bi bi-bell-fill text-lg"></i>
+                        <span>Notifications</span>
+                    </a>
+                </nav>
+                <script>
+                    const menuBtn = document.getElementById('menu-btn');
+                    const mobileMenu = document.getElementById('mobile-menu');
+
+                    menuBtn.addEventListener('click', () => {
+                        // Toggle the max height to show/hide the mobile menu
+                        mobileMenu.classList.toggle('max-h-0');
+                        mobileMenu.classList.toggle('max-h-40'); // You can adjust the max height based on menu size
+                    });
+                </script>
+            </aside> -->
+
+        </header>
+
+        <!-- Main Container -->
+        <div class="flex pt-16 h-screen">
+            <!-- Sidebar (Left) -->
+            <aside class="hidden md:block w-1/4 h-screen fixed top-0 left-0 pt-20 p-4">
+                <nav class="space-y-4">
+                    <!-- Logo -->
+                    <a href="#" class="text-xl uk-link-reset font-bold text-blue-500 flex items-center space-x-2">
+                        <img src="https://i.pinimg.com/736x/5f/b4/d0/5fb4d0930f9e186c390c05ce12ad310f.jpg" alt="Logo"
+                            class="rounded-full border-2 border-blue-400 shadow-sm w-10 h-10">
+                        <span class="text-blue-500">Review.Social</span>
+                    </a>
+                    <!-- Friends with Icon -->
+                    <div class="w-72">
+                        <ul class="w-full flex flex-col gap-2">
+                            <li class="flex-center cursor-pointer p-16-semibold w-full whitespace-nowrap">
+                                <a href="/index"
+                                    class="p-16-semibold flex size-full text-xl uk-link-reset gap-4 p-4 group font-semibold rounded-full bg-cover hover:bg-white hover:shadow-md focus:bg-gradient-to-r from-purple-400 to-purple-600 focus:text-white text-gray-700 transition-all ease-linear">
+                                    <i class="bi bi-house-fill"></i>
+                                   <div class="font-bold flex">
+                                   <div class="font-bold flex">
+                                    <p class="text-yellow-500">Re</p>
+                                    <p class="text-gray-800">view</p>
+                                   </div>
+                                   </div>
+                                </a>
+                            </li>
+                            <li class="flex-center cursor-pointer p-16-semibold w-full whitespace-nowrap">
+                                <button
+                                    class="p-16-semibold font-bold text-xl flex size-full gap-4 p-4 group font-bold rounded-full bg-cover hover:bg-white hover:shadow-md focus:bg-gradient-to-r from-purple-400 to-purple-600 focus:text-white text-gray-700 transition-all ease-linear">
+                                    <i class="bi bi-gear-fill"></i>
+                                    Cài đặt
+                                </button>
+                            </li>
+                            <li class="flex-center cursor-pointer p-16-semibold w-full whitespace-nowrap">
+                                <button 
+                                    class="p-16-semibold text-xl flex size-full gap-4 p-4 group font-bold rounded-full bg-cover hover:bg-white hover:shadow-md focus:bg-gradient-to-r from-purple-400 to-purple-600 focus:text-white text-gray-700 transition-all ease-linear">
+                                    <i class="bi bi-box-arrow-right"></i>
+                                    Đăng xuất
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+
+                </nav>
+            </aside>
+
+            <!-- Main Content (Feed) -->
+            <main class="w-full md:w-1/2 mx-auto h-screen">
+
+                <!-- Đăng bạn muốn đăng gì -->
+                <!-- Trigger to open the modal -->
+                <div class="p-4 rounded-none md:rounded-lg transition bg-white shadow-sm duration-300 ease-in-out cursor-pointer">
+                    <div class="flex items-center space-x-4 uk-animation-toggle" tabindex="0">
+                        <img src="https://i.pinimg.com/736x/b1/c7/39/b1c7394d1233a343a1833c106d836ccf.jpg" alt="User Avatar"
+                            class="rounded-full border-2 border-blue-500 w-10 h-10">
+                        <input placeholder="Bạn muốn đăng gì?" uk-toggle="target: #modal-sections"
+                            class="flex-1 bg-white border border-blue-400 shadow-md uuk-animation-fast uk-animation-fade text-gray-700 px-4 py-2 rounded-full cursor-pointer transition duration-300 ease-in-out"
+                            readonly>
+                    </div>
+                    <div class="flex justify-between mt-4 py-2 border-t border-gray-300">
+                        <a href="" class="flex items-center space-x-2 text-blue-600 hover:underline truncate uk-link-reset w-full sm:w-auto" data-toggle="modal" data-target="#staticBackdrop">
+                            <img src="https://static.xx.fbcdn.net/rsrc.php/v3/yh/r/GcjGXg8Bl95.png" class="w-8 h-8">
+                            <span class="text-blue-500 truncate text-base">Tạo bài viết</span>
+                        </a>
+                        <a href="" class="flex items-center space-x-2 text-blue-600 hover:underline truncate uk-link-reset w-full sm:w-auto" data-toggle="modal" data-target="#exampleModal">
+                            <img src="https://static.xx.fbcdn.net/rsrc.php/v3/yC/r/a6OjkIIE-R0.png" class="w-6 h-6">
+                            <span class="text-blue-500 truncate text-base">Ảnh/Video</span>
+                        </a>
+                        <a href="" class="flex items-center space-x-2 text-blue-600 hover:underline truncate uk-link-reset w-full sm:w-auto">
+                            <img src="https://static.xx.fbcdn.net/rsrc.php/v3/yS/r/9Wy_ArBx-CG.png" class="w-6 h-6">
+                            <span class="text-blue-500 truncate text-base">Cảm xúc/Hoạt động</span>
+                        </a>
+                    </div>                    
+                </div>
+                
+                <!-- -------------------- -->
+
+                <!-- Story -->
+                <div class="relative w-full bg-white shadow-md rounded-none md:rounded-lg p-2 max-w-4xl mt-2 mx-auto">
+                    <!-- Image container with horizontal scroll -->
+                    <div id="image-scroll" class="flex overflow-x-auto scroll-smooth snap-x snap-mandatory">
+                        <!-- Individual images -->
+                        <div class="flex-shrink-0 w-28 h-48 md:w-40 md:h-60 bg-gray-200 rounded-lg mx-2 snap-center transition-transform duration-500 ease-in-out hover:scale-105">
+                            <img src="https://i.pinimg.com/236x/08/66/1b/08661ba50a6558bd690329f1fdda2806.jpg"
+                                alt="Image 1" class="w-full h-full object-cover rounded-lg">
+                        </div>
+                        <div class="flex-shrink-0 w-28 h-48 md:w-40 md:h-60 bg-gray-200 rounded-lg mx-2 snap-center transition-transform duration-500 ease-in-out hover:scale-105">
+                            <img src="https://i.pinimg.com/236x/b0/7f/d5/b07fd5e0ce5f83664f6e53b358c00561.jpg"
+                                alt="Image 2" class="w-full h-full object-cover rounded-lg">
+                        </div>
+                        <div class="flex-shrink-0 w-28 h-48 md:w-40 md:h-60 bg-gray-200 rounded-lg mx-2 snap-center transition-transform duration-500 ease-in-out hover:scale-105">
+                            <img src="https://i.pinimg.com/236x/49/e4/34/49e434c1e4c4906ab4a00afbd6aab180.jpg"
+                                alt="Image 3" class="w-full h-full object-cover rounded-lg">
+                        </div>
+                        <div class="flex-shrink-0 w-28 h-48 md:w-40 md:h-60 bg-gray-200 rounded-lg mx-2 snap-center transition-transform duration-500 ease-in-out hover:scale-105">
+                            <img src="https://i.pinimg.com/236x/eb/3b/8c/eb3b8c4b3306f91f11ef1f05180a8613.jpg"
+                                alt="Image 4" class="w-full h-full object-cover rounded-lg">
+                        </div>
+                        <div class="flex-shrink-0 w-28 h-48 md:w-40 md:h-60 bg-gray-200 rounded-lg mx-2 snap-center transition-transform duration-500 ease-in-out hover:scale-105">
+                            <img src="https://i.pinimg.com/236x/d7/8f/61/d78f619fbe39f158c603913851de47d6.jpg"
+                                alt="Image 5" class="w-full h-full object-cover rounded-lg">
+                        </div>
+                    </div>
+                
+                    <!-- Previous button -->
+                    <button id="prevBtn"
+                        class="absolute top-1/2 transform -translate-y-1/2 left-2 bg-white text-black rounded-full p-2 focus:outline-none hidden">
+                        &#10094;
+                    </button>
+                
+                    <!-- Next button -->
+                    <button id="nextBtn"
+                        class="absolute top-1/2 transform -translate-y-1/2 right-2 bg-white text-black rounded-full p-2 focus:outline-none">
+                        &#10095;
+                    </button>
+                </div>
+                
+                <script>
+                    const scrollContainer = document.getElementById('image-scroll');
+                    const nextButton = document.getElementById('nextBtn');
+                    const prevButton = document.getElementById('prevBtn');
+                
+                    // Kiểm tra xem có cần ẩn/hiện nút không
+                    function checkScrollButtons() {
+                        const maxScrollLeft = scrollContainer.scrollWidth - scrollContainer.clientWidth;
+                        prevButton.style.display = scrollContainer.scrollLeft > 0 ? 'block' : 'none';
+                        nextButton.style.display = scrollContainer.scrollLeft < maxScrollLeft ? 'block' : 'none';
+                    }
+                
+                    // Sự kiện cuộn
+                    scrollContainer.addEventListener('scroll', checkScrollButtons);
+                
+                    nextButton.addEventListener('click', () => {
+                        scrollContainer.scrollBy({ left: 300, behavior: 'smooth' });
+                    });
+                
+                    prevButton.addEventListener('click', () => {
+                        scrollContainer.scrollBy({ left: -300, behavior: 'smooth' });
+                    });
+                
+                    // Kiểm tra nút ngay từ lúc tải trang
+                    checkScrollButtons();
+                </script>
+                
+
+                <!-- ---- -->
+                <!-- -------------------------------------------------------------------------------------------------------------- -->
+
+                <!-- Modal -->
+                <div id="modal-sections" class="uk-modal" uk-modal>
+                    <div class="fixed inset-0 flex items-center justify-center z-50">
+                        <!-- Modal Background -->
+                        <div class="fixed inset-0 bg-gray-800 bg-opacity-50"></div>
+
+                        <!-- Modal Container -->
+                        <div class="relative bg-white p-6 rounded-lg shadow-lg max-w-lg w-full z-10">
+                            <!-- Close Button -->
+                            <button class="uk-modal-close-outside" type="button">
+                                <i class="bi bi-x-circle text-2xl"></i>
+                            </button>
+
+                            <!-- Modal Content -->
+                            <div class="space-y-6">
+                                <!-- Avatar and Textarea -->
+                                <div class="flex items-start space-x-3">
+                                    <img src="https://i.pinimg.com/736x/b1/c7/39/b1c7394d1233a343a1833c106d836ccf.jpg"
+                                        alt="User Avatar" class="rounded-full border-2 border-blue-500 w-12 h-12">
+                                    <div class="flex-1">
+                                        <textarea placeholder="Bạn muốn đăng gì?"
+                                            class="w-full bg-gray-100 p-3 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                                    </div>
+                                </div>
+
+                                <!-- Photo/Video Upload -->
+                                <div class="flex items-center space-x-4">
+                                    <label for="media-upload"
+                                        class="text-blue-500 flex items-center space-x-2 hover:bg-blue-50 p-2 rounded-lg cursor-pointer transition duration-300 ease-in-out">
+                                        <i class="bi bi-cloud-arrow-up text-xl"></i>
+                                        <span>Chọn Ảnh/Videos</span>
+                                        <input type="file" id="media-upload" multiple class="hidden"
+                                            accept="image/*,video/*" onchange="previewMedia(event)">
+                                    </label>
+                                </div>
+
+                                <!-- Media Previews -->
+                                <div class="relative">
+                                    <div id="media-preview" class="flex gap-4 overflow-x-auto">
+                                        <!-- Các ảnh và video sẽ được thêm vào đây -->
+                                    </div>
+
+                                    <!-- Nút điều hướng -->
+                                    <button id="prev-btn"
+                                        class="hidden absolute top-1/2 left-0 transform -translate-y-1/2 bg-gray-300 p-2 rounded-full">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M15 19l-7-7 7-7"></path>
+                                        </svg>
+                                    </button>
+                                    <button id="next-btn"
+                                        class="hidden absolute top-1/2 right-0 transform -translate-y-1/2 bg-gray-300 p-2 rounded-full">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 5l7 7-7 7"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+
+                                <!-- Post Button -->
+                                <button
+                                    class="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 w-full transition duration-300 ease-in-out">
+                                    Đăng
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                        let selectedMedia = [];
+
+                        function previewMedia(event) {
+                            selectedMedia = [...selectedMedia, ...Array.from(event.target.files)];
+                            renderPreviews();
+                            checkScrollButtons();
+                        }
+
+                        function renderPreviews() {
+                            const previewContainer = document.getElementById('media-preview');
+                            previewContainer.innerHTML = '';  // Xóa nội dung cũ
+
+                            selectedMedia.forEach((file, index) => {
+                                const reader = new FileReader();
+                                const mediaElement = document.createElement('div');
+                                mediaElement.className = 'relative overflow-hidden rounded-lg bg-gray-200 w-32 h-32 flex-shrink-0';
+
+                                reader.onload = function (e) {
+                                    if (file.type.startsWith('image/')) {
+                                        mediaElement.innerHTML = `
+                    <img src="${e.target.result}" class="w-full h-full object-cover" alt="Preview">
+                    <button class="absolute top-2 right-2 text-white bg-red-600 p-1 rounded-full hover:bg-red-700" onclick="removeMedia(${index})">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                `;
+                                    } else if (file.type.startsWith('video/')) {
+                                        mediaElement.innerHTML = `
+                    <video src="${e.target.result}" class="w-full h-full object-cover" controls></video>
+                    <button class="absolute top-2 right-2 text-white bg-red-600 p-1 rounded-full hover:bg-red-700" onclick="removeMedia(${index})">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                `;
+                                    }
+                                };
+                                reader.readAsDataURL(file);
+                                previewContainer.appendChild(mediaElement);
+                            });
+                        }
+
+                        function removeMedia(index) {
+                            selectedMedia.splice(index, 1);  // Xoá media theo chỉ số
+                            renderPreviews();  // Tạo lại preview
+                            checkScrollButtons();  // Kiểm tra nút cuộn
+                        }
+
+                        function checkScrollButtons() {
+                            const previewContainer = document.getElementById('media-preview');
+                            const prevBtn = document.getElementById('prev-btn');
+                            const nextBtn = document.getElementById('next-btn');
+
+                            if (previewContainer.scrollWidth > previewContainer.clientWidth) {
+                                prevBtn.style.display = 'block';
+                                nextBtn.style.display = 'block';
+                            } else {
+                                prevBtn.style.display = 'none';
+                                nextBtn.style.display = 'none';
+                            }
+                        }
+
+                        document.getElementById('prev-btn').addEventListener('click', function () {
+                            const previewContainer = document.getElementById('media-preview');
+                            previewContainer.scrollBy({ left: -150, behavior: 'smooth' });
+                        });
+
+                        document.getElementById('next-btn').addEventListener('click', function () {
+                            const previewContainer = document.getElementById('media-preview');
+                            previewContainer.scrollBy({ left: 150, behavior: 'smooth' });
+                        });
+
+                    </script>
+
+                </div>
+            
+
+                <!-- Post -->
+                <div class="bg-white p-4 rounded-none md:rounded-lg shadow mb-4 relative mt-2">
+                    <!-- Menu Options (three dots) -->
+                    <div class="absolute top-2 right-4">
+                        <div id="menuButton"
+                            class="text-gray-500 hover:text-gray-700 font-bold cursor-pointer text-2xl">
+                            <i class="bi bi-three-dots"></i>
+                        </div>
+                        <div id="menuOptions"
+                            class="hidden absolute bg-white border border-gray-300 rounded-lg shadow-lg right-0 w-40  fixed z-50">
+                            <a href="#" class="block px-4 py-2 text-gray-700 uk-link-reset hover:bg-gray-100">Lưu</a>
+                            <a href="#" class="block px-4 py-2 text-gray-700 uk-link-reset hover:bg-gray-100">Xóa</a>
+                            <a href="#" class="block px-4 py-2 text-gray-700 uk-link-reset hover:bg-gray-100">Báo cáo</a>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center space-x-4">
+                        <img src="https://i.pinimg.com/736x/b1/c7/39/b1c7394d1233a343a1833c106d836ccf.jpg" alt="User Avatar"
+                        class="rounded-full border-2 border-blue-500 w-10 h-10">
+                        <div>
+                            <h4 class="font-bold">Shin</h4>
+                            <span class="text-gray-500 text-sm">2 giờ trước</span>
+                        </div>
+                    </div>
+                    <p class="mt-4">Thiên nhiên hùng vĩ.</p>
+
+                    <!-- Media Gallery -->
+                    <div class="grid grid-cols-3 gap-6 mt-6">
+                        <!-- Ảnh đầu tiên -->
+                        <div class="relative overflow-hidden rounded-lg h-52">
+                            <img src="https://i.pinimg.com/236x/43/8a/fd/438afd1a57fc40f240f2648a4fbb1b07.jpg" 
+                                 alt="Media 1" class="object-cover w-full h-full transition-transform duration-500 ease-in-out hover:scale-105">
+                        </div>
+                        
+                        <!-- Ảnh thứ hai -->
+                        <div class="relative overflow-hidden rounded-lg h-52">
+                            <img src="https://i.pinimg.com/236x/e8/97/8a/e8978a842678e74b324b972b0035c68c.jpg" 
+                                 alt="Media 2" class="object-cover w-full h-full transition-transform duration-500 ease-in-out hover:scale-105">
+                        </div>
+                        
+                        <!-- Ảnh thứ ba -->
+                        <div class="relative overflow-hidden rounded-lg h-52">
+                            <img src="https://i.pinimg.com/236x/5e/61/d7/5e61d7a0501ac6c02fa9595052266606.jpg" 
+                                 alt="Media 3" class="object-cover w-full h-full transition-transform duration-500 ease-in-out hover:scale-105">
+                        </div>
+                        
+                        <!-- Video chiếm 2 cột -->
+                        <div class="col-span-2 relative overflow-hidden rounded-lg h-52">
+                            <video src="https://www.w3schools.com/html/mov_bbb.mp4" controls 
+                                   class="object-cover w-full h-full transition-transform duration-500 ease-in-out hover:scale-105">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                        
+                        <!-- Ảnh thứ năm -->
+                        <div class="relative overflow-hidden rounded-lg h-52">
+                            <img src="https://i.pinimg.com/236x/f4/c3/c0/f4c3c0f0714e8d9f1dcaaadf6fdd7ff2.jpg" 
+                                 alt="Media 5" class="object-cover w-full h-full transition-transform duration-500 ease-in-out hover:scale-105">
+                        </div>
+                        
+                        <!-- Ảnh thứ sáu -->
+                        <div class="relative overflow-hidden rounded-lg h-52">
+                            <img src="https://i.pinimg.com/236x/a2/0c/81/a20c81acf42aa3f30da4f8c378690a6c.jpg" 
+                                 alt="Media 6" class="object-cover w-full h-full transition-transform duration-500 ease-in-out hover:scale-105">
+                        </div>
+                        
+                        <!-- Ảnh chiếm 2 cột -->
+                        <div class="col-span-2 relative overflow-hidden rounded-lg h-52">
+                            <img src="https://i.pinimg.com/474x/5a/fe/36/5afe361498a52a7be7558600d63769d8.jpg" 
+                                 alt="Media 7" class="object-cover w-full h-full transition-transform duration-500 ease-in-out hover:scale-105">
+                        </div>
+                    </div>                    
+                                       
+                    <!-- Actions -->
+                    <div class="flex mt-4 justify-between border-t border-gray-300 font-semibold">
+                        <button class="text-gray-800 flex-4 text-center py-2 flex items-center justify-center space-x-2">
+                            <i class="bi bi-heart"></i>
+                            <span>Thích</span>
+                        </button>
+                        <button class="text-gray-800 flex-4 text-center py-2 flex items-center justify-center space-x-2">
+                            <i class="bi bi-chat-dots"></i>
+                            <span>Bình luận</span>
+                        </button>
+                        <button class="text-gray-800 flex-4 text-center py-2 flex items-center justify-center space-x-2">
+                            <i class="bi bi-share"></i>
+                            <span>Chia sẻ</span>
+                        </button>
+                    </div>                    
+
+                </div>
+                <!-- Post -->
+                <div class="bg-white p-4 rounded-none md:rounded-lg shadow mb-4 relative mt-2">
+                    <!-- Menu Options (three dots) -->
+                    <div class="absolute top-2 right-4">
+                        <div id="menuButton"
+                            class="text-gray-500 hover:text-gray-700 font-bold cursor-pointer text-2xl">
+                            <i class="bi bi-three-dots"></i>
+                        </div>
+                        <div id="menuOptions"
+                            class="hidden absolute bg-white border border-gray-300 rounded-lg shadow-lg right-0 w-40  fixed z-50">
+                            <a href="#" class="block px-4 py-2 text-gray-700 uk-link-reset hover:bg-gray-100">Lưu</a>
+                            <a href="#" class="block px-4 py-2 text-gray-700 uk-link-reset hover:bg-gray-100">Xóa</a>
+                            <a href="#" class="block px-4 py-2 text-gray-700 uk-link-reset hover:bg-gray-100">Báo cáo</a>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center space-x-4">
+                        <img src="https://i.pinimg.com/736x/b1/c7/39/b1c7394d1233a343a1833c106d836ccf.jpg" alt="User Avatar"
+                        class="rounded-full border-2 border-blue-500 w-10 h-10">
+                        <div>
+                            <h4 class="font-bold">Shin</h4>
+                            <span class="text-gray-500 text-sm">2 giờ trước</span>
+                        </div>
+                    </div>
+                    <p class="mt-4">Thiên nhiên hùng vĩ.</p>
+
+                    <!-- Media Gallery -->
+                    <div class="grid grid-cols-3 gap-6 mt-6">
+                        <!-- Ảnh đầu tiên -->
+                        <div class="relative overflow-hidden rounded-lg h-52">
+                            <img src="https://i.pinimg.com/236x/43/8a/fd/438afd1a57fc40f240f2648a4fbb1b07.jpg" 
+                                 alt="Media 1" class="object-cover w-full h-full transition-transform duration-500 ease-in-out hover:scale-105">
+                        </div>
+                        
+                        <!-- Ảnh thứ hai -->
+                        <div class="relative overflow-hidden rounded-lg h-52">
+                            <img src="https://i.pinimg.com/236x/e8/97/8a/e8978a842678e74b324b972b0035c68c.jpg" 
+                                 alt="Media 2" class="object-cover w-full h-full transition-transform duration-500 ease-in-out hover:scale-105">
+                        </div>
+                        
+                        <!-- Ảnh thứ ba -->
+                        <div class="relative overflow-hidden rounded-lg h-52">
+                            <img src="https://i.pinimg.com/236x/5e/61/d7/5e61d7a0501ac6c02fa9595052266606.jpg" 
+                                 alt="Media 3" class="object-cover w-full h-full transition-transform duration-500 ease-in-out hover:scale-105">
+                        </div>
+                        
+                        <!-- Video chiếm 2 cột -->
+                        <div class="col-span-2 relative overflow-hidden rounded-lg h-52">
+                            <video src="https://www.w3schools.com/html/mov_bbb.mp4" controls 
+                                   class="object-cover w-full h-full transition-transform duration-500 ease-in-out hover:scale-105">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                        
+                        <!-- Ảnh thứ năm -->
+                        <div class="relative overflow-hidden rounded-lg h-52">
+                            <img src="https://i.pinimg.com/236x/f4/c3/c0/f4c3c0f0714e8d9f1dcaaadf6fdd7ff2.jpg" 
+                                 alt="Media 5" class="object-cover w-full h-full transition-transform duration-500 ease-in-out hover:scale-105">
+                        </div>
+                        
+                        <!-- Ảnh thứ sáu -->
+                        <div class="relative overflow-hidden rounded-lg h-52">
+                            <img src="https://i.pinimg.com/236x/a2/0c/81/a20c81acf42aa3f30da4f8c378690a6c.jpg" 
+                                 alt="Media 6" class="object-cover w-full h-full transition-transform duration-500 ease-in-out hover:scale-105">
+                        </div>
+                        
+                        <!-- Ảnh chiếm 2 cột -->
+                        <div class="col-span-2 relative overflow-hidden rounded-lg h-52">
+                            <img src="https://i.pinimg.com/474x/5a/fe/36/5afe361498a52a7be7558600d63769d8.jpg" 
+                                 alt="Media 7" class="object-cover w-full h-full transition-transform duration-500 ease-in-out hover:scale-105">
+                        </div>
+                    </div>                    
+                                       
+                    <!-- Actions -->
+                    <div class="flex mt-4 justify-between border-t border-gray-300 font-semibold">
+                        <button class="text-gray-800 flex-4 text-center py-2 flex items-center justify-center space-x-2">
+                            <i class="bi bi-heart"></i>
+                            <span>Thích</span>
+                        </button>
+                        <button class="text-gray-800 flex-4 text-center py-2 flex items-center justify-center space-x-2">
+                            <i class="bi bi-chat-dots"></i>
+                            <span>Bình luận</span>
+                        </button>
+                        <button class="text-gray-800 flex-4 text-center py-2 flex items-center justify-center space-x-2">
+                            <i class="bi bi-share"></i>
+                            <span>Chia sẻ</span>
+                        </button>
+                    </div>                    
+
+                </div>
+                
+                <!--  -->
+                <script>
+                    document.getElementById('menuButton').addEventListener('click', function () {
+                        const menu = document.getElementById('menuOptions');
+                        menu.classList.toggle('hidden');
+                    });
+                </script>
+
+                <!--  -->
+            </main>
+
+            <!-- Chat Sidebar (Right) -->
+            <aside class="hidden md:block w-1/4 h-screen fixed top-0 right-0 pt-20 p-4">
+                <h2 class="text-lg font-bold mb-4">Chats</h2>
+                <div class="space-y-4">
+                    <div class="flex items-center space-x-4">
+                        <img src="https://via.placeholder.com/40" alt="User Avatar" class="rounded-full">
+                        <span>An Zero</span>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <img src="https://via.placeholder.com/40" alt="User Avatar" class="rounded-full">
+                        <span>Huỳnh Kai</span>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+    <!-- Nhúng UIkit JS -->
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.2/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.2/dist/js/uikit-icons.min.js"></script>
+</body>
+
+</html>

@@ -7,341 +7,417 @@
     <title>Profile</title>
     <link rel="stylesheet" href="/css/index.css">
     <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css" />
-    <!-- <link rel="stylesheet" href="https://unpkg.com/tailwindcss@latest/dist/tailwind.min.css" /> -->
     <link href="https://fonts.googleapis.com/css?family=Work+Sans:200,400&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/emoji-button@4.6.0/dist/index.min.js"></script>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
     <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/gh/creativetimofficial/tailwind-starter-kit/compiled-tailwind.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
         integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
 
+    <link rel="stylesheet" href="/css/loading.css">
+    <script src="/js/loading.js" defer></script>
 </head>
 
 <body class="bg-gray-100 antialiased">
-    <div class="bg-white fixed top-0 left-0 right-0 z-50 border border-slate-200 p-2 h-10">
-        <nav class="mb-4 ml-6 relative">
-            <ol class="flex flex-wrap items-center space-x-2 text-gray-700 dark:text-gray-300">
-                <li th:each="breadcrumb, iterStat : ${breadcrumbs}" class="flex items-center">
-                    <a th:if="${not #strings.isEmpty(breadcrumb.url) and !iterStat.last}" th:href="${breadcrumb.url}"
-                        class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
-                        th:text="${breadcrumb.title}"></a>
+    <!-- Loading -->
+    <div id="loadingOverlay"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; z-index: 1000;">
+        <div class="loading-spinner"></div>
+    </div>
+    <!-- -------------Thông báo-------------- -->
+    <div class="fixed top-4 inset-x-0 flex justify-center z-50">
+        <!-- Thông báo thành công -->
+        <div id="success-alert" th:if="${successMessage}"
+            class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative shadow-md transition-transform duration-300 transform -translate-y-20 opacity-0"
+            role="alert">
+            <span th:text="${successMessage}"></span>
+            <button type="button" class="absolute top-0 right-0 p-2 text-green-500"
+                onclick="closeAlert('success-alert')">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
 
-                    <span th:if="${#strings.isEmpty(breadcrumb.url) or iterStat.last}"
-                        class="text-gray-500 dark:text-gray-400" th:text="${breadcrumb.title}"></span>
+        <!-- Thông báo lỗi -->
+        <div id="error-alert" th:if="${errorMessage}"
+            class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative shadow-md transition-transform duration-300 transform -translate-y-20 opacity-0"
+            role="alert">
+            <span th:text="${errorMessage}"></span>
+            <button type="button" class="absolute top-0 right-0 p-2 text-red-500" onclick="closeAlert('error-alert')">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                // Kiểm tra và hiển thị thông báo thành công
+                const successAlert = document.getElementById("success-alert");
+                if (successAlert) {
+                    showAndHideAlert(successAlert);
+                }
 
-                    <i th:if="${!iterStat.last}"
-                        class="bi bi-chevron-compact-right text-gray-500 dark:text-gray-400"></i>
-                </li>
-            </ol>
-        </nav>
+                // Kiểm tra và hiển thị thông báo lỗi
+                const errorAlert = document.getElementById("error-alert");
+                if (errorAlert) {
+                    showAndHideAlert(errorAlert);
+                }
+            });
+
+            // Hiển thị thông báo và tự động ẩn sau 3 giây
+            function showAndHideAlert(alertBox) {
+                // Hiệu ứng trượt xuống
+                alertBox.classList.remove("opacity-0", "-translate-y-20");
+                alertBox.classList.add("translate-y-0", "opacity-100");
+
+                // Ẩn sau 3 giây
+                setTimeout(function () {
+                    closeAlert(alertBox.id);
+                }, 3000);
+            }
+
+            // Hàm để đóng thông báo
+            function closeAlert(alertId) {
+                const alertBox = document.getElementById(alertId);
+                if (alertBox) {
+                    // Hiệu ứng trượt lên và ẩn
+                    alertBox.classList.add("-translate-y-20", "opacity-0");
+                    setTimeout(function () {
+                        alertBox.style.display = "none";
+                    }, 300); // Chờ hiệu ứng hoàn tất trước khi ẩn hoàn toàn
+                }
+            }
+        </script>
+
     </div>
 
-    <div class="mx-auto p-8 mt-4">
-        <!-- Profile Header -->
-        <div class="bg-white shadow-md border border-slate-200 rounded-lg overflow-hidden">
-            <div class="relative">
-                <img class="w-full h-48 object-cover"
-                    src="https://i.pinimg.com/564x/25/06/05/2506053a53717e121f504a45e1d15dd2.jpg"
-                    alt="Profile Background">
-                <div class="absolute top-1/2 left-4 transform -translate-y-1/2">
-                    <!-- avata th:src="${profile.avatar}" -->
-                    <img class="w-32 h-32 object-cover rounded-full border-4 border-white shadow-lg"
-                        src="https://i.pinimg.com/564x/b2/11/04/b21104d2403f29042630ca36cbec3484.jpg"
-                        alt="Profile Picture">
-                    <button
-                        class="absolute bottom-0 right-0 bg-white border border-gray-300 rounded-full p-2 shadow-lg hover:bg-gray-100 focus:outline-none">
-                        <i class="fas fa-pencil-alt text-gray-600"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="pt-16 px-6 pb-8">
-                <h2 class="text-2xl font-bold text-gray-900" th:text="${profile.name}">User Name</h2>
-                <div class="mt-4 flex space-x-4">
-                    <a th:href="@{/index}" class="text-gray-600 text-xl hover:text-gray-800">
-                        <i class="bi bi-app-indicator"></i>
-                        <a href="" class="text-blue-500 hover:text-blue-700 ">Đánh giá của bạn</a>
-                        <p>|</p>
-                        <a href="" class="text-blue-500 hover:text-blue-700 ">Yêu thích</a>
-                </div>
-                <div class="mt-4 flex space-x-4">
-                    <a href="mailto:john.doe@example.com" class="text-blue-500 hover:text-blue-700"
-                        th:text="${profile.email}">user@example.com</a>
-                    <p>|</p>
-                    <a href="tel:+1234567890" class="text-blue-500 hover:text-blue-700"
-                        th:text="${profile.phoneNumber}">123-456-7890</a>
-                </div>
-            </div>
-        </div>
-        <!-- TTTTTTTTT Section -->
+    <div class="mt-4">
+        <div class="bg-white fixed top-0 left-0 right-0 z-40 border border-slate-200 p-2 h-10">
+            <nav class="mb-4 ml-6 relative">
+                <ol class="flex flex-wrap items-center space-x-2 text-gray-700 dark:text-gray-300">
+                    <li th:each="breadcrumb, iterStat : ${breadcrumbs}" class="flex items-center">
+                        <a th:if="${not #strings.isEmpty(breadcrumb.url) and !iterStat.last}"
+                            th:href="${breadcrumb.url}"
+                            class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+                            th:text="${breadcrumb.title}"></a>
 
-        <!-- Thông báo -->
+                        <span th:if="${#strings.isEmpty(breadcrumb.url) or iterStat.last}"
+                            class="text-gray-500 dark:text-gray-400" th:text="${breadcrumb.title}"></span>
 
-        <!-- -------- -->
-
-        <!-- <div class="bg-white shadow-md border border-slate-200 rounded-xl mt-8 p-6"> -->
-        <div class="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <!-- Thẻ 1: Thông tin cá nhân -->
-            <div class="relative bg-white shadow-md border border-slate-200 rounded-xl mt-2 p-4 text-center cursor-pointer"
-                data-toggle="modal" data-target="#exampleModal">
-                <button data-toggle="modal" data-target="#exampleModal"
-                    class="flex items-center justify-start space-x-2">
-                    <i class="bi bi-person-circle text-2xl text-white bg-red-400 rounded-full py-1 px-2"></i>
-                    <span class="text-lg font-semibold text-gray-700">Thông tin cá nhân</span>
-                </button>
-
-                <!-- Modal -->
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                    aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Thông tin cá nhân</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true"><i class="bi bi-x-circle"></i></span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <!-- Nội dung form cập nhật -->
-                                <form th:action="@{/profile/update}" method="post" class="space-y-4"
-                                    onclick="event.stopPropagation();">
-                                    <!-- Id -->
-                                    <input type="hidden" name="userId" th:value="${profile.userId}">
-                                    <!-- Email -->
-                                    <div class="text-left">
-                                        <label for="email" class="block text-gray-700 font-medium">Email:</label>
-                                        <input type="email" id="email" name="email" th:value="${profile.email}"
-                                            class="w-full p-2 border border-gray-300 rounded-lg" required>
-                                    </div>
-
-                                    <!-- Tên -->
-                                    <div class="text-left">
-                                        <label for="name" class="block text-gray-700 font-medium">Tên:</label>
-                                        <input type="text" id="name" name="name" th:value="${profile.name}"
-                                            class="w-full p-2 border border-gray-300 rounded-lg" required>
-                                    </div>
-
-                                    <!-- Số điện thoại -->
-                                    <div class="text-left">
-                                        <label for="phoneNumber" class="block text-gray-700 font-medium">Số điện
-                                            thoại:</label>
-                                        <input type="text" id="phoneNumber" name="phoneNumber"
-                                            th:value="${profile.phoneNumber}"
-                                            class="w-full p-2 border border-gray-300 rounded-lg">
-                                    </div>
-
-                                    <!-- Nút lưu -->
-                                    <div class="flex justify-end space-x-4">
-                                        <button type="submit" class="btn btn-primary">Cập nhật</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Thẻ 2: Xem của hàng -->
-            <a th:href="@{/stores/{userId}(userId=${profile.userId})}"
-                class="relative bg-white nav-link shadow-md border border-slate-200 rounded-xl mt-2 p-4 text-center cursor-pointer">
-                <div class="flex items-center justify-start space-x-4">
-                    <i class="bi bi-star text-2xl text-white bg-yellow-400 rounded-full py-1 px-2"></i>
-                    <span class="text-lg font-semibold text-gray-700">Cửa hàng của bạn</span>
-                </div>
-            </a>
-
-
-            <!-- Thẻ 3: Thêm Nhà Hàng -->
-            <a th:href="@{/register-store}"
-                class="relative bg-white nav-link shadow-md border border-slate-200 rounded-xl mt-2 p-4 text-center cursor-pointer">
-                <div class="flex items-center justify-start space-x-4">
-                    <i class="bi bi-house-add text-2xl text-white bg-purple-500 rounded-full py-1 px-2"></i>
-                    <span class="text-lg font-semibold text-gray-700">Thêm nhà hàng</span>
-                </div>
-            </a>
-
+                        <i th:if="${!iterStat.last}"
+                            class="bi bi-chevron-compact-right text-gray-500 dark:text-gray-400"></i>
+                    </li>
+                </ol>
+            </nav>
         </div>
 
-        <!-- Cửa hàng -->
-        <div class="flex flex-col lg:flex-row lg:space-x-4 mt-4 gap-4">
-            <!-- Bảng bên trái (chỉ hiển thị trên màn hình lớn) -->
-            <div class="bg-white border border-slate-200 shadow-md rounded-lg p-6 lg:w-1/3">
-                <h2 class="text-xl font-semibold text-gray-800">CỬA HÀNG</h2>
-
-                <div class="mt-4 space-y-4">
-                    <!-- Thẻ kích hoạt Modal 1 -->
-                    <div class="bg-gray-100 rounded-lg p-4">
-                        <h3 class="text-xl font-semibold text-gray-800">Thông tin cửa hàng</h3>
-
+        <div class="mx-auto p-8 mt-4">
+            <!-- Profile Header -->
+            <div class="bg-white shadow-md border border-slate-200 rounded-lg overflow-hidden">
+                <div class="relative">
+                    <img class="w-full h-48 object-cover"
+                        src="https://i.pinimg.com/564x/25/06/05/2506053a53717e121f504a45e1d15dd2.jpg"
+                        alt="Profile Background">
+                    <div class="absolute top-1/2 left-4 transform -translate-y-1/2">
+                        <!-- avata th:src="${profile.avatar}" -->
+                        <img class="w-32 h-32 object-cover rounded-full border-4 border-white shadow-lg"
+                            src="https://i.pinimg.com/564x/b2/11/04/b21104d2403f29042630ca36cbec3484.jpg"
+                            alt="Profile Picture">
                         <button
-                            class="bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-blue-600 hover:shadow-lg transition duration-300 ease-in-out mt-2 inline-block"
-                            data-toggle="modal" data-target="#exampleModal1">
-                            Xem chi tiết
+                            class="absolute bottom-0 right-0 bg-white border border-gray-300 rounded-full p-2 shadow-lg hover:bg-gray-100 focus:outline-none">
+                            <i class="fas fa-pencil-alt text-gray-600"></i>
                         </button>
                     </div>
+                </div>
+                <div class="pt-16 px-6 pb-8">
+                    <h2 class="text-2xl font-bold text-gray-900" th:text="${profile.name}">User Name</h2>
+                    <div class="mt-4 flex space-x-4">
+                        <a th:href="@{/index}" class="text-gray-600 text-xl hover:text-gray-800">
+                            <i class="bi bi-app-indicator"></i>
+                            <a href="" class="text-blue-500 hover:text-blue-700 ">Đánh giá của bạn</a>
+                            <p>|</p>
+                            <a href="" class="text-blue-500 hover:text-blue-700 ">Yêu thích</a>
+                    </div>
+                    <div class="mt-4 flex space-x-4">
+                        <a href="mailto:john.doe@example.com" class="text-blue-500 hover:text-blue-700"
+                            th:text="${profile.email}">user@example.com</a>
+                        <p>|</p>
+                        <a href="tel:+1234567890" class="text-blue-500 hover:text-blue-700"
+                            th:text="${profile.phoneNumber}">123-456-7890</a>
+                    </div>
+                </div>
+            </div>
+            <!-- TTTTTTTTT Section -->
 
-                    <!-- Modal 1 -->
-                    <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModal1"
+            <!-- Thông báo -->
+
+            <!-- -------- -->
+
+            <!-- <div class="bg-white shadow-md border border-slate-200 rounded-xl mt-8 p-6"> -->
+            <div class="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Thẻ 1: Thông tin cá nhân -->
+                <div class="relative bg-white shadow-md border border-slate-200 rounded-xl mt-2 p-4 text-center cursor-pointer"
+                    data-toggle="modal" data-target="#exampleModal">
+                    <button data-toggle="modal" data-target="#exampleModal"
+                        class="flex items-center justify-start space-x-2">
+                        <i class="bi bi-person-circle text-2xl text-white bg-red-400 rounded-full py-1 px-2"></i>
+                        <span class="text-lg font-semibold text-gray-700">Thông tin cá nhân</span>
+                    </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
                         aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-scrollable">
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                             <div class="modal-content">
-                                <div th:each="store : ${stores}" class="modal-header">
-                                    <h5 class="modal-title" id="exampleModal1"> Cửa hàng:
-                                        <span class="text-xl text-blue-500" th:text="${store.storeName}"></span>
-                                    </h5>
+                                <div class="modal-header">
+                                    <h5 class="modal-title text-primary" id="exampleModalLabel">Thông tin cá nhân</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true"><i class="bi bi-x-circle"></i></span>
                                     </button>
                                 </div>
-                                <div th:each="store : ${stores}" class="modal-body">
-                                    <form th:action="@{/profile/updatestore}" method="post">
-                                        <div class="mb-4">
-                                            <label for="storeName" class="block text-gray-700 font-semibold mb-2">Tên
-                                                cửa
-                                                hàng:
-                                            </label>
-                                            <input type="text" id="storeName" name="storeName"
-                                                th:value="${store.storeName}"
-                                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                                                required>
+                                <div class="modal-body">
+                                    <!-- Nội dung form cập nhật -->
+                                    <!-- Nội dung form cập nhật -->
+                                    <form th:action="@{/profile/updatethongtincanhan}" method="post" class="space-y-4"
+                                        onclick="event.stopPropagation();">
+                                        <!-- Id -->
+                                        <input type="hidden" name="userId" th:value="${profile.userId}">
+
+                                        <!-- Email -->
+                                        <div class="text-left">
+                                            <label for="email" class="block text-gray-700 font-medium">Email:</label>
+                                            <input type="email" id="email" name="email" th:value="${profile.email}"
+                                                class="w-full p-2 border border-gray-300 rounded-lg" required>
                                         </div>
-                                        <div class="mb-4">
-                                            <label for="addressCity"
-                                                class="block text-gray-700 font-semibold mb-2">Tỉnh/Thành
-                                                phố:</label>
-                                            <input type="text" id="addressCity" name="addressCity"
-                                                th:value="${store.addressCity}"
-                                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                                                required>
+
+                                        <!-- Tên -->
+                                        <div class="text-left">
+                                            <label for="name" class="block text-gray-700 font-medium">Tên:</label>
+                                            <input type="text" id="name" name="name" th:value="${profile.name}"
+                                                class="w-full p-2 border border-gray-300 rounded-lg" required>
                                         </div>
-                                        <div class="mb-4">
-                                            <label for="addressDistrict"
-                                                class="block text-gray-700 font-semibold mb-2">Quận/Huyện:</label>
-                                            <input type="text" id="addressDistrict" name="addressDistrict"
-                                                th:value="${store.addressDistrict}"
-                                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                                                required>
-                                        </div>
-                                        <div class="mb-4">
-                                            <label for="addressCommune"
-                                                class="block text-gray-700 font-semibold mb-2">Xã/Phường:</label>
-                                            <input type="text" id="addressCommune" name="addressCommune"
-                                                th:value="${store.addressCommune}"
-                                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                                                required>
-                                        </div>
-                                        <div class="mb-4">
-                                            <label for="addressStreet"
-                                                class="block text-gray-700 font-semibold mb-2">Đường:</label>
-                                            <input type="text" id="addressStreet" name="addressStreet"
-                                                th:value="${store.addressStreet}"
-                                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                                                required>
-                                        </div>
-                                        <div class="mb-4">
-                                            <label for="phoneNumber" class="block text-gray-700 font-semibold mb-2">Số
-                                                điện
+
+                                        <!-- Số điện thoại -->
+                                        <div class="text-left">
+                                            <label for="phoneNumber" class="block text-gray-700 font-medium">Số điện
                                                 thoại:</label>
                                             <input type="text" id="phoneNumber" name="phoneNumber"
-                                                th:value="${store.phoneNumber}"
-                                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                                                required>
+                                                th:value="${profile.phoneNumber}"
+                                                class="w-full p-2 border border-gray-300 rounded-lg">
                                         </div>
-                                        <input type="hidden" name="storeId" th:value="${store.storeId}">
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary"
-                                                data-dismiss="modal">Thoát</button>
+                                        <!-- Nút lưu -->
+                                        <div class="flex justify-end space-x-4">
                                             <button type="submit" class="btn btn-primary">Cập nhật</button>
                                         </div>
                                     </form>
+
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <!-- Thẻ 2: Xem của hàng -->
+                <a th:href="@{/stores/{userId}(userId=${profile.userId})}"
+                    class="relative bg-white nav-link shadow-md border border-slate-200 rounded-xl mt-2 p-4 text-center cursor-pointer">
+                    <div class="flex items-center justify-start space-x-4">
+                        <i class="bi bi-star text-2xl text-white bg-yellow-400 rounded-full py-1 px-2"></i>
+                        <span class="text-lg font-semibold text-gray-700">Cửa hàng của tôi</span>
+                    </div>
+                </a>
+
+
+                <!-- Thẻ 3: Thêm Nhà Hàng -->
+                <a th:href="@{/register-store}"
+                    class="relative bg-white nav-link shadow-md border border-slate-200 rounded-xl mt-2 p-4 text-center cursor-pointer">
+                    <div class="flex items-center justify-start space-x-4">
+                        <i class="bi bi-house-add text-2xl text-white bg-purple-500 rounded-full py-1 px-2"></i>
+                        <span class="text-lg font-semibold text-gray-700">Thêm nhà hàng</span>
+                    </div>
+                </a>
+
             </div>
 
+            <!-- Cửa hàng -->
+            <div class="flex flex-col lg:flex-row lg:space-x-4 mt-4 gap-4">
+                <!-- Bảng bên trái (chỉ hiển thị trên màn hình lớn) -->
+                <div class="bg-white border border-slate-200 shadow-md rounded-lg p-6 lg:w-1/3">
+                    <h2 class="text-xl font-semibold text-gray-800">CỬA HÀNG</h2>
 
-            <!-- Bảng bên phải (hiển thị trên tất cả các màn hình) -->
-            <div class="bg-white border border-slate-200 shadow-md rounded-lg lg:mt-0 lg:w-2/3 p-6">
-                <h2 class="text-xl font-semibold text-gray-800">ĐÁNH GIÁ CỦA CỬA HÀNG</h2>
-                <div class="relative mt-4 space-y-4 h-80 overflow-hidden">
+                    <div class="mt-4 space-y-4">
+                        <!-- Thẻ kích hoạt Modal 1 -->
+                        <div class="bg-gray-100 rounded-lg p-4">
+                            <h3 class="text-xl font-semibold text-gray-800">Thông tin cửa hàng</h3>
 
-                    <!-- Đánh giá của người dùng -->
-                    <div class="bg-gray-100 rounded-lg p-4 space-y-4 overflow-y-auto">
-                        <div class="flex items-start space-x-4">
-                            <!-- Ảnh đại diện -->
-                            <img src="https://via.placeholder.com/50" alt="Avatar"
-                                class="w-12 h-12 rounded-full border border-gray-300">
+                            <button
+                                class="bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-blue-600 hover:shadow-lg transition duration-300 ease-in-out mt-2 inline-block"
+                                data-toggle="modal" data-target="#exampleModal1">
+                                Xem chi tiết
+                            </button>
+                        </div>
 
-                            <!-- Nội dung đánh giá -->
-                            <div class="flex-1">
-                                <!-- Tên người dùng -->
-                                <h3
-                                    class="text-lg truncate md:truncate-none md:w-auto w-40 font-semibold text-gray-800">
-                                    Tên
-                                    Người Dùng</h3>
-                                <!-- Tên của hàng -->
-                                <div
-                                    class="absolute truncate md:truncate-none md:w-80 w-40 text-center top-0 right-0 bg-blue-400 text-white px-2 py-1 text-sm rounded-bl-lg">
-                                    Tên Cửa Hàng
+                        <!-- Modal 1 -->
+                        <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModal1"
+                            aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-scrollable">
+                                <div class="modal-content">
+                                    <div th:each="store : ${stores}" class="modal-header">
+                                        <h5 class="modal-title text-primary" id="exampleModal1"> Cửa hàng:
+                                            <span class="text-xl text-blue-500" th:text="${store.storeName}"></span>
+                                        </h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true"><i class="bi bi-x-circle"></i></span>
+                                        </button>
+                                    </div>
+                                    <div th:each="store : ${stores}" class="modal-body">
+                                        <form th:action="@{/profile/updatestore}" method="post">
+                                            <div class="mb-4">
+                                                <label for="storeName"
+                                                    class="block text-gray-700 font-semibold mb-2">Tên
+                                                    cửa
+                                                    hàng:
+                                                </label>
+                                                <input type="text" id="storeName" name="storeName"
+                                                    th:value="${store.storeName}"
+                                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                                                    required>
+                                            </div>
+                                            <div class="mb-4">
+                                                <label for="addressCity"
+                                                    class="block text-gray-700 font-semibold mb-2">Tỉnh/Thành
+                                                    phố:</label>
+                                                <input type="text" id="addressCity" name="addressCity"
+                                                    th:value="${store.addressCity}"
+                                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                                                    required>
+                                            </div>
+                                            <div class="mb-4">
+                                                <label for="addressDistrict"
+                                                    class="block text-gray-700 font-semibold mb-2">Quận/Huyện:</label>
+                                                <input type="text" id="addressDistrict" name="addressDistrict"
+                                                    th:value="${store.addressDistrict}"
+                                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                                                    required>
+                                            </div>
+                                            <div class="mb-4">
+                                                <label for="addressCommune"
+                                                    class="block text-gray-700 font-semibold mb-2">Xã/Phường:</label>
+                                                <input type="text" id="addressCommune" name="addressCommune"
+                                                    th:value="${store.addressCommune}"
+                                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                                                    required>
+                                            </div>
+                                            <div class="mb-4">
+                                                <label for="addressStreet"
+                                                    class="block text-gray-700 font-semibold mb-2">Đường:</label>
+                                                <input type="text" id="addressStreet" name="addressStreet"
+                                                    th:value="${store.addressStreet}"
+                                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                                                    required>
+                                            </div>
+                                            <div class="mb-4">
+                                                <label for="phoneNumber"
+                                                    class="block text-gray-700 font-semibold mb-2">Số
+                                                    điện
+                                                    thoại:</label>
+                                                <input type="text" id="phoneNumber" name="phoneNumber"
+                                                    th:value="${store.phoneNumber}"
+                                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                                                    required>
+                                            </div>
+                                            <input type="hidden" name="storeId" th:value="${store.storeId}">
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-dismiss="modal">Thoát</button>
+                                                <button type="submit" class="btn btn-primary">Cập nhật</button>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                                <!-- Sao đánh giá -->
-                                <div class="flex items-center mt-1">
-                                    <svg class="w-4 h-4 text-yellow-500" fill="currentColor" viewBox="0 0 24 24"
-                                        aria-hidden="true">
-                                        <path
-                                            d="M12 17.27L18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27z">
-                                        </path>
-                                    </svg>
-                                    <svg class="w-4 h-4 text-yellow-500" fill="currentColor" viewBox="0 0 24 24"
-                                        aria-hidden="true">
-                                        <path
-                                            d="M12 17.27L18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27z">
-                                        </path>
-                                    </svg>
-                                    <svg class="w-4 h-4 text-yellow-500" fill="currentColor" viewBox="0 0 24 24"
-                                        aria-hidden="true">
-                                        <path
-                                            d="M12 17.27L18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27z">
-                                        </path>
-                                    </svg>
-                                    <svg class="w-4 h-4 text-yellow-500" fill="currentColor" viewBox="0 0 24 24"
-                                        aria-hidden="true">
-                                        <path
-                                            d="M12 17.27L18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27z">
-                                        </path>
-                                    </svg>
-                                    <svg class="w-4 h-4 text-gray-300" fill="currentColor" viewBox="0 0 24 24"
-                                        aria-hidden="true">
-                                        <path
-                                            d="M12 17.27L18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27z">
-                                        </path>
-                                    </svg>
-                                </div>
+                <!-- Bảng bên phải (hiển thị trên tất cả các màn hình) -->
+                <div class="bg-white border border-slate-200 shadow-md rounded-lg lg:mt-0 lg:w-2/3 p-6">
+                    <h2 class="text-xl font-semibold text-gray-800">ĐÁNH GIÁ CỦA CỬA HÀNG</h2>
+                    <div class="relative mt-4 space-y-4 h-80 overflow-hidden">
+
+                        <!-- Đánh giá của người dùng -->
+                        <div class="bg-gray-100 rounded-lg p-4 space-y-4 overflow-y-auto">
+                            <div class="flex items-start space-x-4">
+                                <!-- Ảnh đại diện -->
+                                <img src="https://via.placeholder.com/50" alt="Avatar"
+                                    class="w-12 h-12 rounded-full border border-gray-300">
 
                                 <!-- Nội dung đánh giá -->
-                                <p class="mt-2 text-gray-600">Nội dung đánh giá.</p>
+                                <div class="flex-1">
+                                    <!-- Tên người dùng -->
+                                    <h3
+                                        class="text-lg truncate md:truncate-none md:w-auto w-40 font-semibold text-gray-800">
+                                        Tên
+                                        Người Dùng</h3>
+                                    <!-- Tên của hàng -->
+                                    <div
+                                        class="absolute truncate md:truncate-none md:w-80 w-40 text-center top-0 right-0 bg-blue-400 text-white px-2 py-1 text-sm rounded-bl-lg">
+                                        Tên Cửa Hàng
+                                    </div>
+
+                                    <!-- Sao đánh giá -->
+                                    <div class="flex items-center mt-1">
+                                        <svg class="w-4 h-4 text-yellow-500" fill="currentColor" viewBox="0 0 24 24"
+                                            aria-hidden="true">
+                                            <path
+                                                d="M12 17.27L18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27z">
+                                            </path>
+                                        </svg>
+                                        <svg class="w-4 h-4 text-yellow-500" fill="currentColor" viewBox="0 0 24 24"
+                                            aria-hidden="true">
+                                            <path
+                                                d="M12 17.27L18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27z">
+                                            </path>
+                                        </svg>
+                                        <svg class="w-4 h-4 text-yellow-500" fill="currentColor" viewBox="0 0 24 24"
+                                            aria-hidden="true">
+                                            <path
+                                                d="M12 17.27L18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27z">
+                                            </path>
+                                        </svg>
+                                        <svg class="w-4 h-4 text-yellow-500" fill="currentColor" viewBox="0 0 24 24"
+                                            aria-hidden="true">
+                                            <path
+                                                d="M12 17.27L18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27z">
+                                            </path>
+                                        </svg>
+                                        <svg class="w-4 h-4 text-gray-300" fill="currentColor" viewBox="0 0 24 24"
+                                            aria-hidden="true">
+                                            <path
+                                                d="M12 17.27L18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27z">
+                                            </path>
+                                        </svg>
+                                    </div>
+
+                                    <!-- Nội dung đánh giá -->
+                                    <p class="mt-2 text-gray-600">Nội dung đánh giá.</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
-            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-            crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
-            integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
-            crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"
-            integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+"
-            crossorigin="anonymous"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.15.5/js/uikit.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.15.5/js/uikit-icons.min.js"></script>
+
+            <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+                integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+                crossorigin="anonymous"></script>
+            <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+                integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+                crossorigin="anonymous"></script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"
+                integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+"
+                crossorigin="anonymous"></script>
 </body>
 
 </html>

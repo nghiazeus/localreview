@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>Detail</title>
     <link href="dist/output.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/index.css">
@@ -14,6 +14,8 @@
     <script src="https://cdn.jsdelivr.net/npm/emoji-button@4.6.0/dist/index.min.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <link rel="stylesheet" href="/css/loading.css">
+    <script src="/js/loading.js" defer></script>
     <style>
         /* From Uiverse.io by SouravBandyopadhyay */
         .containerer {
@@ -140,6 +142,12 @@
 </head>
 
 <body class="bg-gray-100">
+    <!-- Loading -->
+    <div id="loadingOverlay"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; z-index: 1000;">
+        <div class="loading-spinner"></div>
+    </div>
+
     <div class="fixed top-0 left-0 w-full shadow-sm z-50">
         <nav id="header" class="w-full flex z-30 top-0 py-2 bg-gray-50 dark:bg-neutral-800">
             <div class="container mx-auto flex items-center justify-between px-5 relative">
@@ -256,7 +264,7 @@
     </nav>
     <div class="relative">
         <!-- --------------------- -->
-        <div class="bg-gray-100 shadow-lg rounded-lg overflow-hidden">
+        <div class="bg-gray-100 rounded-lg overflow-hidden">
             <!-- Container Flex -->
             <div class="flex flex-col md:flex-row">
                 <!-- Hình ảnh (Carousel) -->
@@ -343,46 +351,95 @@
         </div>
         <!-- --------------------- -->
         <!-- Croll -->
-        <div class="mt-8 bg-gray-100 shadow-lg rounded-lg p-4">
-            <div class="flex space-x-4 overflow-x-scroll scrollbar-hide cursor-grab" id="scroll-container">
-                <div class="flex-none w-60">
-                    <img src="https://cdn.tgdd.vn/Files/2021/08/23/1377184/15-mon-an-dac-san-trung-quoc-noi-tieng-ma-ban-khong-nen-bo-lo-202108231441032708.jpg"
-                        alt="Gallery Image 1" class="object-cover w-full h-40 rounded-lg">
+        <!-- Story -->
+        <div class="relative max-w-full mt-4 mx-auto">
+            <!-- Image container with horizontal scroll -->
+            <div id="image-scroll" class="flex overflow-x-auto py-2 px-2 scroll-smooth snap-x snap-mandatory">
+                <!-- Individual images -->
+                <div class="flex-shrink-0 w-60 h-60 bg-gray-200 rounded-lg mx-2 snap-center">
+                    <img src="https://i.pinimg.com/236x/08/66/1b/08661ba50a6558bd690329f1fdda2806.jpg" alt="Image 1"
+                        class="w-full h-full object-cover rounded-lg">
                 </div>
-                <div class="flex-none w-60">
+                <div class="flex-shrink-0 w-60 h-60 bg-gray-200 rounded-lg mx-2 snap-center">
+                    <img src="https://i.pinimg.com/236x/b0/7f/d5/b07fd5e0ce5f83664f6e53b358c00561.jpg" alt="Image 2"
+                        class="w-full h-full object-cover rounded-lg">
+                </div>
+                <div class="flex-shrink-0 w-60 h-60 bg-gray-200 rounded-lg mx-2 snap-center">
+                    <img src="https://i.pinimg.com/236x/49/e4/34/49e434c1e4c4906ab4a00afbd6aab180.jpg" alt="Image 3"
+                        class="w-full h-full object-cover rounded-lg">
+                </div>
+                <div class="flex-shrink-0 w-60 h-60 bg-gray-200 rounded-lg mx-2 snap-center">
+                    <img src="https://i.pinimg.com/236x/eb/3b/8c/eb3b8c4b3306f91f11ef1f05180a8613.jpg" alt="Image 4"
+                        class="w-full h-full object-cover rounded-lg">
+                </div>
+                <div class="flex-shrink-0 w-60 h-60 bg-gray-200 rounded-lg mx-2 snap-center">
+                    <img src="https://i.pinimg.com/236x/d7/8f/61/d78f619fbe39f158c603913851de47d6.jpg" alt="Image 5"
+                        class="w-full h-full object-cover rounded-lg">
+                </div>
+                <div class="flex-shrink-0 w-60 h-60 bg-gray-200 rounded-lg mx-2 snap-center">
                     <img src="https://images2.thanhnien.vn/zoom/686_429/Uploaded/ttt/images/Content/tan-huong/mon-ngon-nha-hang/2017_07_w3/6.jpg"
-                        alt="Gallery Image 2" class="object-cover w-full h-40 rounded-lg">
+                        alt="Image 1" class="w-full h-full object-cover rounded-lg">
                 </div>
-                <div class="flex-none w-60">
-                    <img src="https://cdn.alongwalk.info/vn/wp-content/uploads/2022/04/05175641/image-ngon-mieng-voi-top-20-mon-an-ngon-o-seoul-noi-tieng-164913100195925.jpg"
-                        alt="Gallery Image 3" class="object-cover w-full h-40 rounded-lg">
+                <div class="flex-shrink-0 w-60 h-60 bg-gray-200 rounded-lg mx-2 snap-center">
+                    <img src="https://i.pinimg.com/236x/b0/7f/d5/b07fd5e0ce5f83664f6e53b358c00561.jpg" alt="Image 2"
+                        class="w-full h-full object-cover rounded-lg">
                 </div>
-                <div class="flex-none w-60">
-                    <img src="https://cdn.alongwalk.info/vn/wp-content/uploads/2022/03/10000142/image-mr-bbq-am-thuc-han-quoc-chuan-vi-han-quoc-giai-nhiet-ngay-nong-tai-quan-7-164682010213951.jpg"
-                        alt="Gallery Image 4" class="object-cover w-full h-40 rounded-lg">
+                <div class="flex-shrink-0 w-60 h-60 bg-gray-200 rounded-lg mx-2 snap-center">
+                    <img src="https://i.pinimg.com/236x/49/e4/34/49e434c1e4c4906ab4a00afbd6aab180.jpg" alt="Image 3"
+                        class="w-full h-full object-cover rounded-lg">
                 </div>
-                <div class="flex-none w-60">
-                    <img src="https://assets.grab.com/wp-content/uploads/sites/11/2020/05/31175018/chubehanoi_96868579_158391732331537_35234746899292690_n-e1590918624125.jpg"
-                        alt="Gallery Image 5" class="object-cover w-full h-40 rounded-lg">
+                <div class="flex-shrink-0 w-60 h-60 bg-gray-200 rounded-lg mx-2 snap-center">
+                    <img src="https://i.pinimg.com/236x/eb/3b/8c/eb3b8c4b3306f91f11ef1f05180a8613.jpg" alt="Image 4"
+                        class="w-full h-full object-cover rounded-lg">
                 </div>
-                <div class="flex-none w-60">
-                    <img src="https://pastaxi-manager.onepas.vn/content/uploads/articles/2amthuc/nhahang/hoaithu/top-10-quan-an-han-quoc-ngon-duoc-yeu-thich-o-ha-noi-anh5.jpg"
-                        alt="Gallery Image 6" class="object-cover w-full h-40 rounded-lg">
-                </div>
-                <div class="flex-none w-60">
-                    <img src="https://cdn.tgdd.vn/Files/2021/08/23/1377184/15-mon-an-dac-san-trung-quoc-noi-tieng-ma-ban-khong-nen-bo-lo-202108231441032708.jpg"
-                        alt="Gallery Image 1" class="object-cover w-full h-40 rounded-lg">
-                </div>
-                <div class="flex-none w-60">
-                    <img src="https://images2.thanhnien.vn/zoom/686_429/Uploaded/ttt/images/Content/tan-huong/mon-ngon-nha-hang/2017_07_w3/6.jpg"
-                        alt="Gallery Image 2" class="object-cover w-full h-40 rounded-lg">
-                </div>
-                <div class="flex-none w-60">
-                    <img src="https://cdn.alongwalk.info/vn/wp-content/uploads/2022/04/05175641/image-ngon-mieng-voi-top-20-mon-an-ngon-o-seoul-noi-tieng-164913100195925.jpg"
-                        alt="Gallery Image 3" class="object-cover w-full h-40 rounded-lg">
+                <div class="flex-shrink-0 w-60 h-60 bg-gray-200 rounded-lg mx-2 snap-center">
+                    <img src="https://i.pinimg.com/236x/d7/8f/61/d78f619fbe39f158c603913851de47d6.jpg" alt="Image 5"
+                        class="w-full h-full object-cover rounded-lg">
                 </div>
             </div>
+
+            <!-- Previous button -->
+            <button id="prevBtn"
+                class="absolute top-1/2 transform -translate-y-1/2 left-2 text-xl bg-white text-black rounded-full p-2 focus:outline-none hidden">
+                &#10094;
+            </button>
+
+            <!-- Next button -->
+            <button id="nextBtn"
+                class="absolute top-1/2 transform -translate-y-1/2 right-2 text-xl bg-white text-black rounded-full p-2 focus:outline-none">
+                &#10095;
+            </button>
         </div>
+
+        <script>
+            const scrollContainer = document.getElementById('image-scroll');
+            const nextButton = document.getElementById('nextBtn');
+            const prevButton = document.getElementById('prevBtn');
+
+            // Kiểm tra xem có cần ẩn/hiện nút không
+            function checkScrollButtons() {
+                const maxScrollLeft = scrollContainer.scrollWidth - scrollContainer.clientWidth;
+                prevButton.style.display = scrollContainer.scrollLeft > 0 ? 'block' : 'none';
+                nextButton.style.display = scrollContainer.scrollLeft < maxScrollLeft ? 'block' : 'none';
+            }
+
+            // Sự kiện cuộn
+            scrollContainer.addEventListener('scroll', checkScrollButtons);
+
+            nextButton.addEventListener('click', () => {
+                scrollContainer.scrollBy({ left: 300, behavior: 'smooth' });
+            });
+
+            prevButton.addEventListener('click', () => {
+                scrollContainer.scrollBy({ left: -300, behavior: 'smooth' });
+            });
+
+            // Kiểm tra nút ngay từ lúc tải trang
+            checkScrollButtons();
+        </script>
+
+
+        <!-- ---- -->
         <!--  -->
         <!-- <div class="mt-8 bg-white shadow-lg rounded-lg p-4">
             <div class="flex space-x-4 overflow-x-scroll scrollbar-hide cursor-grab" id="scroll-container">
@@ -390,8 +447,8 @@
             </div>
         </div> -->
         <!-- Time -->
-         <!-- Thẻ đầu tiên -->
-                <!-- <section class="bg-blue-100 rounded-lg p-4 shadow-md">
+        <!-- Thẻ đầu tiên -->
+        <!-- <section class="bg-blue-100 rounded-lg p-4 shadow-md">
                     <h2 class="text-2xl font-semibold mb-4">Giờ mở cửa</h2>
                     <div class="flex items-start space-x-4">
                         <i class="bi bi-clock text-gray-500 text-3xl"></i>
@@ -409,10 +466,10 @@
                     </div>
                 </section> -->
         <!-- Card Menu -->
-         
+
         <div class="mt-8 bg-gray-100 rounded-lg p-4">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        
+
                 <!-- Thẻ món ăn -->
                 <div class="bg-gray-50 rounded-lg p-4 shadow-md col-span-1 md:col-span-1">
                     <h3 class="text-lg font-semibold text-gray-800 font-bold">THỰC ĐƠN</h3>
@@ -428,7 +485,8 @@
                         <div id="dishList" class="hidden">
                             <strong>Món Chính:</strong>
                             <ul class="text-gray-800 mt-2">
-                                <li>Phở: Món phở truyền thống với nước dùng thơm ngon, thịt bò hoặc gà, cùng bánh phở mềm.</li>
+                                <li>Phở: Món phở truyền thống với nước dùng thơm ngon, thịt bò hoặc gà, cùng bánh phở
+                                    mềm.</li>
                                 <li>Bún Chả: Bún chả với thịt nướng thơm lừng, nước mắm chua ngọt và rau sống.</li>
                                 <li>Bò Kho: Món bò kho mềm mại với nước sốt đậm đà, ăn kèm với bánh mì hoặc cơm.</li>
                             </ul>
@@ -442,7 +500,8 @@
                             <br>
                             <strong>Món Tráng Miệng:</strong>
                             <ul class="text-gray-800 mt-2">
-                                <li>Chè Ba Màu: Chè với ba lớp màu sắc khác nhau, gồm đậu xanh, thạch, và nước cốt dừa.</li>
+                                <li>Chè Ba Màu: Chè với ba lớp màu sắc khác nhau, gồm đậu xanh, thạch, và nước cốt dừa.
+                                </li>
                                 <li>Bánh Flan: Bánh flan mềm mịn với lớp caramel ngọt ngào.</li>
                                 <li>Kem Xôi: Xôi với kem tươi mát lạnh.</li>
                             </ul>
@@ -450,7 +509,7 @@
                         <button class="text-red-500 mt-2" onclick="toggleContent('dishList')">Xem thêm</button>
                     </div>
                 </div>
-        
+
                 <!-- Thẻ món nước -->
                 <div class="bg-gray-50 rounded-lg p-4 shadow-md col-span-1 md:col-span-1">
                     <h3 class="text-lg font-semibold text-gray-800 font-bold">MÓN NƯỚC</h3>
@@ -490,7 +549,7 @@
                 </div>
             </div>
         </div>
-            
+
 
         <script>
             function toggleContent(id) {
@@ -512,83 +571,121 @@
         <div class="grid grid-cols-2 md:grid-cols-6 gap-6 p-6">
             <!-- Card 1 -->
             <div class="bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 backdrop-blur-sm bg-opacity-70">
-                <img src="https://i.pinimg.com/564x/a9/8c/69/a98c692cc1f19dda2a101ba95108496b.jpg" alt="Món saimi"
-                    class="w-full h-48 object-cover rounded-lg">
-                <div class="p-4">
-                    <h3 class="text-lg font-semibold text-gray-800">Món Sashimi</h3>
-                    <p class="text-gray-600 mt-2">Chất lượng tuyệt vời, Ngon.</p>
-                    <div class="mt-4 flex justify-between items-center">
-                        <span class="text-gray-800 font-bold">122.000<sup>đ</sup></span>
-                        <span class="text-yellow-500">★★★★☆</span>
+                <img src="https://images2.thanhnien.vn/zoom/686_429/Uploaded/ttt/images/Content/tan-huong/mon-ngon-nha-hang/2017_07_w3/6.jpg"
+                    alt="Dish 2" class="w-full h-48 object-cover rounded-lg">
+                <div class="p-4 flex flex-col justify-between h-40"> <!-- Fix chiều cao cho phần nội dung -->
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800">Bò kho</h3>
                     </div>
+                    <div class="flex items-center justify-between mt-12 w-48">
+                        <span class="text-gray-800 font-bold text-sm truncate">Giá:</span>
+                        <span class="text-gray-800 font-bold text-sm truncate mr-8 md:mr-8">Điểm</span>
+                    </div>
+                    <div class="flex items-center justify-between w-48">
+                        <span class="text-red-500 font-bold truncate">122.000<sup>đ</sup></span>
+                        <span class="text-yellow-500 font-bold truncate truncate">★★★★☆</span>
+                    </div>
+
                 </div>
             </div>
+
             <!-- Card 2 -->
             <div class="bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 backdrop-blur-sm bg-opacity-70">
                 <img src="https://images2.thanhnien.vn/zoom/686_429/Uploaded/ttt/images/Content/tan-huong/mon-ngon-nha-hang/2017_07_w3/6.jpg"
                     alt="Dish 2" class="w-full h-48 object-cover rounded-lg">
-                <div class="p-4">
-                    <h3 class="text-lg font-semibold text-gray-800">Bò kho</h3>
-                    <p class="text-gray-600 mt-2">Chất lượng tuyệt vời, Ngon.</p>
-                    <div class="mt-4 flex justify-between items-center">
-                        <span class="text-gray-800 font-bold">100.000<sup>đ</sup></span>
-                        <span class="text-yellow-500">★★★★★</span>
+                <div class="p-4 flex flex-col justify-between h-40"> <!-- Fix chiều cao cho phần nội dung -->
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800">Thịt kho tộ</h3>
                     </div>
+                    <div class="flex items-center justify-between mt-12 w-48">
+                        <span class="text-gray-800 font-bold text-sm truncate">Giá:</span>
+                        <span class="text-gray-800 font-bold text-sm truncate mr-8 md:mr-8">Điểm</span>
+                    </div>
+                    <div class="flex items-center justify-between w-48">
+                        <span class="text-red-500 font-bold truncate">122.000<sup>đ</sup></span>
+                        <span class="text-yellow-500 font-bold truncate truncate">★★★★☆</span>
+                    </div>
+
                 </div>
             </div>
             <!-- Card 3 -->
             <div class="bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 backdrop-blur-sm bg-opacity-70">
-                <img src="https://i.pinimg.com/564x/41/77/15/4177152d793abca3f0de2cbf985e54d7.jpg" alt="Dish 2"
-                    class="w-full h-48 object-cover rounded-lg">
-                <div class="p-4">
-                    <h3 class="text-lg font-semibold text-gray-800">Cơm tấm</h3>
-                    <p class="text-gray-600 mt-2">Chất lượng tuyệt vời, Ngon. Thịt mền rất ngon</p>
-                    <div class="mt-4 flex justify-between items-center">
-                        <span class="text-gray-800 font-bold">40.000<sup>đ</sup></span>
-                        <span class="text-yellow-500">★★★★★</span>
+                <img src="https://images2.thanhnien.vn/zoom/686_429/Uploaded/ttt/images/Content/tan-huong/mon-ngon-nha-hang/2017_07_w3/6.jpg"
+                    alt="Dish 2" class="w-full h-48 object-cover rounded-lg">
+                <div class="p-4 flex flex-col justify-between h-40"> <!-- Fix chiều cao cho phần nội dung -->
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800">Gà hầm thuốc bắc</h3>
                     </div>
+                    <div class="flex items-center justify-between mt-12 w-48">
+                        <span class="text-gray-800 font-bold text-sm truncate">Giá:</span>
+                        <span class="text-gray-800 font-bold text-sm truncate mr-8 md:mr-8">Điểm</span>
+                    </div>
+                    <div class="flex items-center justify-between w-48">
+                        <span class="text-red-500 font-bold truncate">122.000<sup>đ</sup></span>
+                        <span class="text-yellow-500 font-bold truncate truncate">★★★★☆</span>
+                    </div>
+
                 </div>
             </div>
             <!-- Card 4 -->
             <div class="bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 backdrop-blur-sm bg-opacity-70">
-                <img src="https://i.pinimg.com/564x/71/be/38/71be38e661f54b84d359cf5bb4250624.jpg" alt="Món saimi"
-                    class="w-full h-48 object-cover rounded-lg">
-                <div class="p-4">
-                    <h3 class="text-lg font-semibold text-gray-800">Phở</h3>
-                    <p class="text-gray-600 mt-2">Chất lượng tuyệt vời, Ngon.</p>
-                    <div class="mt-4 flex justify-between items-center">
-                        <span class="text-gray-800 font-bold">50.000<sup>đ</sup></span>
-                        <span class="text-yellow-500">★★★★☆</span>
+                <img src="https://images2.thanhnien.vn/zoom/686_429/Uploaded/ttt/images/Content/tan-huong/mon-ngon-nha-hang/2017_07_w3/6.jpg"
+                    alt="Dish 2" class="w-full h-48 object-cover rounded-lg">
+                <div class="p-4 flex flex-col justify-between h-40"> <!-- Fix chiều cao cho phần nội dung -->
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800">Long tranh Hổ đấu</h3>
                     </div>
+                    <div class="flex items-center justify-between mt-12 w-48">
+                        <span class="text-gray-800 font-bold text-sm truncate">Giá:</span>
+                        <span class="text-gray-800 font-bold text-sm truncate mr-8 md:mr-8">Điểm</span>
+                    </div>
+                    <div class="flex items-center justify-between w-48">
+                        <span class="text-red-500 font-bold truncate">122.000<sup>đ</sup></span>
+                        <span class="text-yellow-500 font-bold truncate truncate">★★★★☆</span>
+                    </div>
+
                 </div>
             </div>
             <!-- Card 5 -->
             <div class="bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 backdrop-blur-sm bg-opacity-70">
                 <img src="https://images2.thanhnien.vn/zoom/686_429/Uploaded/ttt/images/Content/tan-huong/mon-ngon-nha-hang/2017_07_w3/6.jpg"
                     alt="Dish 2" class="w-full h-48 object-cover rounded-lg">
-                <div class="p-4">
-                    <h3 class="text-lg font-semibold text-gray-800">Tôm nướng</h3>
-                    <p class="text-gray-600 mt-2">Ngon đậm đà.</p>
-                    <div class="mt-4 flex justify-between items-center">
-                        <span class="text-gray-800 font-bold">250.000<sup>đ</sup></span>
-                        <span class="text-yellow-500">★★★★★</span>
+                <div class="p-4 flex flex-col justify-between h-40"> <!-- Fix chiều cao cho phần nội dung -->
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800">Bún mộc</h3>
                     </div>
+                    <div class="flex items-center justify-between mt-12 w-48">
+                        <span class="text-gray-800 font-bold text-sm truncate">Giá:</span>
+                        <span class="text-gray-800 font-bold text-sm truncate mr-8 md:mr-8">Điểm</span>
+                    </div>
+                    <div class="flex items-center justify-between w-48">
+                        <span class="text-red-500 font-bold truncate">122.000<sup>đ</sup></span>
+                        <span class="text-yellow-500 font-bold truncate truncate">★★★★☆</span>
+                    </div>
+
                 </div>
             </div>
             <!-- Card 6 -->
             <div class="bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 backdrop-blur-sm bg-opacity-70">
-                <img src="https://i.pinimg.com/564x/9e/e3/46/9ee346d28ede7bb464b9079d82df9020.jpg" alt="Món saimi"
-                    class="w-full h-48 object-cover rounded-lg">
-                <div class="p-4">
-                    <h3 class="text-lg font-semibold text-gray-800">Chả giò</h3>
-                    <p class="text-gray-600 mt-2">Chất lượng tuyệt vời, Ngon.</p>
-                    <div class="mt-4 flex justify-between items-center">
-                        <span class="text-gray-800 font-bold">100.000<sup>đ</sup></span>
-                        <span class="text-yellow-500">★★★★☆</span>
+                <img src="https://images2.thanhnien.vn/zoom/686_429/Uploaded/ttt/images/Content/tan-huong/mon-ngon-nha-hang/2017_07_w3/6.jpg"
+                    alt="Dish 2" class="w-full h-48 object-cover rounded-lg">
+                <div class="p-4 flex flex-col justify-between h-40"> <!-- Fix chiều cao cho phần nội dung -->
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800">Thiên an môn</h3>
                     </div>
+                    <div class="flex items-center justify-between mt-12 w-48">
+                        <span class="text-gray-800 font-bold text-sm truncate">Giá:</span>
+                        <span class="text-gray-800 font-bold text-sm truncate mr-8 md:mr-8">Điểm</span>
+                    </div>
+                    <div class="flex items-center justify-between w-48">
+                        <span class="text-red-500 font-bold truncate">122.000<sup>đ</sup></span>
+                        <span class="text-yellow-500 font-bold truncate truncate">★★★★☆</span>
+                    </div>
+
                 </div>
             </div>
         </div>
+
         <br>
         <br>
         <!-- Thức uống -->
@@ -774,20 +871,20 @@
                     </div>
                 </div>
             </div>
-            
-               <form id="reviewForm">
-			        <label for="comment">Comment:</label>
-			        <textarea id="comment" name="comment"></textarea><br>
-			
-			        <label for="rating">Rating:</label>
-			        <input type="number" id="rating" name="rating" min="1" max="5"/><br>
-			
-			        <label for="images">Images:</label>
-			        <input type="file" id="images" name="images" multiple/><br>
-			
-			        <button type="submit">Submit Review</button>
-			    </form>
-		            
+
+            <form id="reviewForm">
+                <label for="comment">Comment:</label>
+                <textarea id="comment" name="comment"></textarea><br>
+
+                <label for="rating">Rating:</label>
+                <input type="number" id="rating" name="rating" min="1" max="5" /><br>
+
+                <label for="images">Images:</label>
+                <input type="file" id="images" name="images" multiple /><br>
+
+                <button type="submit">Submit Review</button>
+            </form>
+
         </section>
     </div>
     <br>
@@ -796,7 +893,7 @@
     <!-- ------- -->
 
 
-	 <script src="/build/js/reviews.js"></script>
+    <script src="/build/js/reviews.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"

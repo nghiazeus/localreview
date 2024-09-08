@@ -10,6 +10,10 @@ body {
     -webkit-touch-callout: none; /* Ngăn menu bật lên khi giữ một đối tượng */
 }
 
+.modal-message {
+    display: none;
+}
+
 
 .work-sans {
     font-family: 'Work Sans', sans-serif;
@@ -308,3 +312,30 @@ input, textarea, select {
 }
 
 
+.menu-transition {
+    transition: max-height 0.3s ease-out;
+}
+
+#media-preview {
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* Internet Explorer 10+ */
+}
+
+#media-preview::-webkit-scrollbar {
+    display: none;
+    /* Webkit (Chrome, Safari, Edge) */
+}
+
+/* Ẩn thanh croll story */
+#image-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+#image-scroll {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+}

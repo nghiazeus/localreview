@@ -29,58 +29,61 @@ import com.localreview.repository.CategoriesRepository;
 import com.localreview.repository.StoreMenuRepository;
 import com.localreview.repository.StoreRepository;
 import com.localreview.repository.UserRepository;
+
 @Controller
 @RequestMapping("/stores")
 public class StoreOfUserController {
 
-    @Autowired
-    private StoreService storeService;
+	@Autowired
+	private StoreService storeService;
 
-    @Autowired
-    private CategoriesRepository categoryRepository;
+	@Autowired
+	private CategoriesRepository categoryRepository;
 
-    @Autowired
-    private UserService userService;
-    
-    @Autowired
-    private UserRepository userRepository;
+	@Autowired
+	private UserService userService;
 
-    @Autowired
-    private StoreRepository storeRepository;
-    
-    @Autowired
-    private StoreMenuService menuService;
-    
-    @Autowired
-    private StoreMenuRepository menuRepository;
+	@Autowired
+	private UserRepository userRepository;
 
-    @GetMapping("/{userId}")
-    public String getUserStores(@PathVariable("userId") String userId, @RequestParam(required = false) String storeId, Model model) {
-        User currentUser = userRepository.findById(userId).orElse(null);
+	@Autowired
+	private StoreRepository storeRepository;
 
-        if (currentUser == null) {
-            model.addAttribute("error", "Không tìm thấy người dùng");
-            return "error";
-        }
+	@Autowired
+	private StoreMenuService menuService;
 
-        // Nếu storeId không null, lấy danh sách thực đơn của cửa hàng đó
-      //  List<StoreMenu> menuList = storeId != null ? menuService.getMenuByStoreId(storeId) : new ArrayList<>();
-        List<Store> stores = storeService.getStoresByOwnerId(userId);
-        
-        List<StoreMenu> menulist = menuService.getMenuByStoreId(userId);
+	@Autowired
+	private StoreMenuRepository menuRepository;
 
-        model.addAttribute("menulist", menulist);
-        model.addAttribute("stores", stores);
+	@GetMapping("/{userId}")
+	public String getUserStores(@PathVariable("userId") String userId, 
+			@RequestParam(required = false) String storeId, Model model) {
 
-        // Thêm breadcrumb vào model
-        List<Breadcrumb> breadcrumbs = new ArrayList<>();
-        breadcrumbs.add(new Breadcrumb("Trang chủ", "/index"));
-        breadcrumbs.add(new Breadcrumb("Tài khoản", "/profile/" + userId));
-        breadcrumbs.add(new Breadcrumb("Cửa hàng của tôi", "/stores/" + userId));
-        model.addAttribute("breadcrumbs", breadcrumbs);
+		User currentUser = userRepository.findById(userId).orElse(null);
 
-        return "user_stores";
-    }
+		if (currentUser == null) {
+			model.addAttribute("error", "Không tìm thấy người dùng");
+			return "error";
+		}
+
+		List<Store> stores = storeService.getStoresByOwnerId(userId);
+
+		List<StoreMenu> menuList = new ArrayList<>();
+		if (storeId != null) {
+			menuList = menuService.getMenuByStoreId(storeId);
+		}
+
+		model.addAttribute("menulist", menuList);
+		model.addAttribute("stores", stores);
+
+		List<Breadcrumb> breadcrumbs = new ArrayList<>();
+		breadcrumbs.add(new Breadcrumb("Trang chủ", "/index"));
+		breadcrumbs.add(new Breadcrumb("Tài khoản", "/profile/" + userId));
+		breadcrumbs.add(new Breadcrumb("Cửa hàng của tôi", storeId));
+		model.addAttribute("breadcrumbs", breadcrumbs);
+
+		return "user_stores";
+	}
 
 //    @GetMapping("/edit/{id}")
 //    public String editStore(@PathVariable String id, Model model) {
@@ -91,90 +94,71 @@ public class StoreOfUserController {
 //        return "edit_store"; // Tên của file Thymeleaf
 //    }
 
-    @PostMapping("/update")
-    public String updateStore(@RequestParam String storeId,
-                               @RequestParam String storeName,
-                               @RequestParam String storeCategory,
-                               @RequestParam String address,
-                               @RequestParam String phoneNumber,
-                               RedirectAttributes redirectAttributes) {
-        Optional<Store> storeOptional = storeRepository.findById(storeId);
-        if (storeOptional.isPresent()) {
-            Store store = storeOptional.get();
-            store.setStoreName(storeName);
-            // Assume you have a way to fetch categories
-            Categories category = categoryRepository.findById(storeCategory).orElse(null);
-            store.setStoreCategories(category);
-            String[] addressParts = address.split(", ");
-            store.setAddressStreet(addressParts[0]);
-            store.setAddressCommune(addressParts[1]);
-            store.setAddressDistrict(addressParts[2]);
-            store.setAddressCity(addressParts[3]);
-            store.setPhoneNumber(phoneNumber);
-            
-            storeRepository.save(store);
+	@PostMapping("/updatestoreuser")
+	public String updateStore(@ModelAttribute("store") Store store, Model model) {
+        Optional<Store> existingStoreOptional = storeRepository.findById(store.getStoreId());
 
-            redirectAttributes.addFlashAttribute("message", "Cập nhật cửa hàng thành công");
-            return "redirect:/stores/" + store.getOwnerId();
+        if (existingStoreOptional.isPresent()) {
+            Store existingStore = existingStoreOptional.get();
+            existingStore.setStoreName(store.getStoreName());
+            existingStore.setAddressCity(store.getAddressCity());
+            existingStore.setAddressDistrict(store.getAddressDistrict());
+            existingStore.setAddressCommune(store.getAddressCommune());
+            existingStore.setAddressStreet(store.getAddressStreet());
+            existingStore.setPhoneNumber(store.getPhoneNumber());
+
+            storeRepository.save(existingStore);
+
+            model.addAttribute("store", existingStore);
+            model.addAttribute("success", "Store updated successfully");
+
+            return "redirect:/stores/" + existingStore.getOwnerId();
         } else {
-            redirectAttributes.addFlashAttribute("error", "Cửa hàng không tồn tại");
-            return "redirect:/stores";
+            model.addAttribute("error", "Store not found");
+            return "error";
         }
     }
 
-    @GetMapping("/delete/{id}")
-    public String deleteStore(@PathVariable String id) {
-        Store store = storeRepository.findById(id).orElse(null);
-        if (store != null) {
-            storeService.deleteStore(id);
-        }
-        return "redirect:/stores/" + store.getOwnerId();
-    }
 
-    // Thêm menu
-    @PostMapping("/menu/update")
-    public String updateMenu(@RequestParam String menuId,
-                             @RequestParam String foodFirst,
-                             @RequestParam String foodMain,
-                             @RequestParam String foodDessert,
-                             RedirectAttributes redirectAttributes) {
-        StoreMenu menu = menuService.getMenuById(menuId);
 
-        if (menu != null) {
-            menu.setFoodFirst(foodFirst);
-            menu.setFoodMain(foodMain);
-            menu.setFoodDessert(foodDessert);
-            menuService.saveMenu(menu);
+	// Thêm menu
+	@PostMapping("/menu/update")
+	public String updateMenu(@RequestParam String menuId, @RequestParam String foodFirst, @RequestParam String foodMain,
+			@RequestParam String foodDessert, RedirectAttributes redirectAttributes) {
+		StoreMenu menu = menuService.getMenuById(menuId);
 
-            redirectAttributes.addFlashAttribute("message", "Cập nhật menu thành công");
-        } else {
-            redirectAttributes.addFlashAttribute("error", "Menu không tồn tại");
-        }
+		if (menu != null) {
+			menu.setFoodFirst(foodFirst);
+			menu.setFoodMain(foodMain);
+			menu.setFoodDessert(foodDessert);
+			menuService.saveMenu(menu);
 
-        return "redirect:/stores/" + menu.getStore().getOwnerId() + "/menu";
-    }
+			redirectAttributes.addFlashAttribute("message", "Cập nhật menu thành công");
+		} else {
+			redirectAttributes.addFlashAttribute("error", "Menu không tồn tại");
+		}
 
-    @PostMapping("/menu/add")
-    public String addMenu(@RequestParam String storeId,
-                          @RequestParam String foodFirst,
-                          @RequestParam String foodMain,
-                          @RequestParam String foodDessert,
-                          RedirectAttributes redirectAttributes) {
-        Store store = storeRepository.findById(storeId).orElse(null);
+		return "redirect:/stores/" + menu.getStore().getOwnerId() + "/menu";
+	}
 
-        if (store != null) {
-            StoreMenu newMenu = new StoreMenu();
-            newMenu.setStore(store);
-            newMenu.setFoodFirst(foodFirst);
-            newMenu.setFoodMain(foodMain);
-            newMenu.setFoodDessert(foodDessert);
+	@PostMapping("/menu/add")
+	public String addMenu(@RequestParam String storeId, @RequestParam String foodFirst, @RequestParam String foodMain,
+			@RequestParam String foodDessert, RedirectAttributes redirectAttributes) {
+		Store store = storeRepository.findById(storeId).orElse(null);
 
-            menuService.saveMenu(newMenu);
-            redirectAttributes.addFlashAttribute("message", "Thêm menu thành công");
-        } else {
-            redirectAttributes.addFlashAttribute("error", "Cửa hàng không tồn tại");
-        }
+		if (store != null) {
+			StoreMenu newMenu = new StoreMenu();
+			newMenu.setStore(store);
+			newMenu.setFoodFirst(foodFirst);
+			newMenu.setFoodMain(foodMain);
+			newMenu.setFoodDessert(foodDessert);
 
-        return "redirect:/stores/" + storeId + "/menu";
-    }
+			menuService.saveMenu(newMenu);
+			redirectAttributes.addFlashAttribute("message", "Thêm menu thành công");
+		} else {
+			redirectAttributes.addFlashAttribute("error", "Cửa hàng không tồn tại");
+		}
+
+		return "redirect:/stores/" + storeId + "/menu";
+	}
 }

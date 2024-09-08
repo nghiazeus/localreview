@@ -20,7 +20,7 @@ public class StoreMenu {
     @Id
     @Column(name = "menu_id", columnDefinition = "CHAR(36)")
     private String menuId = UUID.randomUUID().toString(); // Tạo UUID tự động
-
+    
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id", nullable = false, columnDefinition = "CHAR(36)")
     private Store store; // Liên kết tới Store

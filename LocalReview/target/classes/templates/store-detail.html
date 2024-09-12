@@ -15,134 +15,10 @@
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
     <link rel="stylesheet" href="/css/loading.css">
-    <script src="/js/loading.js" defer></script>
-    <style>
-        /* From Uiverse.io by SouravBandyopadhyay */
-        .containerer {
-            width: 100%;
-            height: 100px;
-            position: relative;
-            background: #f0f0f0;
-        }
-
-        .containerer::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg,
-                    #3498db 25%,
-                    transparent 25%,
-                    transparent 50%,
-                    #3498db 50%,
-                    #3498db 75%,
-                    transparent 75%,
-                    transparent),
-                linear-gradient(-45deg,
-                    #3498db 25%,
-                    transparent 25%,
-                    transparent 50%,
-                    #3498db 50%,
-                    #3498db 75%,
-                    transparent 75%,
-                    transparent);
-            background-size: 20px 20px;
-            opacity: 0.8;
-        }
-
-        .scrollable-container {
-            overflow: auto;
-            /* Cho phép cuộn */
-            -ms-overflow-style: none;
-            /* Ẩn thanh cuộn trên Internet Explorer */
-            scrollbar-width: none;
-            /* Ẩn thanh cuộn trên Firefox */
-        }
-
-        .scrollable-container::-webkit-scrollbar {
-            display: none;
-            /* Ẩn thanh cuộn trên Chrome, Safari */
-        }
-
-        /*  */
-        .carousel-container {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-
-        .carousel-slide {
-            display: flex;
-            transition: transform 0.5s ease-in-out;
-            height: 100%;
-            /* Đảm bảo chiều cao của carousel-slide */
-        }
-
-        .carousel-item {
-            flex: 0 0 100%;
-            height: 100%;
-            /* Đảm bảo chiều cao của carousel-item */
-        }
-
-        .carousel-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            /* Giữ tỷ lệ ảnh */
-            background-color: black;
-            /* Màu nền nếu ảnh không đầy đủ */
-        }
-
-        .carousel-button {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: rgba(0, 0, 0, 0.5);
-            color: white;
-            border: none;
-            padding: 0.5rem;
-            cursor: pointer;
-            z-index: 10;
-        }
-
-        .carousel-button.left {
-            left: 10px;
-        }
-
-        .carousel-button.right {
-            right: 10px;
-        }
-
-
-        .carousel-button.left {
-            left: 0;
-        }
-
-        .carousel-button.right {
-            right: 0;
-        }
-
-        @media (min-width: 768px) {
-            .carousel-container {
-                height: 20rem;
-                /* Chiều cao cho desktop */
-            }
-        }
-
-        @media (max-width: 767px) {
-            .carousel-container {
-                height: 16rem;
-                /* Chiều cao cho mobile */
-            }
-        }
-    </style>
+    <script src="/js/loading.js"></script>
 </head>
 
 <body class="bg-gray-100">
-    <!-- Loading -->
     <div id="loadingOverlay"
         style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; z-index: 1000;">
         <div class="loading-spinner"></div>
@@ -165,100 +41,21 @@
                         <strong class="text-yellow-400">RE</strong>VIEW
                     </a>
                 </div>
-
+                <!-- filter -->
+                <div th:replace="/layout/_filter.html"></div>
+                <!-- ----- -->
             </div>
-
-            <!-- Lọc -->
-            <div class="relative inline-block text-left mr-6">
-                <button class="flex pl-3 text-3xl inline-block no-underline hover:text-black" id="openModal1">
-                    <i class="bi bi-filter-circle"></i>
-                </button>
-
-                <!-- Modal -->
-                <div id="modal-container"
-                    class="fixed inset-0 bg-gray-400 bg-opacity-75 flex justify-center items-center z-50 hidden">
-                    <!-- Modal Container -->
-                    <div class="bg-white rounded-lg shadow-lg">
-                        <!-- Modal Header -->
-                        <div class="flex justify-between items-center bg-gray-100 p-4 rounded-t-lg md-7 space-x-5">
-                            <h2 class="font-bold">(Nhà hàng/Quán ăn được đánh giá tốt)</h2>
-                            <button class="text-gray-500 hover:text-gray-700 focus:outline-none" id="closeModal">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
-                        </div>
-                        <!-- Modal Body -->
-                        <div class="p-6">
-                            <!-- Filter Option 1: Category -->
-                            <div class="mb-4">
-                                <label class="block text-gray-700 text-sm font-bold mb-2">Nhà hàng/Quán
-                                    ăn</label>
-                                <select
-                                    class="w-full px-3 py-2  h-12 sm:h-12 md:h-12 lg:h-12 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    <option value="">Chọn nhà hàng/quán ăn</option>
-                                    <option value="star">(5 SAO) 🌟🌟🌟🌟🌟</option>
-                                    <option value="star">(4 SAO) 🌟🌟🌟🌟</option>
-                                    <option value="star">(3 SAO) 🌟🌟🌟</option>
-                                    <option value="star">(2 SAO) 🌟🌟</option>
-                                    <option value="star">(1 SAO) 🌟</option>
-                                </select>
-                            </div>
-                            <!-- Filter Option 3: Availability -->
-                            <div class="mb-4">
-                                <label class="block text-gray-700 text-sm font-bold mb-2">Phổ biến</label>
-                                <div class="flex items-center">
-                                    <input type="checkbox" id="in-stock" class="mr-2">
-                                    <label for="in-stock" class="text-gray-600">Được xem nhiều</label>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Modal Footer -->
-                        <div class="flex justify-end p-4 bg-gray-100 rounded-b-lg">
-                            <button
-                                class="bg-red-500 text-white px-4 py-2 rounded-md mr-2 hover:bg-red-600 transition duration-300"
-                                id="closeModal2">Hủy</button>
-                            <button
-                                class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300">Áp
-                                dụng</button>
-                        </div>
-                    </div>
-                </div>
-                <script>
-                    // Lấy các phần tử
-                    const openModalButton = document.getElementById('openModal1');
-                    const modalContainer = document.getElementById('modal-container');
-                    const closeModalButtons = document.querySelectorAll('#closeModal, #closeModal2');
-
-                    // Mở modal
-                    openModalButton.addEventListener('click', () => {
-                        modalContainer.classList.remove('hidden');
-                    });
-
-                    // Đóng modal
-                    closeModalButtons.forEach(button => {
-                        button.addEventListener('click', () => {
-                            modalContainer.classList.add('hidden');
-                        });
-                    });
-                </script>
-            </div>
+        </nav>
     </div>
-    </nav>
-    </div>
-    <nav class="mb-4 ml-4 relative mt-20">
+    <nav class="mb-4 ml-4 relative mt-16">
         <ol class="flex flex-wrap items-center space-x-2 text-gray-700 dark:text-gray-300">
-            <li th:each="breadcrumb, iterStat : ${breadcrumbs}" class="flex items-center">
-
-                <a th:if="${not #strings.isEmpty(breadcrumb.url) and !iterStat.last}" th:href="${breadcrumb.url}"
+            <li th:each="breadcrumb, iterStat : ${breadcrumbs}" class="flex items-center"><a
+                    th:if="${not #strings.isEmpty(breadcrumb.url) and !iterStat.last}" th:href="${breadcrumb.url}"
                     class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
-                    th:text="${breadcrumb.title}"></a>
-
-                <span th:if="${#strings.isEmpty(breadcrumb.url) or iterStat.last}"
-                    class="text-gray-500 dark:text-gray-400" th:text="${breadcrumb.title}"></span>
-
-                <i th:if="${!iterStat.last}" class="bi bi-chevron-compact-right text-gray-500 dark:text-gray-400"></i>
+                    th:text="${breadcrumb.title}"></a> <span
+                    th:if="${#strings.isEmpty(breadcrumb.url) or iterStat.last}"
+                    class="text-gray-500 dark:text-gray-400" th:text="${breadcrumb.title}"></span> <i
+                    th:if="${!iterStat.last}" class="bi bi-chevron-compact-right text-gray-500 dark:text-gray-400"></i>
             </li>
         </ol>
     </nav>
@@ -330,16 +127,57 @@
                     </div>
                     <p class="text-gray-600 mb-4">
                         <strong>Địa chỉ: </strong>
-                        <a th:href="'https://www.google.com/maps/search/?api=1&query=' 
-                        + ${store.addressStreet} + ', ' + ${store.addressCommune} + ', ' 
-                        + ${store.addressDistrict} + ', ' + ${store.addressCity}" class="text-blue-500 hover:underline"
-                            target="_blank">
+                        <a onclick="confirmOpenMaps(event, this)" th:href="'https://www.google.com/maps/search/?api=1&query=' 
+                            + ${store.addressStreet} + ', ' + ${store.addressCommune} + ', ' 
+                            + ${store.addressDistrict} + ', ' + ${store.addressCity}"
+                            class="text-blue-500 hover:underline">
                             <span th:text="${store.addressStreet}"></span>,
                             <span th:text="${store.addressCommune}"></span>,
                             <span th:text="${store.addressDistrict}"></span>,
                             <span th:text="${store.addressCity}"></span>.
                         </a>
                     </p>
+
+                    <!-- Modal -->
+                    <div id="mapModal"
+                        class="fixed z-40 inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center hidden">
+                        <div class="bg-white p-6 rounded-lg shadow-lg">
+                            <h2 class="flex text-lg font-semibold mb-4">
+                                <!-- <i class="bi bi-geo-alt-fill text-red-600 mr-2"></i> -->
+                                <img src="https://s3.cloud.cmctelecom.vn/tinhte2/2020/02/4902204_cover_bieu_tuong_moi_google_maps.jpg"
+                                    class="h-8 w-14">
+                                Mở Google Maps
+                            </h2>
+                            <p class="text-gray-700 mb-4">Bạn có muốn mở Google Maps để xem vị trí này?</p>
+                            <div class="flex justify-end mt-6 py-6 gap-4">
+                                <button onclick="cancelOpenMaps()"
+                                    class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded mr-2">Hủy</button>
+                                <button id="confirmBtn"
+                                    class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">OK</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                        function confirmOpenMaps(event, linkElement) {
+                            event.preventDefault(); // Ngăn chặn liên kết mở ngay lập tức
+                            document.getElementById('mapModal').classList.remove('hidden');
+
+                            // Lấy URL từ thuộc tính href của thẻ <a>
+                            const mapUrl = linkElement.getAttribute('href');
+
+                            // Gán URL Google Maps cho nút OK
+                            const confirmBtn = document.getElementById('confirmBtn');
+                            confirmBtn.onclick = function () {
+                                window.open(mapUrl, '_blank'); // Mở Google Maps trong tab mới
+                                cancelOpenMaps(); // Ẩn modal
+                            };
+                        }
+
+                        function cancelOpenMaps() {
+                            document.getElementById('mapModal').classList.add('hidden'); // Ẩn modal
+                        }
+                    </script>
 
                     <p class="flex items-center mb-4">
                         <i class="bi bi-geo-alt-fill text-red-600 mr-2"></i>
@@ -837,53 +675,19 @@
 
             <!-- Cột bên phải chứa quảng cáo (3 phần) -->
             <div class="md:w-3/12 w-full md:ml-20 mt-8 md:mt-6">
-                <div class="bg-white border border-slate-200 rounded-xl p-4 text-sm">
-                    <h1 class="text-center text-slate-800 text-xl font-bold mb-2">Gửi cảm nhận của bạn</h1>
-                    <textarea id="feedback" placeholder="Cảm nhận của bạn..."
-                        class="bg-slate-100 text-slate-600 h-40 w-full placeholder:text-slate-600 placeholder:opacity-50 border border-slate-200 resize-none outline-none rounded-lg p-2 duration-300 focus:border-slate-600"></textarea>
-                    <div class="flex space-x-2 mt-2">
-                        <button
-                            class="flex-grow fill-slate-600 flex justify-center items-center rounded-lg p-2 duration-300 bg-slate-100 hover:border-slate-600 focus:fill-blue-200 focus:bg-blue-400 border border-slate-200">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 0 512 512">
-                                <path
-                                    d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm177.6 62.1C192.8 334.5 218.8 352 256 352s63.2-17.5 78.4-33.9c9-9.7 24.2-10.4 33.9-1.4s10.4 24.2 1.4 33.9c-22 23.8-60 49.4-113.6 49.4s-91.7-25.5-113.6-49.4c-9-9.7-8.4-24.9 1.4-33.9s24.9-8.4 33.9 1.4zM144.4 208a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm192-32a32 32 0 1 1 0 64 32 32 0 1 1 0-64z">
-                                </path>
-                            </svg>
-                        </button>
-                        <button id="emoji-button"
-                            class="flex-grow fill-slate-600 flex justify-center items-center rounded-lg p-2 duration-300 bg-slate-100 hover:border-slate-600 focus:fill-blue-200 focus:bg-blue-400 border border-slate-200">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 0 512 512">
-                                <path
-                                    d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm177.6 62.1C192.8 334.5 218.8 352 256 352s63.2-17.5 78.4-33.9c9-9.7 24.2-10.4 33.9-1.4s10.4 24.2 1.4 33.9c-22 23.8-60 49.4-113.6 49.4s-91.7-25.5-113.6-49.4c-9-9.7-8.4-24.9 1.4-33.9s24.9-8.4 33.9 1.4zM144.4 208a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm192-32a32 32 0 1 1 0 64 32 32 0 1 1 0-64z">
-                                </path>
-                            </svg>
-                        </button>
-                        <button
-                            class="flex items-center bg-black text-white gap-1 px-4 py-2 cursor-pointer text-yellow-400 font-semibold tracking-widest rounded-md hover:bg-yellow-400 hover:text-black duration-300 hover:gap-2 hover:translate-x-3">
-                            Gửi
-                            <svg class="w-5 h-5" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"
-                                fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
-                                    stroke-linejoin="round" stroke-linecap="round"></path>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
+                <form id="reviewForm">
+                    <label for="comment">Comment:</label>
+                    <textarea id="comment" name="comment"></textarea><br>
+
+                    <label for="rating">Rating:</label>
+                    <input type="number" id="rating" name="rating" min="1" max="5" /><br>
+
+                    <label for="images">Images:</label>
+                    <input type="file" id="images" name="images" multiple /><br>
+
+                    <button type="submit">Submit Review</button>
+                </form>
             </div>
-
-            <form id="reviewForm">
-                <label for="comment">Comment:</label>
-                <textarea id="comment" name="comment"></textarea><br>
-
-                <label for="rating">Rating:</label>
-                <input type="number" id="rating" name="rating" min="1" max="5" /><br>
-
-                <label for="images">Images:</label>
-                <input type="file" id="images" name="images" multiple /><br>
-
-                <button type="submit">Submit Review</button>
-            </form>
 
         </section>
     </div>

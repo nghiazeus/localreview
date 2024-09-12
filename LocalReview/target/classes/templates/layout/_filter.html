@@ -1,0 +1,75 @@
+<div class="relative inline-block text-left mr-6">
+    <button class="flex pl-3 text-3xl inline-block no-underline hover:text-black" id="openModal1">
+        <i class="bi bi-filter-circle"></i>
+    </button>
+
+    <!-- Modal -->
+    <div id="modal-container"
+        class="fixed inset-0 bg-gray-400 bg-opacity-75 flex justify-center items-center z-50 hidden">
+        <!-- Modal Container -->
+        <div class="bg-white rounded-lg shadow-lg">
+            <!-- Modal Header -->
+            <div class="flex justify-between items-center bg-gray-100 p-4 rounded-t-lg md-7 space-x-5">
+                <h2 class="font-bold">(Nhà hàng/Quán ăn được đánh giá tốt)</h2>
+                <button class="text-gray-500 hover:text-gray-700 focus:outline-none" id="closeModal">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <!-- Modal Body -->
+            <div class="p-6">
+                <!-- Filter Option 1: Category -->
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Nhà hàng/Quán
+                        ăn</label>
+                    <select
+                        class="w-full px-3 py-2  h-12 sm:h-12 md:h-12 lg:h-12 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Chọn nhà hàng/quán ăn</option>
+                        <option value="star">(5 SAO) 🌟🌟🌟🌟🌟</option>
+                        <option value="star">(4 SAO) 🌟🌟🌟🌟</option>
+                        <option value="star">(3 SAO) 🌟🌟🌟</option>
+                        <option value="star">(2 SAO) 🌟🌟</option>
+                        <option value="star">(1 SAO) 🌟</option>
+                    </select>
+                </div>
+                <!-- Filter Option 3: Availability -->
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Phổ biến</label>
+                    <div class="flex items-center">
+                        <input type="checkbox" id="in-stock" class="mr-2">
+                        <label for="in-stock" class="text-gray-600">Được xem nhiều</label>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal Footer -->
+            <div class="flex justify-end p-4 bg-gray-100 rounded-b-lg">
+                <button
+                    class="bg-red-500 text-white px-4 py-2 rounded-md mr-2 hover:bg-red-600 transition duration-300"
+                    id="closeModal2">Hủy</button>
+                <button
+                    class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300">Áp
+                    dụng</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Lấy các phần tử
+        const openModalButton = document.getElementById('openModal1');
+        const modalContainer = document.getElementById('modal-container');
+        const closeModalButtons = document.querySelectorAll('#closeModal, #closeModal2');
+
+        // Mở modal
+        openModalButton.addEventListener('click', () => {
+            modalContainer.classList.remove('hidden');
+        });
+
+        // Đóng modal
+        closeModalButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                modalContainer.classList.add('hidden');
+            });
+        });
+    </script>
+</div>

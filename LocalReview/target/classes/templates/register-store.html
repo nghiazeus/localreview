@@ -52,7 +52,7 @@
         </div>
 
         <!-- Store Registration Form -->
-        <form th:action="@{/register-store}" method="post" class="space-y-4">
+        <form th:action="@{/register-store}" method="post" enctype="multipart/form-data" class="space-y-4">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <label for="store_name" class="block text-sm font-medium text-gray-700">Tên cửa hàng</label>
@@ -60,8 +60,7 @@
                         placeholder="Tên cửa hàng" id="store_name" name="store_name" type="text" required />
                 </div>
                 <div>
-                    <label for="store_categories" class="block text-sm font-medium text-gray-700">Loại nhà
-                        hàng</label>
+                    <label for="store_categories" class="block text-sm font-medium text-gray-700">Loại nhà hàng</label>
                     <select class="outline-none border-2 rounded-md px-3 py-2 w-full text-gray-700 focus:border-blue-300
                             text-sm sm:text-base md:text-lg h-10" id="store_categories" name="store_categories"
                         required>
@@ -97,12 +96,18 @@
                     <input class="outline-none border-2 rounded-md px-3 py-2 w-full text-gray-700 focus:border-blue-300"
                         placeholder="Số điện thoại" id="phone_number" name="phone_number" type="text" required />
                 </div>
+                <div>
+                    <label for="store_images" class="block text-sm font-medium text-gray-700">Ảnh cửa hàng</label>
+                    <input type="file" id="store_images" name="store_images" multiple
+                        class="outline-none border-2 rounded-md px-3 py-2 w-full text-gray-700 focus:border-blue-300" />
+                </div>
             </div>
             <button class="w-full py-2 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 rounded-md text-white ring-2
                     focus:outline-none focus:ring-2 focus:ring-blue-300 mt-4" type="submit">
                 Đăng ký cửa hàng
             </button>
         </form>
+        
     </div>
 
     <!-- <div>

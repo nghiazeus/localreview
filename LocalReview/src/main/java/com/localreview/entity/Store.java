@@ -40,6 +40,9 @@ public class Store {
     
     @OneToMany(mappedBy = "store", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<StoreMenu> storeMenus;
+    
+    @OneToMany(mappedBy = "store", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Photo> photos; // Liên kết với bảng Photo
 
     @Column(name = "address_city", nullable = false)
     private String addressCity;

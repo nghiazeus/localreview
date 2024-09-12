@@ -6,389 +6,83 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>Review</title>
     <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/build/css/tailwind.css">
     <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@glidejs/glide@3.4.1/dist/css/glide.core.min.css">
     <!-- <link rel="stylesheet" href="https://unpkg.com/tailwindcss@latest/dist/tailwind.min.css" /> -->
     <link href="https://fonts.googleapis.com/css?family=Work+Sans:200,400&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/emoji-button@4.6.0/dist/index.min.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@glidejs/glide@3.4.1/dist/glide.min.js"></script>
     <link rel="stylesheet" href="/css/loading.css">
     <script src="/js/loading.js" defer></script>
+    <script src="/js/loaddata.js" defer></script>
 </head>
 
-<body class="bg-gray-100">
+<body class="bg-gray-200">
     <!-- Loading -->
     <div id="loadingOverlay"
         style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; z-index: 1000;">
         <div class="loading-spinner"></div>
     </div>
 
-    <div class="containe work-sans leading-normal text-base tracking-normal">
-        <!--Nav-->
-        <div class="fixed top-0 left-0 w-full shadow-sm z-50">
-            <nav id="header" class="w-full z-30 top-0 py-2 bg-white shadow-md">
-                <div class="container mx-auto flex items-center justify-between px-5 relative">
-                    <!-- Tiêu đề mobile -->
-                    <div class="block md:hidden flex items-center">
-                        <a th:href="@{/index}" class="font-bold text-xl">
-                            <strong class="text-yellow-400">RE</strong>VIEW
-                        </a>
-                    </div>
-
-                    <!-- Tiêu đề laptop -->
-                    <div class="hidden md:flex md:items-center md:w-auto">
-                        <a class="flex items-center tracking-wide no-underline hover:no-underline font-bold text-xl"
-                            th:href="@{/index}">
-                            <strong class="text-yellow-400">RE</strong>VIEW
-                        </a>
-                    </div>
-
-                    <!-- Thanh tìm kiếm cho desktop -->
-                    <div class="flex-grow mx-4 hidden md:flex items-center justify-center relative">
-                        <div class="relative flex items-center w-full max-w-2xl">
-                            <input id="searchInput" type="text" placeholder="Tìm kiếm..."
-                                class="w-full py-3 pl-4 pr-10 text-sm bg-white border border-gray-300 rounded-full shadow-sm dark:bg-neutral-800 dark:border-neutral-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300 ease-in-out">
-                            <button id="searchButton" class="absolute right-0 mr-3 text-blue-500">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Thanh tìm kiếm cho mobile -->
-                    <div class="flex-grow mx-4 md:hidden flex items-center justify-center relative">
-                        <div class="relative flex items-center w-full max-w-xs">
-                            <input id="searchInputMobile" type="text" placeholder="Tìm kiếm..."
-                                class="w-full py-3 pl-4 pr-10 text-sm bg-white border border-gray-300 rounded-full shadow-sm dark:bg-neutral-800 dark:border-neutral-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300 ease-in-out">
-                            <button id="searchButtonMobile" class="absolute right-0 mr-3 text-blue-500">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                </svg>
-                            </button>
-                        </div>
-                        <!-- Lịch sử tìm kiếm trên mobile -->
-                        <div id="searchHistoryMobile"
-                            class="absolute inset-x-0 top-full mt-1 w-full max-w-xs bg-white border border-gray-300 rounded-lg shadow-lg hidden">
-                            <ul id="searchHistoryListMobile" class="divide-y divide-gray-200">
-
-                            </ul>
-                        </div>
-                    </div>
-
-                    <!-- Icon người dùng -->
-                    <div class="relative inline-block text-left">
-                        <div class="flex flex-col items-center space-y-1">
-                            <h1 th:if="${#request.remoteUser}"
-                                class="text-xs font-medium text-gray-700 text-center truncate md:truncate-none md:w-auto w-20">
-                                Hi, <span th:text="${currentUser.name}">User</span>!
-                            </h1>
-
-
-                            <i class="bi bi-person-circle text-yellow-500 text-3xl cursor-pointer"
-                                onclick="toggleMenu()"></i>
-                        </div>
-                        <!-- Dropdown menu -->
-                        <div class="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none hidden"
-                            role="menu" aria-orientation="vertical" aria-labelledby="menu-button" id="dropdown-menu">
-                            <!--  -->
-                            <th:block th:if="${#request.remoteUser}" class="py-1" role="none">
-                                <a th:href="@{/profile/{userId}(userId=${currentUser.userId})}"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:text-yellow-400">
-                                    <i class="bi bi-person"></i> Tài khoản
-                                </a>
-
-                                <a th:href="@{/feed}"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:text-yellow-400">
-                                    <i class="bi bi-cursor"></i> Feed
-                                </a>
-
-                                <a th:href="@{/register-store}"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:text-yellow-400" role="menuitem"
-                                    tabindex="-1" id="menu-item-2"><i class="bi bi-house-add"></i>
-                                    Đăng ký cửa hàng
-                                </a>
-                                <!--  -->
-                                <!-- Đăng xuất -->
-                                <a th:href="@{/logout}"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:text-yellow-400" role="menuitem"
-                                    tabindex="-1" id="menu-item-2"><i class="bi bi-box-arrow-right"></i>
-                                    Đăng xuất
-                                </a>
-                            </th:block>
-                            <!--  -->
-                            <th:block th:unless="${#request.remoteUser}">
-                                <a th:href="@{/login}"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:text-yellow-400" role="menuitem"
-                                    tabindex="-1" id="menu-item-0"><i class="bi bi-box-arrow-in-right"></i> Đăng
-                                    nhập</a>
-                                <a th:href="@{/register}"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:text-yellow-400" role="menuitem"
-                                    tabindex="-1" id="menu-item-1"><i class="bi bi-person-fill-add"></i>
-                                    Đăng ký</a>
-                            </th:block>
-                        </div>
-                        <script>
-                            function toggleMenu() {
-                                const menu = document.getElementById('dropdown-menu');
-                                menu.classList.toggle('hidden');
-                            }
-
-                            // Ẩn menu khi nhấp ra ngoài
-                            window.addEventListener('click', function (e) {
-                                const menu = document.getElementById('dropdown-menu');
-                                const button = document.getElementById('menu-button');
-                                if (!button.contains(e.target) && !menu.contains(e.target)) {
-                                    menu.classList.add('hidden');
-                                }
-                            });
-                        </script>
-                    </div>
-
-                </div>
-
-                <!-- Lịch sử tìm kiếm trên desktop -->
-                <div id="searchHistory"
-                    class="absolute inset-x-0 mt-2 mr-15 max-w-2xl mx-auto bg-white border border-gray-300 rounded-lg shadow-lg hidden">
-                    <ul id="searchHistoryList" class="divide-y divide-gray-200">
-                        <!--  <li class="flex justify-between items-center border-b py-2">Diamon</li>
-                        <li class="flex justify-between items-center border-b py-2">Diamon</li> -->
-                    </ul>
-                </div>
-            </nav>
-            <script>
-                document.addEventListener('DOMContentLoaded', function () {
-                    const searchInput = document.getElementById('searchInput');
-                    const searchButton = document.getElementById('searchButton');
-                    const searchInputMobile = document.getElementById('searchInputMobile');
-                    const searchButtonMobile = document.getElementById('searchButtonMobile');
-                    const searchHistory = document.getElementById('searchHistory');
-                    const searchHistoryList = document.getElementById('searchHistoryList');
-                    const searchHistoryMobile = document.getElementById('searchHistoryMobile');
-                    const searchHistoryListMobile = document.getElementById('searchHistoryListMobile');
-
-                    let searchTerms = JSON.parse(localStorage.getItem('searchHistory')) || [];
-
-                    // Hiển thị lịch sử tìm kiếm khi nhấn vào input
-                    function toggleSearchHistory(inputElement, historyElement) {
-                        historyElement.classList.toggle('hidden');
-                        updateSearchHistory();
-                    }
-
-                    searchInput.addEventListener('focus', () => toggleSearchHistory(searchInput, searchHistory));
-                    searchInputMobile.addEventListener('focus', () => toggleSearchHistory(searchInputMobile, searchHistoryMobile));
-
-                    // Xử lý khi nhấn nút tìm kiếm
-                    function handleSearch(inputElement) {
-                        const term = inputElement.value.trim();
-                        if (term !== '') {
-                            searchTerms = [term, ...searchTerms.filter(item => item !== term)].slice(0, 5);
-                            localStorage.setItem('searchHistory', JSON.stringify(searchTerms));
-                            updateSearchHistory();
-                        }
-                        inputElement.value = '';
-                    }
-
-                    searchButton.addEventListener('click', () => handleSearch(searchInput));
-                    searchButtonMobile.addEventListener('click', () => handleSearch(searchInputMobile));
-
-                    // Xử lý khi nhấn phím Enter
-                    searchInput.addEventListener('keydown', function (event) {
-                        if (event.key === 'Enter') {
-                            handleSearch(searchInput);
-                        }
-                    });
-
-                    searchInputMobile.addEventListener('keydown', function (event) {
-                        if (event.key === 'Enter') {
-                            handleSearch(searchInputMobile);
-                        }
-                    });
-
-                    // Cập nhật danh sách lịch sử tìm kiếm
-                    function updateSearchHistory() {
-                        searchHistoryList.innerHTML = '';
-                        searchHistoryListMobile.innerHTML = '';
-                        if (searchTerms.length > 0) {
-                            searchTerms.forEach((term, index) => {
-                                const li = document.createElement('li');
-                                li.classList.add('flex', 'justify-between', 'items-center', 'border-b', 'py-2');
-
-                                const icon = document.createElement('i');
-                                icon.classList.add('bi', 'bi-stopwatch', 'mr-2');
-
-                                const termSpan = document.createElement('span');
-                                termSpan.textContent = term;
-                                termSpan.classList.add('flex-grow', 'cursor-pointer');
-                                termSpan.addEventListener('click', function () {
-                                    searchInput.value = term;
-                                    searchInputMobile.value = term;
-                                    searchHistory.classList.add('hidden');
-                                    searchHistoryMobile.classList.add('hidden');
-                                });
-
-                                const deleteButton = document.createElement('button');
-                                deleteButton.innerHTML = '&times;';
-                                deleteButton.classList.add('delete-button');
-                                deleteButton.addEventListener('click', function (event) {
-                                    event.stopPropagation(); // Ngăn sự kiện click trên nút xóa được truyền lên
-                                    searchTerms.splice(index, 1);
-                                    localStorage.setItem('searchHistory', JSON.stringify(searchTerms));
-                                    updateSearchHistory();
-                                });
-
-                                // Thêm icon và termSpan vào li
-                                li.appendChild(icon);
-                                li.appendChild(termSpan);
-                                li.appendChild(deleteButton);
-                                searchHistoryList.appendChild(li);
-                                searchHistoryListMobile.appendChild(li.cloneNode(true));
-                            });
-                            searchHistory.classList.remove('hidden');
-                            searchHistoryMobile.classList.remove('hidden');
-                        } else {
-                            searchHistory.classList.add('hidden');
-                            searchHistoryMobile.classList.add('hidden');
-                        }
-                    }
-
-                    // Ẩn bảng lịch sử khi nhấp ra ngoài
-                    function clickOutsideHandler(event) {
-                        if (!searchHistory.contains(event.target) && event.target !== searchInput && !searchHistoryMobile.contains(event.target) && event.target !== searchInputMobile) {
-                            searchHistory.classList.add('hidden');
-                            searchHistoryMobile.classList.add('hidden');
-                        }
-                    }
-
-                    document.addEventListener('click', clickOutsideHandler);
-                });
-
-            </script>
-        </div>
-        <br>
-
-        <!-- ---------------- -->
-        <section class="body mt-10">
-            <div class="container mx-auto flex items-center flex-wrap pt-4">
-                <nav id="store" class="w-full z-30 top-0 px-6 py-1">
-                    <div class="w-full container mx-auto flex flex-wrap items-center justify-between mt-0 px-2 py-3">
-                        <a class="relative shadow-md border hover:border-yellow-400 hover:bg-gray-50 text-1xl duration-500 group cursor-pointer overflow-hidden h-14 w-56 rounded-md bg-white p-2 flex justify-center items-center font-extrabold"
-                            href="#">
-                            Cửa hàng
-                        </a>
-                        <div class="flex items-center" id="store-nav-content">
-                            <button class="flex text-3xl pl-3 inline-block no-underline hover:text-black"
-                                id="openModal">
-                                <i class="bi bi-filter-circle"></i>
-                            </button>
-
-                            <!-- Modal -->
-                            <div id="modal-container"
-                                class="fixed inset-0 bg-gray-400 bg-opacity-75 flex justify-center items-center z-50 hidden">
-                                <!-- Modal Container -->
-                                <div class="bg-white rounded-lg shadow-lg">
-                                    <!-- Modal Header -->
-                                    <div
-                                        class="flex justify-between items-center bg-gray-100 p-4 rounded-t-lg md-7 space-x-5">
-                                        <h2 class="font-bold">(Nhà hàng / Quán ăn được đánh giá tốt)</h2>
-                                        <button class="text-gray-500 hover:text-gray-700 focus:outline-none"
-                                            id="closeModal">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
-                                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M6 18L18 6M6 6l12 12" />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                    <!-- Modal Body -->
-                                    <div class="p-6">
-                                        <!-- Filter Option 1: Category -->
-                                        <div class="mb-4">
-                                            <label class="block text-gray-700 text-sm font-bold mb-2">Nhà hàng/Quán
-                                                ăn</label>
-                                            <select
-                                                class="w-full px-3 py-2 h-12 sm:h-12 md:h-12 lg:h-12 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                                <option value="">Chọn nhà hàng/quán ăn</option>
-                                                <option value="star">(5 SAO) 🌟🌟🌟🌟🌟</option>
-                                                <option value="star">(4 SAO) 🌟🌟🌟🌟</option>
-                                                <option value="star">(3 SAO) 🌟🌟🌟</option>
-                                                <option value="star">(2 SAO) 🌟🌟</option>
-                                                <option value="star">(1 SAO) 🌟</option>
-                                            </select>
-                                        </div>
-                                        <!-- Filter Option 3: Availability -->
-                                        <div class="mb-4">
-                                            <label class="block text-gray-700 text-sm font-bold mb-2">Phổ biến</label>
-                                            <div class="flex items-center">
-                                                <input type="checkbox" id="in-stock" class="mr-2">
-                                                <label for="in-stock" class="text-gray-600">Được xem nhiều</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- Modal Footer -->
-                                    <div class="flex justify-end p-4 bg-gray-100 rounded-b-lg">
-                                        <button
-                                            class="bg-red-500 text-white px-4 py-2 rounded-md mr-2 hover:bg-red-600 transition duration-300"
-                                            id="closeModal2">Hủy</button>
-                                        <button
-                                            class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300">Áp
-                                            dụng</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <script>
-                            // Lấy các phần tử
-                            const openModalButton = document.getElementById('openModal');
-                            const modalContainer = document.getElementById('modal-container');
-                            const closeModalButtons = document.querySelectorAll('#closeModal, #closeModal2');
-
-                            // Mở modal
-                            openModalButton.addEventListener('click', () => {
-                                modalContainer.classList.remove('hidden');
-                            });
-
-                            // Đóng modal
-                            closeModalButtons.forEach(button => {
-                                button.addEventListener('click', () => {
-                                    modalContainer.classList.add('hidden');
-                                });
-                            });
-                        </script>
-
-                    </div>
-                </nav>
-                <!--  -->
-            </div>
-        </section>
+    <!-- Màn hình chào mừng -->
+    <div id="welcome-screen" class="fixed inset-0 bg-white flex items-center justify-center z-50">
+        <h1 class="text-4xl font-bold zoom-in gradient-text">Welcome To Review</h1>
     </div>
 
-    <!-- Container for Horizontal Scroll -->
-    <div class="flex ml-8 text-sm text-blue-500 gap-2">
-        <i class="bi bi-emoji-smile text-pink-400"></i>
-        <p>Cửa hàng được bình chọn tốt nhất!</p>
-    </div>
-    <div class="relative w-full py-4">
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const welcomeScreen = document.getElementById('welcome-screen');
+            const mainContent = document.getElementById('main-content');
+            const displayTime = 2000; // Thời gian hiển thị màn hình chào (3 giây)
+            const expirationTime = 24 * 60 * 60 * 1000; // 24 giờ hết hạn (1 ngày)
+
+            // Lấy giá trị từ localStorage
+            const welcomeScreenData = JSON.parse(localStorage.getItem('welcomeScreenShown'));
+
+            // Kiểm tra nếu không có hoặc đã hết hạn
+            if (!welcomeScreenData || (new Date().getTime() - welcomeScreenData.timestamp) > expirationTime) {
+                // Nếu chưa xem hoặc đã hết hạn, hiển thị màn hình chào mừng
+                setTimeout(function () {
+                    welcomeScreen.classList.add('fade-out');
+                    setTimeout(function () {
+                        welcomeScreen.style.display = 'none';
+                        mainContent.classList.remove('hidden');
+                        // Lưu trạng thái đã xem và thời gian hiện tại vào localStorage
+                        localStorage.setItem('welcomeScreenShown', JSON.stringify({ timestamp: new Date().getTime() }));
+                    }, 1000); // Thời gian cho hiệu ứng fade-out
+                }, displayTime);
+            } else {
+                // Nếu đã xem và chưa hết hạn, ẩn màn hình chào ngay lập tức
+                welcomeScreen.style.display = 'none';
+                mainContent.classList.remove('hidden');
+            }
+        });
+    </script>
+    <!-- Header -->
+    <div th:replace="/layout/_header.html"></div>
+
+    <!-- Card container -->
+    <div class="mt-6"></div>
+
+    <div class="relative w-full">
         <!-- Image container with horizontal scroll -->
-        <div id="image-scroll" class="flex overflow-x-auto scroll-smooth snap-x snap-mandatory px-4 gap-2">
+        <div id="image-scroll" class="flex overflow-x-auto scroll-smooth snap-x snap-mandatory">
             <!-- Individual images -->
             <div th:replace="/layout/_storeone.html"></div>
         </div>
 
         <!-- Previous button -->
         <button id="prevBtn"
-            class="absolute top-1/2 transform -translate-y-1/2 left-2 bg-white text-2xl text-black rounded-full p-2 focus:outline-none hidden">
+            class="absolute top-2/3 transform -translate-y-1/2 left-2 bg-white text-2xl text-black rounded-full p-2 focus:outline-none hidden">
             &#10094;
         </button>
 
         <!-- Next button -->
         <button id="nextBtn"
-            class="absolute top-1/2 transform -translate-y-1/2 right-2 bg-white text-2xl text-black rounded-full p-2 focus:outline-none">
+            class="absolute top-2/3 transform -translate-y-1/2 right-2 bg-white text-2xl text-black rounded-full p-2 focus:outline-none">
             &#10095;
         </button>
     </div>
@@ -409,174 +103,151 @@
         scrollContainer.addEventListener('scroll', checkScrollButtons);
 
         nextButton.addEventListener('click', () => {
-            scrollContainer.scrollBy({ left: 360, behavior: 'smooth' });
+            scrollContainer.scrollBy({ left: 375, behavior: 'smooth' });
         });
 
         prevButton.addEventListener('click', () => {
-            scrollContainer.scrollBy({ left: -360, behavior: 'smooth' });
+            scrollContainer.scrollBy({ left: -375, behavior: 'smooth' });
         });
 
         // Kiểm tra nút ngay từ lúc tải trang
         checkScrollButtons();
     </script>
 
+    <!-- Main -->
+    <main class="my-8">
+        <div class="mx-auto px-6">
+            <div class="h-52 md:h-80 rounded-md overflow-hidden bg-cover bg-center"
+                style="background-image: url('https://i.pinimg.com/564x/20/2f/6a/202f6aae057141201a71bb15b8e30d73.jpg')">
+                <div class="bg-gray-900 bg-opacity-50 flex items-center h-full">
+                    <div class="px-10 max-w-xl">
+                        <h2 class="text-2xl text-white font-semibold">Cửa hàng</h2>
+                        <p class="mt-2 text-gray-100">Đi đến xem những cửa hàng mà bạn có thể sẽ thích.</p>
+                        <a th:href="@{/stores}"
+                            class="flex items-center mt-4 p-2 text-center w-32 bg-blue-500 text-white text-sm uppercase font-medium rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600">
+                            <span>Bắt đầu</span>
+                            <svg class="h-5 w-5 mx-2" fill="none" stroke-linecap="round" stroke-linejoin="round"
+                                stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                                <path d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="flex mt-8 md:-mx-4 gap-2">
+                <div class="w-full h-64 md:mx-4 rounded-md shadow-md overflow-hidden bg-cover bg-center w-1/2"
+                    style="background-image: url('https://i.pinimg.com/564x/c6/09/99/c609990a07ec080ec152ef0611f37966.jpg')">
 
-    <!-- ---- -->
+                </div>
+                <div class="w-full h-64 mt-8 md:mx-4 rounded-md shadow-md overflow-hidden bg-cover bg-center md:mt-0 w-1/2"
+                    style="background-image: url('https://i.pinimg.com/564x/5b/32/22/5b3222bbf8dea9828e5b8a5818d78636.jpg')">
 
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+
+    <!-- -Carousel header--- -->
+    <div class="relative w-full ">
+        <!-- Image container with horizontal scroll -->
+        <div id="category-scroll" class="flex overflow-x-auto scroll-smooth snap-x snap-mandatory gap-2 hide-scrollbar">
+            <!-- Image Tiles -->
+            <a href="#" class="flex bg-white rounded-lg shadow-md p-4 m-2 min-w-max">
+                <div class="w-48 rounded-lg overflow-hidden">
+                    <img src="https://kientruchoanmy.vn/wp-content/uploads/2023/05/1_Camera_6_2.jpg" alt=""
+                        class="w-full h-full object-cover rounded-lg">
+                </div>
+                <div class="flex flex-col items-start ml-4">
+                    <h4 class="text-xl text-black font-semibold">Beatesk</h4>
+                    <p class="text-sm text-black">Thế giới thịt.</p>
+                </div>
+            </a>
+            <!-- Tile 2 -->
+            <a href="#" class="flex bg-white rounded-lg shadow-md p-4 m-2 min-w-max">
+                <div class="w-48 rounded-lg overflow-hidden">
+                    <img src="https://nhahangdep.vn/wp-content/uploads/2018/12/kinh-nghiem-thiet-ke-nha-hang-hai-mat-tien-hieu-qua-3.jpg"
+                        alt="" class="w-full h-full object-cover rounded-lg">
+                </div>
+                <div class="flex flex-col items-start ml-4">
+                    <h4 class="text-xl text-black font-semibold">Chicken Plus</h4>
+                    <p class="text-sm text-black">Ẩm thực Phương Tấy.</p>
+                </div>
+            </a>
+            <!-- Các tile khác... -->
+            <!-- Image Tiles -->
+            <a href="#" class="flex bg-white rounded-lg shadow-md p-4 m-2 min-w-max">
+                <div class="w-48 rounded-lg overflow-hidden">
+                    <img src="https://kientruchoanmy.vn/wp-content/uploads/2023/05/1_Camera_6_2.jpg" alt=""
+                        class="w-full h-full object-cover rounded-lg">
+                </div>
+                <div class="flex flex-col items-start ml-4">
+                    <h4 class="text-xl text-black font-semibold">Beatesk</h4>
+                    <p class="text-sm text-black">Thế giới thịt.</p>
+                </div>
+            </a>
+            <!-- Tile 2 -->
+            <a href="#" class="flex bg-white rounded-lg shadow-md p-4 m-2 min-w-max">
+                <div class="w-48 rounded-lg overflow-hidden">
+                    <img src="https://nhahangdep.vn/wp-content/uploads/2018/12/kinh-nghiem-thiet-ke-nha-hang-hai-mat-tien-hieu-qua-3.jpg"
+                        alt="" class="w-full h-full object-cover rounded-lg">
+                </div>
+                <div class="flex flex-col items-start ml-4">
+                    <h4 class="text-xl text-black font-semibold">Chicken Plus</h4>
+                    <p class="text-sm text-black">Ẩm thực Phương Tấy.</p>
+                </div>
+            </a>
+            <!-- Các tile khác... -->
+
+        </div>
+
+        <!-- Previous button -->
+        <button id="prevBtncate"
+            class="absolute top-1/2 transform -translate-y-1/2 left-2 bg-white text-black rounded-full p-2 focus:outline-none">
+            &#10094;
+        </button>
+
+        <!-- Next button -->
+        <button id="nextBtcate"
+            class="absolute top-1/2 transform -translate-y-1/2 right-2 bg-white text-black rounded-full p-2 focus:outline-none">
+            &#10095;
+        </button>
+    </div>
+
+    <!-- JavaScript for scrolling -->
+    <script>
+        const scrollContainer1 = document.getElementById('category-scroll');
+        const nextButton1 = document.getElementById('nextBtcate');
+        const prevButton1 = document.getElementById('prevBtncate');
+
+        // Kiểm tra xem có cần ẩn/hiện nút không
+        function checkScrollButtons1() {
+            const maxScrollLeft = scrollContainer1.scrollWidth - scrollContainer1.clientWidth;
+            prevButton1.style.display = scrollContainer1.scrollLeft > 0 ? 'block' : 'none';
+            nextButton1.style.display = scrollContainer1.scrollLeft < maxScrollLeft ? 'block' : 'none';
+        }
+
+        // Sự kiện cuộn
+        scrollContainer1.addEventListener('scroll', checkScrollButtons1);
+
+        nextButton1.addEventListener('click', () => {
+            scrollContainer1.scrollBy({ left: 357, behavior: 'smooth' });
+        });
+
+        prevButton1.addEventListener('click', () => {
+            scrollContainer1.scrollBy({ left: -357, behavior: 'smooth' });
+        });
+
+        // Kiểm tra nút ngay từ lúc tải trang
+        checkScrollButtons1();
+    </script>
+
+    <!-- ------------------- -->
 
     <!-- Store -->
     <div th:replace="/layout/_store.html"></div>
     <!-- ---- -->
-
-    <br>
-    <br>
-
-    <section class="article flex flex-col md:flex-row bg-white rounded-lg mt-8 p-2">
-        <!-- Phần chính (7 phần) -->
-        <div class="md:w-7/12 w-full scrollable-container py-6 px-8">
-            <div class="space-y-4">
-                <!-- Card 1 -->
-                <div class="card">
-                    <div class="p-4">
-                        <div class="flex items-center">
-                            <img class="avatar" src="https://via.placeholder.com/150" alt="User Avatar">
-                            <div class="ml-4">
-                                <h3 class="text-lg font-semibold">Nguyễn Văn A</h3>
-                                <p class="text-sm text-gray-600">Có những nhà hàng ăn ngon như Kasaki</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 2 -->
-                <div class="card">
-                    <div class="p-4">
-                        <div class="flex items-center">
-                            <img class="avatar" src="https://via.placeholder.com/150" alt="User Avatar">
-                            <div class="ml-4">
-                                <h3 class="text-lg font-semibold">Trần Thị B</h3>
-                                <p class="text-sm text-gray-600">Có các nhà hàng, quán ăn không ngon như giới thiệu</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 3 -->
-                <div class="card">
-                    <div class="p-4">
-                        <div class="flex items-center">
-                            <img class="avatar" src="https://via.placeholder.com/150" alt="User Avatar">
-                            <div class="ml-4">
-                                <h3 class="text-lg font-semibold">Nguyễn Văn A</h3>
-                                <p class="text-sm text-gray-600">Có những nhà hàng ăn ngon như Kasaki</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 2 -->
-                <div class="card">
-                    <div class="p-4">
-                        <div class="flex items-center">
-                            <img class="avatar" src="https://via.placeholder.com/150" alt="User Avatar">
-                            <div class="ml-4">
-                                <h3 class="text-lg font-semibold">Trần Thị B</h3>
-                                <p class="text-sm text-gray-600">Có các nhà hàng, quán ăn không ngon như giới thiệu</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Cột bên phải chứa quảng cáo (3 phần) -->
-        <div class="md:w-3/12 w-full md:ml-20 mt-8 md:mt-1">
-            <!-- Thẻ div đầu tiên với khoảng cách dưới -->
-            <a href="#" class="bg-white border border-slate-200 rounded-xl p-6 shadow-lg flex items-center mb-4">
-                <div class="flex-shrink-0">
-                    <img src="https://i.pinimg.com/736x/0d/8c/04/0d8c0476837f5be5577698ee67d2ed62.jpg"
-                        alt="Profile Image" class="rounded-lg w-24 h-24 object-cover">
-                </div>
-                <div class="ml-4">
-                    <h2 class="text-xl font-semibold text-gray-800">Thế giới hải sản</h2>
-                    <p class="text-gray-600">Những hải tươi ngon đầy dinh dưỡng.</p>
-                </div>
-            </a>
-
-            <!-- Thẻ div thứ hai -->
-            <a href="#" class="bg-white border border-slate-200 rounded-xl p-6 shadow-lg flex items-center">
-                <div href="#" class="flex-shrink-0">
-                    <img src="https://i.pinimg.com/736x/0d/8c/04/0d8c0476837f5be5577698ee67d2ed62.jpg"
-                        alt="Profile Image" class="rounded-lg w-24 h-24 object-cover">
-                </div>
-                <div class="ml-4">
-                    <h2 class="text-xl font-semibold text-gray-800">Thế giới thịt</h2>
-                    <p class="text-gray-600">Những miếng thịt dai, mèm ngọt ngào.</p>
-                </div>
-            </a>
-        </div>
-    </section>
-    <br>
-    <!-- ------carousel-- -->
-    <div class="marquee mt-2 overflow-hidden relative">
-        <div class="marquee-content flex">
-            <!-- Image Tiles -->
-            <a href="#" class="flex bg-gray-200 rounded-lg p-4 m-2 min-w-max">
-                <div class="w-48 bg-gray-400 rounded-lg overflow-hidden">
-                    <img src="https://kientruchoanmy.vn/wp-content/uploads/2023/05/1_Camera_6_2.jpg" alt=""
-                        class="w-full h-full object-cover rounded-lg">
-                </div>
-                <div class="flex flex-col items-start ml-4">
-                    <h4 class="text-xl text-black font-semibold">Beatesk</h4>
-                    <p class="text-sm text-black">Thế giới thịt.</p>
-                </div>
-            </a>
-            <!-- Tile 2 -->
-            <a href="#" class="flex bg-gray-200 rounded-lg p-4 m-2 min-w-max">
-                <div class="w-48 bg-gray-400 rounded-lg overflow-hidden">
-                    <img src="https://nhahangdep.vn/wp-content/uploads/2018/12/kinh-nghiem-thiet-ke-nha-hang-hai-mat-tien-hieu-qua-3.jpg"
-                        alt="" class="w-full h-full object-cover rounded-lg">
-                </div>
-                <div class="flex flex-col items-start ml-4">
-                    <h4 class="text-xl text-black font-semibold">Chicken Plus</h4>
-                    <p class="text-sm text-black">Ẩm thực Phương Tấy.</p>
-                </div>
-            </a>
-            <!-- Image Tiles -->
-            <a href="#" class="flex bg-gray-200 rounded-lg p-4 m-2 min-w-max">
-                <div class="w-48 bg-gray-400 rounded-lg overflow-hidden">
-                    <img src="https://kientruchoanmy.vn/wp-content/uploads/2023/05/1_Camera_6_2.jpg" alt=""
-                        class="w-full h-full object-cover rounded-lg">
-                </div>
-                <div class="flex flex-col items-start ml-4">
-                    <h4 class="text-xl text-black font-semibold">Beatesk</h4>
-                    <p class="text-sm text-black">Thế giới thịt.</p>
-                </div>
-            </a>
-            <!-- Tile 2 -->
-            <a href="#" class="flex bg-gray-200 rounded-lg p-4 m-2 min-w-max">
-                <div class="w-48 bg-gray-400 rounded-lg overflow-hidden">
-                    <img src="https://nhahangdep.vn/wp-content/uploads/2018/12/kinh-nghiem-thiet-ke-nha-hang-hai-mat-tien-hieu-qua-3.jpg"
-                        alt="" class="w-full h-full object-cover rounded-lg">
-                </div>
-                <div class="flex flex-col items-start ml-4">
-                    <h4 class="text-xl text-black font-semibold">Chicken Plus</h4>
-                    <p class="text-sm text-black">Ẩm thực Phương Tấy.</p>
-                </div>
-            </a>
-        </div>
-        <script>
-            const root = document.documentElement;
-            const marqueeElementsDisplayed = getComputedStyle(root).getPropertyValue("--marquee-elements-displayed");
-            const marqueeContent = document.querySelector(".marquee-content");
-
-            root.style.setProperty("--marquee-elements", marqueeContent.children.length);
-
-            for (let i = 0; i < marqueeElementsDisplayed; i++) {
-                marqueeContent.appendChild(marqueeContent.children[i].cloneNode(true));
-            }
-        </script>
-    </div>
     <br>
     <!-- Main -->
     <div class="flex bg-gray-100 overflow-hidden shadow-lg">

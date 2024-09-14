@@ -37,7 +37,7 @@ document.querySelectorAll('form, a').forEach(element => {
                 showLoading(); // Hiển thị loading trước khi chuyển hướng
                 setTimeout(() => {
                     window.location.href = href; // Chuyển hướng thủ công
-                }, 200); // Delay nhỏ để đảm bảo loading hiển thị
+                }, 1000); // Delay nhỏ để đảm bảo loading hiển thị
             }
         });
     }

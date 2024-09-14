@@ -5,13 +5,19 @@ import com.localreview.entity.Categories;
 import com.localreview.entity.Photo;
 import com.localreview.entity.QRCodeScans;
 import com.localreview.entity.Store;
+import com.localreview.entity.StoreDrink;
+import com.localreview.entity.StoreFood;
 import com.localreview.entity.User;
 import com.localreview.entityEnum.UserRole;
 import com.localreview.repository.CategoriesRepository;
 import com.localreview.repository.StoreRepository;
 import com.localreview.repository.UserRepository;
+import com.localreview.service.CategoriesService;
 import com.localreview.service.EmailService;
 import com.localreview.service.QRCodeScansService;
+import com.localreview.service.StoreDrinkService;
+import com.localreview.service.StoreFoodService;
+import com.localreview.service.StoreMenuService;
 import com.localreview.service.StoreService;
 import com.localreview.service.UserService;
 
@@ -61,19 +67,31 @@ public class StoreController {
 	private UserService userService;
 
 	@Autowired
+	private CategoriesService categoriesService;
+
+	@Autowired
 	private CategoriesRepository category;
 
-	@GetMapping("/stores")
+	@Autowired
+	private StoreMenuService storeMenuService;
+
+	@Autowired
+	private StoreFoodService storeFoodService;
+
+	@Autowired
+	private StoreDrinkService storeDrinkService;
+
+	@GetMapping("/store")
 	public String store(Model model) {
 		List<Breadcrumb> breadcrumbs = new ArrayList<>();
 		breadcrumbs.add(new Breadcrumb("Trang chủ", "/index"));
 		breadcrumbs.add(new Breadcrumb("Cửa hàng", "/stores"));
 		model.addAttribute("breadcrumbs", breadcrumbs);
-		return "stores";
+		return "stores/stores";
 	}
 
 //	Search........
-	@GetMapping("/stores/search")
+	@GetMapping("/store/search")
 	public String searchStores(@RequestParam("query") String query, Model model) {
 		List<Store> searchResults = storeService.searchStores(query);
 		model.addAttribute("stores", searchResults);
@@ -84,7 +102,7 @@ public class StoreController {
 		breadcrumbs.add(new Breadcrumb("Tìm kiếm =  " + query, "/stores/search?query=" + query));
 		model.addAttribute("breadcrumbs", breadcrumbs);
 
-		return "stores";
+		return "stores/stores";
 	}
 
 //	Đăng ký của hàng..........
@@ -94,125 +112,122 @@ public class StoreController {
 	public String Registersore(Model model) {
 		List<Categories> list = category.findAll();
 		model.addAttribute("categories", list);
-		return "register-store";
+		return "stores/register-store";
 	}
-	
+
 	@PostMapping("/register-store")
-	public String registerStore(
-	        @RequestParam("store_name") String storeName,
-	        @RequestParam("store_categories") Categories storeCategories,
-	        @RequestParam("address_city") String addressCity, 
-	        @RequestParam("address_district") String addressDistrict,
-	        @RequestParam("address_commune") String addressCommune,
-	        @RequestParam("address_street") String addressStreet, 
-	        @RequestParam("phone_number") String phoneNumber,
-	        @RequestParam("store_images") MultipartFile[] storeImages, // Nhiều ảnh cửa hàng
-	        RedirectAttributes redirectAttributes) {
+	public String registerStore(@RequestParam("store_name") String storeName,
+			@RequestParam("store_categories") Categories storeCategories,
+			@RequestParam("address_city") String addressCity, @RequestParam("address_district") String addressDistrict,
+			@RequestParam("address_commune") String addressCommune,
+			@RequestParam("address_street") String addressStreet, @RequestParam("phone_number") String phoneNumber,
+			@RequestParam("store_images") MultipartFile[] storeImages, // Nhiều ảnh cửa hàng
+			RedirectAttributes redirectAttributes) {
 
-	    try {
-	        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-	        String currentID;
+		try {
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			String currentID;
 
-	        // Kiểm tra nếu đăng nhập bằng Google (OAuth2AuthenticationToken)
-	        if (authentication instanceof OAuth2AuthenticationToken) {
-	            OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
-	            Map<String, Object> attributes = oauthToken.getPrincipal().getAttributes();
-	            currentID = (String) attributes.get("email"); // Lấy email từ OAuth2 user
-	        } else {
-	            currentID = authentication.getName(); // Sử dụng cách thông thường cho đăng nhập bình thường
-	        }
+			// Kiểm tra nếu đăng nhập bằng Google (OAuth2AuthenticationToken)
+			if (authentication instanceof OAuth2AuthenticationToken) {
+				OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
+				Map<String, Object> attributes = oauthToken.getPrincipal().getAttributes();
+				currentID = (String) attributes.get("email"); // Lấy email từ OAuth2 user
+			} else {
+				currentID = authentication.getName(); // Sử dụng cách thông thường cho đăng nhập bình thường
+			}
 
-	        // Kiểm tra sự tồn tại của người dùng
-	        User currentUser = userService.findByEmail(currentID);
-	        if (currentUser == null) {
-	            redirectAttributes.addFlashAttribute("error", "Người dùng không tồn tại. Vui lòng đăng nhập lại.");
-	            return "redirect:/register-store";
-	        }
+			// Kiểm tra sự tồn tại của người dùng
+			User currentUser = userService.findByEmail(currentID);
+			if (currentUser == null) {
+				redirectAttributes.addFlashAttribute("error", "Người dùng không tồn tại. Vui lòng đăng nhập lại.");
+				return "redirect:/register-store";
+			}
 
-	        User role = userrepon.findByEmail(currentID);
-	        if (role != null) {
-	            role.setRole(UserRole.store_owner);
-	        }
+			User role = userrepon.findByEmail(currentID);
+			if (role != null) {
+				role.setRole(UserRole.store_owner);
+			}
 
-	        // Tạo đối tượng Store và lưu thông tin
-	        Store store = new Store();
-	        store.setStoreName(storeName);
-	        store.setStoreCategories(storeCategories);
-	        store.setAddressCity(addressCity);
-	        store.setAddressDistrict(addressDistrict);
-	        store.setAddressCommune(addressCommune);
-	        store.setAddressStreet(addressStreet);
-	        store.setPhoneNumber(phoneNumber);
-	        store.setOwnerId(currentUser.getUserId());
+			// Tạo đối tượng Store và lưu thông tin
+			Store store = new Store();
+			store.setStoreName(storeName);
+			store.setStoreCategories(storeCategories);
+			store.setAddressCity(addressCity);
+			store.setAddressDistrict(addressDistrict);
+			store.setAddressCommune(addressCommune);
+			store.setAddressStreet(addressStreet);
+			store.setPhoneNumber(phoneNumber);
+			store.setOwnerId(currentUser.getUserId());
 
-	        // Lưu đối tượng store vào cơ sở dữ liệu trước khi lưu ảnh
-	        Store savedStore = storeService.saveStore(store);
+			// Lưu đối tượng store vào cơ sở dữ liệu trước khi lưu ảnh
+			Store savedStore = storeService.saveStore(store);
 
-	        // Xử lý và lưu nhiều ảnh
-	        if (storeImages != null && storeImages.length > 0) {
-	            for (MultipartFile image : storeImages) {
-	                if (!image.isEmpty()) {
-	                    Path tempFilePath = null;
+			// Xử lý và lưu nhiều ảnh
+			if (storeImages != null && storeImages.length > 0) {
+				for (MultipartFile image : storeImages) {
+					if (!image.isEmpty()) {
+						Path tempFilePath = null;
 
-	                    try {
-	                        // Lưu file tạm thời
-	                        tempFilePath = saveFile(image);
+						try {
+							// Lưu file tạm thời
+							tempFilePath = saveFile(image);
 
-	                        // Upload lên Imgur và lấy URL
-	                        String imageUrl = storeService.uploadImageToImgur(tempFilePath.toString());
+							// Upload lên Imgur và lấy URL
+							String imageUrl = storeService.uploadImageToImgur(tempFilePath.toString());
 
-	                        // Tạo đối tượng Photo và lưu vào cơ sở dữ liệu
-	                        Photo photo = new Photo();
-	                        photo.setPhotoUrl(imageUrl);
-	                        photo.setStoreId(savedStore.getStoreId()); // Gán storeId cho ảnh
+							// Tạo đối tượng Photo và lưu vào cơ sở dữ liệu
+							Photo photo = new Photo();
+							photo.setPhotoUrl(imageUrl);
+							photo.setStoreId(savedStore.getStoreId()); // Gán storeId cho ảnh
 
-	                        storeService.savePhoto(photo);
-	                    } catch (IOException e) {
-	                        e.printStackTrace();
-	                        return "redirect:/register-store?error=upload_failed";
-	                    } finally {
-	                        // Đảm bảo xóa file tạm thời
-	                        if (tempFilePath != null && Files.exists(tempFilePath)) {
-	                            try {
-	                                Files.delete(tempFilePath);
-	                            } catch (IOException e) {
-	                                e.printStackTrace();
-	                            }
-	                        }
-	                    }
-	                }
-	            }
-	        }
+							storeService.savePhoto(photo);
+						} catch (IOException e) {
+							e.printStackTrace();
+							return "redirect:/register-store?error=upload_failed";
+						} finally {
+							// Đảm bảo xóa file tạm thời
+							if (tempFilePath != null && Files.exists(tempFilePath)) {
+								try {
+									Files.delete(tempFilePath);
+								} catch (IOException e) {
+									e.printStackTrace();
+								}
+							}
+						}
+					}
+				}
+			}
 
-	        QRCodeScans qrCodeScans = qrCodeScansService.createQRCodeScan(currentUser, savedStore);
+			QRCodeScans qrCodeScans = qrCodeScansService.createQRCodeScan(currentUser, savedStore);
 
-	        // Tạo nội dung email
-	        String subject = "Đăng ký thành công hệ thống đánh giá System Review!";
+			// Tạo nội dung email
+			String subject = "Đăng ký thành công hệ thống đánh giá System Review!";
 
-	        // Gửi email
-	        emailService.sendRegistrationEmail(currentUser.getEmail(), subject, currentUser.getName(), storeName,
-	                qrCodeScans.getQrCodeUrl());
+			// Gửi email
+			emailService.sendRegistrationEmail(currentUser.getEmail(), subject, currentUser.getName(), storeName,
+					qrCodeScans.getQrCodeUrl());
 
-	        // Thêm thông báo và chuyển hướng
-	        redirectAttributes.addFlashAttribute("message", "Đăng ký thành công với mã QR: " + qrCodeScans.getQrId());
-	        redirectAttributes.addFlashAttribute("success", "Đăng ký cửa hàng thành công!");
-	        return "redirect:/profile/" + currentUser.getUserId();
+			// Thêm thông báo và chuyển hướng
+			redirectAttributes.addFlashAttribute("message", "Đăng ký thành công với mã QR: " + qrCodeScans.getQrId());
+			redirectAttributes.addFlashAttribute("success", "Đăng ký cửa hàng thành công!");
+			return "redirect:/profile/" + currentUser.getUserId();
 
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        redirectAttributes.addFlashAttribute("error", "Đã xảy ra lỗi trong quá trình đăng ký cửa hàng. Vui lòng thử lại.");
-	        return "redirect:/register-store";
-	    }
+		} catch (Exception e) {
+			e.printStackTrace();
+			redirectAttributes.addFlashAttribute("error",
+					"Đã xảy ra lỗi trong quá trình đăng ký cửa hàng. Vui lòng thử lại.");
+			return "redirect:/register-store";
+		}
 	}
-
 
 //	--Store detail
 
 	private Path saveFile(MultipartFile file) throws IOException {
-        Path tempFile = Files.createTempFile("upload-", file.getOriginalFilename());
-        file.transferTo(tempFile.toFile());
-        return tempFile;
-    }
+		Path tempFile = Files.createTempFile("upload-", file.getOriginalFilename());
+		file.transferTo(tempFile.toFile());
+		return tempFile;
+	}
 
 	@GetMapping("/store/detail/{id}")
 	public String showStoreDetail(@PathVariable("id") String id, Model model) {
@@ -221,14 +236,21 @@ public class StoreController {
 			if (store != null) {
 				model.addAttribute("store", store);
 
+				// Tìm thực đơn của cửa hàng
+				List<StoreFood> storeFoodList = storeFoodService.findByStore_StoreId(id);
+				List<StoreDrink> storeDrinkList = storeDrinkService.findByStore_StoreId(id);
+
+				model.addAttribute("foodlist", storeFoodList);
+				model.addAttribute("drinklist", storeDrinkList);
+
 				// Thêm thông tin breadcrumb
 				List<Breadcrumb> breadcrumbs = new ArrayList<>();
 				breadcrumbs.add(new Breadcrumb("Trang chủ", "/index"));
-				breadcrumbs.add(new Breadcrumb("Cửa hàng", "/stores"));
+				breadcrumbs.add(new Breadcrumb("Cửa hàng", "/store"));
 				breadcrumbs.add(new Breadcrumb(store.getStoreName(), "/store/detail/" + store.getStoreId()));
 				model.addAttribute("breadcrumbs", breadcrumbs);
 
-				return "store-detail"; // Tên của view HTML
+				return "stores/store-detail"; // Tên của view HTML
 			} else {
 				model.addAttribute("error", "Cửa hàng không tồn tại.");
 				return "error";
@@ -238,6 +260,26 @@ public class StoreController {
 			model.addAttribute("error", "Đã xảy ra lỗi khi lấy thông tin cửa hàng.");
 			return "error";
 		}
+	}
+
+	@GetMapping("/store/category")
+	public String getStoresByCategory(@RequestParam("categoryId") String categoryId, Model model) {
+		List<Store> stores = storeService.getStoresByCategoryId(categoryId);
+		model.addAttribute("stores", stores);
+		model.addAttribute("categoryId", categoryId);
+
+		Categories category = categoriesService.getCategoryById(categoryId);
+		String categoryName = category != null ? category.getCategoriesName() : "Danh mục không xác định";
+
+		// Thêm breadcrumb với tên danh mục
+		List<Breadcrumb> breadcrumbs = new ArrayList<>();
+		breadcrumbs.add(new Breadcrumb("Trang chủ", "/index"));
+		breadcrumbs.add(new Breadcrumb("Cửa hàng", "/store"));
+		breadcrumbs.add(new Breadcrumb("Danh mục", "/stores/category?categoryId=" + categoryId));
+		breadcrumbs.add(new Breadcrumb(categoryName, "/stores/category?categoryId=" + categoryId));
+		model.addAttribute("breadcrumbs", breadcrumbs);
+
+		return "stores/stores";
 	}
 
 }

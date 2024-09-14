@@ -1,7 +1,5 @@
 package com.localreview.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -9,27 +7,39 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.localreview.entity.Categories;
 import com.localreview.entity.Store;
+import com.localreview.entity.StoreFood;
 import com.localreview.entity.User;
 import com.localreview.repository.CategoriesRepository;
+import com.localreview.repository.StoreRepository;
+import com.localreview.service.StoreFoodService;
 import com.localreview.service.StoreService;
 import com.localreview.service.UserService;
+
+import java.util.List;
+import java.util.Optional;
 
 @ControllerAdvice
 public class GlobalControllerAdvice {
 
     @Autowired
     private StoreService storeService;
+    
+    @Autowired
+    private StoreRepository storeRepository;
 
     @Autowired
     private UserService userService;
 
     @Autowired
     private CategoriesRepository category;
+    
+    @Autowired
+    private StoreFoodService storeFoodService;
 
     @ModelAttribute
     public void addGlobalAttributes(Model model) {
@@ -56,8 +66,9 @@ public class GlobalControllerAdvice {
 
         // Thêm danh sách cửa hàng và categories vào model
         List<Store> randomStores = storeService.getRandomStores();
-        List<Categories> lists = category.findAll();
+        List<Categories> listscategori = category.findAll();
         model.addAttribute("stores", randomStores);
-        model.addAttribute("categories", lists);
+        model.addAttribute("categories", listscategori);
     }
+    
 }

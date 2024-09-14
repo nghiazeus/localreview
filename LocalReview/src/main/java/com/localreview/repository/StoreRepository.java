@@ -20,6 +20,8 @@ public interface StoreRepository extends JpaRepository<Store, String> {
 	
 	@Query("SELECT s FROM Store s WHERE LOWER(s.storeName) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
     List<Store> searchStoresByName(@Param("searchTerm") String searchTerm);
+	
+	List<Store> findByStoreCategories_CategoriesId(String categoriesId);
 
 
     

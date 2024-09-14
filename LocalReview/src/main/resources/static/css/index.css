@@ -12,6 +12,7 @@ body {
 	/* Ngăn menu bật lên khi giữ một đối tượng */
 }
 
+
 /* Tùy chọn CSS để tạo hiệu ứng chuyển động */
 @keyframes zoomIn {
 	from {
@@ -26,15 +27,16 @@ body {
 
 }
 
+
 .hide-scrollbar::-webkit-scrollbar {
-   display: none;
+	display: none;
 }
 
-  .hide-scrollbar {
-  -ms-overflow-style: none;
-            /* IE and Edge */
-  scrollbar-width: none;
-/* Firefox */
+.hide-scrollbar {
+	-ms-overflow-style: none;
+	/* IE and Edge */
+	scrollbar-width: none;
+	/* Firefox */
 }
 
 .zoom-in {
@@ -189,14 +191,10 @@ body {
 		/* Đặt phần tử cách cạnh trái 50% chiều rộng của viewport */
 		transform: translateX(-50%);
 		/* Dịch chuyển phần tử về bên trái 50% chiều rộng của chính nó để căn giữa */
-		width: 350px;
+		width: 385px;
 		max-width: none;
 		/* Bỏ giới hạn chiều rộng tối đa */
 		background: white;
-		/* Màu nền */
-		border: 1px solid #e5e7eb;
-		/* Đường viền */
-		border-radius: 0.5rem;
 		/* Bo góc */
 		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 		/* Đổ bóng */
@@ -253,34 +251,6 @@ body {
 	/* Màu đỏ đậm khi di chuột qua */
 }
 
-
-
-@media (max-width : 600px) {
-	html {
-		font-size: 12px;
-	}
-
-	:root {
-		--marquee-width: 100vw;
-		--marquee-height: 16vh;
-		--marquee-elements-displayed: 3;
-	}
-
-	.marquee:before,
-	.marquee:after {
-		width: 5rem;
-	}
-}
-
-/* From Uiverse.io by uiverse-astronaut */
-/* .article {
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to bottom right, orangered, orange, orangered)
-      orange;
-    background-size: 2em 2em;
-    background-repeat: space;
-  } */
 .work-sans {
 	font-family: 'Work Sans', sans-serif;
 }
@@ -367,127 +337,146 @@ select {
 	/* Firefox */
 }
 
- /* From Uiverse.io by SouravBandyopadhyay */
-        .containerer {
-            width: 100%;
-            height: 100px;
-            position: relative;
-            background: #f0f0f0;
-        }
+#food-scroll {
+    -ms-overflow-style: none;  /* Ẩn thanh cuộn trong Internet Explorer và Edge */
+    scrollbar-width: none;     /* Ẩn thanh cuộn trong Firefox */
+}
 
-        .containerer::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg,
-                    #3498db 25%,
-                    transparent 25%,
-                    transparent 50%,
-                    #3498db 50%,
-                    #3498db 75%,
-                    transparent 75%,
-                    transparent),
-                linear-gradient(-45deg,
-                    #3498db 25%,
-                    transparent 25%,
-                    transparent 50%,
-                    #3498db 50%,
-                    #3498db 75%,
-                    transparent 75%,
-                    transparent);
-            background-size: 20px 20px;
-            opacity: 0.8;
-        }
+#food-scroll::-webkit-scrollbar {
+    display: none;  /* Ẩn thanh cuộn trong Chrome, Safari, và các trình duyệt Webkit khác */
+}
 
-        .scrollable-container {
-            overflow: auto;
-            /* Cho phép cuộn */
-            -ms-overflow-style: none;
-            /* Ẩn thanh cuộn trên Internet Explorer */
-            scrollbar-width: none;
-            /* Ẩn thanh cuộn trên Firefox */
-        }
+#drink-scroll {
+    -ms-overflow-style: none;  /* Ẩn thanh cuộn trong Internet Explorer và Edge */
+    scrollbar-width: none;     /* Ẩn thanh cuộn trong Firefox */
+}
 
-        .scrollable-container::-webkit-scrollbar {
-            display: none;
-            /* Ẩn thanh cuộn trên Chrome, Safari */
-        }
-
-        /*  */
-        .carousel-container {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-
-        .carousel-slide {
-            display: flex;
-            transition: transform 0.5s ease-in-out;
-            height: 100%;
-            /* Đảm bảo chiều cao của carousel-slide */
-        }
-
-        .carousel-item {
-            flex: 0 0 100%;
-            height: 100%;
-            /* Đảm bảo chiều cao của carousel-item */
-        }
-
-        .carousel-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            /* Giữ tỷ lệ ảnh */
-            background-color: black;
-            /* Màu nền nếu ảnh không đầy đủ */
-        }
-
-        .carousel-button {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: rgba(0, 0, 0, 0.5);
-            color: white;
-            border: none;
-            padding: 0.5rem;
-            cursor: pointer;
-            z-index: 10;
-        }
-
-        .carousel-button.left {
-            left: 10px;
-        }
-
-        .carousel-button.right {
-            right: 10px;
-        }
+#drink-scroll::-webkit-scrollbar {
+    display: none;  /* Ẩn thanh cuộn trong Chrome, Safari, và các trình duyệt Webkit khác */
+}
 
 
-        .carousel-button.left {
-            left: 0;
-        }
 
-        .carousel-button.right {
-            right: 0;
-        }
+/* From Uiverse.io by SouravBandyopadhyay */
+.containerer {
+	width: 100%;
+	height: 100px;
+	position: relative;
+	background: #f0f0f0;
+}
 
-        @media (min-width: 768px) {
-            .carousel-container {
-                height: 20rem;
-                /* Chiều cao cho desktop */
-            }
-        }
+.containerer::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(45deg,
+			#3498db 25%,
+			transparent 25%,
+			transparent 50%,
+			#3498db 50%,
+			#3498db 75%,
+			transparent 75%,
+			transparent),
+		linear-gradient(-45deg,
+			#3498db 25%,
+			transparent 25%,
+			transparent 50%,
+			#3498db 50%,
+			#3498db 75%,
+			transparent 75%,
+			transparent);
+	background-size: 20px 20px;
+	opacity: 0.8;
+}
 
-        @media (max-width: 767px) {
-            .carousel-container {
-                height: 16rem;
-                /* Chiều cao cho mobile */
-            }
-        }
-        /* Rating */
- 
-        
+.scrollable-container {
+	overflow: auto;
+	/* Cho phép cuộn */
+	-ms-overflow-style: none;
+	/* Ẩn thanh cuộn trên Internet Explorer */
+	scrollbar-width: none;
+	/* Ẩn thanh cuộn trên Firefox */
+}
+
+.scrollable-container::-webkit-scrollbar {
+	display: none;
+	/* Ẩn thanh cuộn trên Chrome, Safari */
+}
+
+/*  */
+.carousel-container {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
+.carousel-slide {
+	display: flex;
+	transition: transform 0.5s ease-in-out;
+	height: 100%;
+	/* Đảm bảo chiều cao của carousel-slide */
+}
+
+.carousel-item {
+	flex: 0 0 100%;
+}
+
+
+.carousel-button {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	background-color: rgba(0, 0, 0, 0.5);
+	color: white;
+	border: none;
+	padding: 0.5rem;
+	cursor: pointer;
+	z-index: 10;
+}
+
+.carousel-button.left {
+	left: 10px;
+}
+
+.carousel-button.right {
+	right: 10px;
+}
+
+
+.carousel-button.left {
+	left: 0;
+}
+
+.carousel-button.right {
+	right: 0;
+}
+
+@media (min-width: 768px) {
+	.carousel-container {
+		height: 20rem;
+		/* Chiều cao cho desktop */
+	}
+}
+
+@media (max-width: 767px) {
+	.carousel-container {
+		height: 16rem;
+		/* Chiều cao cho mobile */
+	}
+}
+
+.loading-text {
+    color: white;
+    font-size: 1.5rem;
+    margin-top: 15px;
+    animation: fadeIn 1.5s ease-in-out infinite;
+}
+
+@keyframes fadeIn {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}

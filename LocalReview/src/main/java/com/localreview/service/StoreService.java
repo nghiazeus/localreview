@@ -7,26 +7,31 @@ import com.localreview.entity.Photo;
 import com.localreview.entity.Store;
 
 public interface StoreService {
-	
+
 	List<Store> getAllStores();
 
 	Store saveStore(Store store);
-	
+
 	Store findStoreById(String id);
-	
+
 // Store of user
-    List<Store> getStoresByOwnerId(String ownerId);
-    void updateStore(Store store);
-    public void deleteStore(String id);
-    
+	List<Store> getStoresByOwnerId(String ownerId);
+
+	void updateStore(Store store);
+
+	public void deleteStore(String id);
+
 //    Random store
-    List<Store> getRandomStores();
-    
+	List<Store> getRandomStores();
+
 //    Search...
-    List<Store> searchStores(String searchTerm);
+	List<Store> searchStores(String searchTerm);
 
 	String uploadImageToImgur(String imagePath);
 
-	 Photo savePhoto(Photo photo);
+	Photo savePhoto(Photo photo);
+
+//	Lọc của hàng theo danh mục
+	List<Store> getStoresByCategoryId(String categoriesId);
 
 }

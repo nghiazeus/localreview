@@ -5,15 +5,18 @@ import java.util.Optional;
 
 import com.localreview.entity.Store;
 import com.localreview.entity.StoreMenu;
+import com.localreview.entity.User;
 
 public interface StoreMenuService {
 
-	List<StoreMenu> getMenuByStoreId(String storeId);
+	List<StoreMenu> findByStore_StoreId(String storeId);
 
-	StoreMenu getMenuById(String menuId);
+	StoreMenu updateStoreMenu(String menuId, String foodFirst, String foodMain, String foodDessert);
 
-	StoreMenu saveMenu(StoreMenu menu);
+	StoreMenu deleteStoreMenu(String menuId);
 
-	void deleteMenu(String menuId);
+	void save(StoreMenu newMenu);
+
+	Optional<StoreMenu> findById(String menuId);
 
 }

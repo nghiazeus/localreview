@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Đăng ký Cửa Hàng</title>
     <!-- Liên kết CSS -->
     <link href="/dist/output.css" rel="stylesheet">
@@ -21,10 +21,7 @@
 
 <body class="bg-gray-100">
     <!-- Loading -->
-    <div id="loadingOverlay"
-        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; z-index: 1000;">
-        <div class="loading-spinner"></div>
-    </div>
+     <div th:replace="/layout/_loading.html"></div>
 
     <div class="bg-white">
         <div class="container mx-auto px-4 py-4 flex items-center">
@@ -62,8 +59,7 @@
                 <div>
                     <label for="store_categories" class="block text-sm font-medium text-gray-700">Loại nhà hàng</label>
                     <select class="outline-none border-2 rounded-md px-3 py-2 w-full text-gray-700 focus:border-blue-300
-                            text-sm sm:text-base md:text-lg h-10" id="store_categories" name="store_categories"
-                        required>
+                    text-sm sm:text-base md:text-lg h-10" id="store_categories" name="store_categories" required>
                         <option value="" disabled selected>Chọn danh mục</option>
                         <th:block th:each="category : ${categories}">
                             <option th:value="${category.categoriesId}" th:text="${category.categoriesName}">
@@ -72,7 +68,7 @@
                     </select>
                 </div>
                 <div>
-                    <label for="address_city" class="block text-sm font-medium text-gray-700">Thành phố</label>
+                    <label for="address_city" class="block text-sm font-medium text-gray-700">Tỉnh/Thành phố</label>
                     <input class="outline-none border-2 rounded-md px-3 py-2 w-full text-gray-700 focus:border-blue-300"
                         placeholder="Thành phố" id="address_city" name="address_city" type="text" required />
                 </div>
@@ -97,17 +93,88 @@
                         placeholder="Số điện thoại" id="phone_number" name="phone_number" type="text" required />
                 </div>
                 <div>
-                    <label for="store_images" class="block text-sm font-medium text-gray-700">Ảnh cửa hàng</label>
-                    <input type="file" id="store_images" name="store_images" multiple
-                        class="outline-none border-2 rounded-md px-3 py-2 w-full text-gray-700 focus:border-blue-300" />
+                    <label for="store_images" class="block text-sm font-medium text-gray-700 mb-2">
+                        Ảnh/Video cửa hàng
+                    </label>
+                    <div class="flex items-center space-x-4">
+                        <!-- Label để chọn ảnh/video -->
+                        <label for="store_images"
+                            class="text-blue-500 flex items-center space-x-2 hover:bg-blue-50 p-2 rounded-lg cursor-pointer transition duration-300 ease-in-out">
+                            <i class="bi bi-cloud-arrow-up text-xl"></i>
+                            <span>Chọn Ảnh/Videos</span>
+                        </label>
+                        <!-- Input tệp, ẩn để chỉ kích hoạt bằng cách nhấp vào label -->
+                        <input type="file" id="store_images" name="store_images" multiple class="hidden"
+                            accept="image/*,video/*" onchange="previewMedia(event)">
+                    </div>
+
+                    <!-- Khu vực xem trước ảnh/video -->
+                    <div class="relative mt-4">
+                        <div id="imgregisterstore" class="flex gap-4 overflow-x-auto p-2">
+                            <!-- Các ảnh và video sẽ được thêm vào đây -->
+                        </div>
+                    </div>
                 </div>
             </div>
             <button class="w-full py-2 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 rounded-md text-white ring-2
-                    focus:outline-none focus:ring-2 focus:ring-blue-300 mt-4" type="submit">
+                         focus:outline-none focus:ring-2 focus:ring-blue-300 mt-4" type="submit">
                 Đăng ký cửa hàng
             </button>
         </form>
-        
+        <script>
+            const mediaContainer = document.getElementById('imgregisterstore');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+
+            function previewMedia(event) {
+                const files = event.target.files;
+                mediaContainer.innerHTML = ''; // Xóa nội dung cũ
+                Array.from(files).forEach((file) => {
+                    const fileType = file.type;
+                    const reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        const mediaWrapper = document.createElement('div');
+                        mediaWrapper.classList.add('relative', 'flex-shrink-0', 'w-48', 'h-32', 'rounded-lg', 'shadow-md', 'overflow-hidden');
+
+                        let mediaElement;
+                        if (fileType.startsWith('image/')) {
+                            // Xử lý ảnh
+                            mediaElement = document.createElement('img');
+                            mediaElement.src = e.target.result;
+                            mediaElement.classList.add('object-cover', 'w-full', 'h-full');
+                        } else if (fileType.startsWith('video/')) {
+                            // Xử lý video
+                            mediaElement = document.createElement('video');
+                            mediaElement.src = e.target.result;
+                            mediaElement.controls = true;
+                            mediaElement.classList.add('object-cover', 'w-full', 'h-full');
+                        }
+
+                        // Nút xóa
+                        const deleteButton = document.createElement('button');
+                        deleteButton.textContent = 'X';
+                        deleteButton.classList.add('absolute', 'top-2', 'right-2', 'bg-red-500', 'text-white', 'rounded-full', 'px-2', 'shadow-lg');
+
+                        // Xóa media khi nhấn nút xóa
+                        deleteButton.addEventListener('click', () => {
+                            mediaWrapper.remove();
+                            checkScrollButtons(); // Kiểm tra nút điều hướng sau khi xóa
+                        });
+
+                        mediaWrapper.appendChild(mediaElement);
+                        mediaWrapper.appendChild(deleteButton);
+                        mediaContainer.appendChild(mediaWrapper);
+                    };
+
+                    reader.readAsDataURL(file); // Đọc file để xem trước ảnh/video
+                });
+
+                checkScrollButtons(); // Kiểm tra nút điều hướng khi thêm mới
+            }
+
+        </script>
+
     </div>
 
     <!-- <div>

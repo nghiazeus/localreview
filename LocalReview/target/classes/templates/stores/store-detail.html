@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Detail</title>
     <link href="dist/output.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/index.css">
@@ -16,13 +16,12 @@
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
     <link rel="stylesheet" href="/css/loading.css">
     <script src="/js/loading.js"></script>
+
 </head>
 
 <body class="bg-gray-100">
-    <div id="loadingOverlay"
-        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; z-index: 1000;">
-        <div class="loading-spinner"></div>
-    </div>
+    <!-- Loading -->
+    <div th:replace="/layout/_loading.html"></div>
 
     <div class="fixed top-0 left-0 w-full shadow-sm z-50">
         <nav id="header" class="w-full flex z-30 top-0 py-2 bg-gray-50 dark:bg-neutral-800">
@@ -70,23 +69,17 @@
                         <!-- Carousel -->
                         <div class="carousel-container" id="carousel">
                             <div class="carousel-slide">
-                                <div class="carousel-item">
-                                    <img src="https://i.pinimg.com/736x/7e/5a/14/7e5a14ce6f45a3cb20a7dae08e35667a.jpg"
-                                        alt="Slide 1" class="rounded-lg">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="https://i.pinimg.com/736x/0b/ee/3c/0bee3ca0f534ef5e2ab8bd9b3a24b7a0.jpg"
-                                        alt="Slide 2" class="rounded-lg">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="https://noithattugia.com/wp-content/uploads/2022/10/thiet-ke-nha-hang-16.jpg"
-                                        alt="Slide 3" class="rounded-lg">
+                                <!-- Duyệt qua các ảnh từ cơ sở dữ liệu -->
+                                <div th:each="photo : ${store.photos}" class="carousel-item">
+                                    <img th:src="${photo.photoUrl}" alt="Slide"
+                                        class="rounded-lg object-fill w-full h-full">
                                 </div>
                             </div>
 
                             <button class="carousel-button left" onclick="prevSlide()">&#10094;</button>
                             <button class="carousel-button right" onclick="nextSlide()">&#10095;</button>
                         </div>
+
                         <script>
                             const carousel = document.getElementById('carousel');
                             const slides = carousel.querySelector('.carousel-slide');
@@ -114,13 +107,13 @@
 
                 <!-- Thông tin nhà hàng -->
                 <div class="w-full md:w-2/3 p-6 flex flex-col justify-center">
-                    <h2 class="text-3xl font-bold text-gray-800 mb-4 gap-4">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4 gap-4">
                         Nhà hàng:
                         <strong class="text-red-400" th:text="${store.storeName}"></strong>
                     </h2>
                     <div class="flex font-bold text-xl text-gray-800 mb-4 gap-4">
                         Loại nhà hàng:
-                        <div class="text-center text-white bg-blue-400 dark:bg-neutral-700 rounded-md px-2 w-30">
+                        <div class="text-center text-white bg-blue-400 dark:bg-neutral-700 rounded-md px-2 w-40">
                             <i class="bi bi-tags"></i>
                             <span th:text="${store.storeCategories.categoriesName}">Loại</span>
                         </div>
@@ -141,17 +134,17 @@
                     <!-- Modal -->
                     <div id="mapModal"
                         class="fixed z-40 inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center hidden">
-                        <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <div class="bg-white p-4 rounded-lg shadow-lg">
                             <h2 class="flex text-lg font-semibold mb-4">
                                 <!-- <i class="bi bi-geo-alt-fill text-red-600 mr-2"></i> -->
                                 <img src="https://s3.cloud.cmctelecom.vn/tinhte2/2020/02/4902204_cover_bieu_tuong_moi_google_maps.jpg"
                                     class="h-8 w-14">
                                 Mở Google Maps
                             </h2>
-                            <p class="text-gray-700 mb-4">Bạn có muốn mở Google Maps để xem vị trí này?</p>
-                            <div class="flex justify-end mt-6 py-6 gap-4">
+                            <p class="text-gray-700 mb-4 text-sm">Bạn có muốn mở Google Maps để xem vị trí này?</p>
+                            <div class="flex justify-end mt-6 py-2 gap-4">
                                 <button onclick="cancelOpenMaps()"
-                                    class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded mr-2">Hủy</button>
+                                    class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded ">Hủy</button>
                                 <button id="confirmBtn"
                                     class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">OK</button>
                             </div>
@@ -404,211 +397,162 @@
     </div>
     <br>
     <!--  -->
-    <div class="bg-gray-100 rounded-lg overflow-hidden">
-        <strong class="text-2xl ml-8 text-black pt-4">MÓN ĂN</strong>
-        <div class="grid grid-cols-2 md:grid-cols-6 gap-6 p-6">
-            <!-- Card 1 -->
-            <div class="bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 backdrop-blur-sm bg-opacity-70">
-                <img src="https://images2.thanhnien.vn/zoom/686_429/Uploaded/ttt/images/Content/tan-huong/mon-ngon-nha-hang/2017_07_w3/6.jpg"
-                    alt="Dish 2" class="w-full h-48 object-cover rounded-lg">
-                <div class="p-4 flex flex-col justify-between h-40"> <!-- Fix chiều cao cho phần nội dung -->
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-800">Bò kho</h3>
-                    </div>
-                    <div class="flex items-center justify-between mt-12 w-48">
-                        <span class="text-gray-800 font-bold text-sm truncate">Giá:</span>
-                        <span class="text-gray-800 font-bold text-sm truncate mr-8 md:mr-8">Điểm</span>
-                    </div>
-                    <div class="flex items-center justify-between w-48">
-                        <span class="text-red-500 font-bold truncate">122.000<sup>đ</sup></span>
-                        <span class="text-yellow-500 font-bold truncate truncate">★★★★☆</span>
-                    </div>
+    <div class="tabs-container relative">
+        <!-- Tab Links -->
+        <div class="flex space-x-4 mb-4 p-4">
+            <button
+                class="tab-button py-2 px-4 text-lg font-semibold rounded-lg focus:outline-none bg-gray-300 text-black"
+                data-tab="food" onclick="openTab(event, 'food')">MÓN ĂN</button>
+            <button class="tab-button py-2 px-4 text-lg font-semibold rounded-lg focus:outline-none" data-tab="drink"
+                onclick="openTab(event, 'drink')">ĐỒ UỐNG</button>
+        </div>
 
+        <!-- Tab Content for Food -->
+        <div id="food" class="tab-content relative">
+
+            <!-- Phần chứa các thẻ món ăn -->
+            <div class="relative overflow-x-auto" id="food-scroll">
+                <div class="flex space-x-4 p-4">
+                    <!-- Loop through foodlist for Food tab -->
+                    <div th:each="food : ${foodlist}"
+                        class="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-md w-64 flex-shrink-0">
+                        <img th:src="${#lists.isEmpty(food.photos) ? 'https://via.placeholder.com/400x300.png?text=No+Image' : food.photos[0].photoUrl}"
+                            class="w-full h-48 md:h-56 object-cover" alt="Ảnh của món ăn">
+                        <div class="p-4">
+                            <h3 class="font-bold text-lg mb-2" th:text="${food.foodName}">Tên Món Ăn</h3>
+                            <p class="flex items-baseline text-red-500 mb-2">
+                                <span class="font-semibold text-lg" th:text="'Giá: ' + ${food.Price}">Giá: 500</span>
+                                <sup class="text-sm ml-1">đ</sup>
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
+            <div class="mt-14 py-2">
+                <div class="absolute bottom-0 right-0 flex space-x-2 z-10 p-4">
+                    <!-- Nút Prev -->
+                    <button id="food-prevBtn"
+                        class="text-2xl bg-white text-black shadow-lg rounded-full p-2 focus:outline-none shadow">
+                        &#10094;
+                    </button>
 
-            <!-- Card 2 -->
-            <div class="bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 backdrop-blur-sm bg-opacity-70">
-                <img src="https://images2.thanhnien.vn/zoom/686_429/Uploaded/ttt/images/Content/tan-huong/mon-ngon-nha-hang/2017_07_w3/6.jpg"
-                    alt="Dish 2" class="w-full h-48 object-cover rounded-lg">
-                <div class="p-4 flex flex-col justify-between h-40"> <!-- Fix chiều cao cho phần nội dung -->
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-800">Thịt kho tộ</h3>
-                    </div>
-                    <div class="flex items-center justify-between mt-12 w-48">
-                        <span class="text-gray-800 font-bold text-sm truncate">Giá:</span>
-                        <span class="text-gray-800 font-bold text-sm truncate mr-8 md:mr-8">Điểm</span>
-                    </div>
-                    <div class="flex items-center justify-between w-48">
-                        <span class="text-red-500 font-bold truncate">122.000<sup>đ</sup></span>
-                        <span class="text-yellow-500 font-bold truncate truncate">★★★★☆</span>
-                    </div>
-
-                </div>
-            </div>
-            <!-- Card 3 -->
-            <div class="bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 backdrop-blur-sm bg-opacity-70">
-                <img src="https://images2.thanhnien.vn/zoom/686_429/Uploaded/ttt/images/Content/tan-huong/mon-ngon-nha-hang/2017_07_w3/6.jpg"
-                    alt="Dish 2" class="w-full h-48 object-cover rounded-lg">
-                <div class="p-4 flex flex-col justify-between h-40"> <!-- Fix chiều cao cho phần nội dung -->
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-800">Gà hầm thuốc bắc</h3>
-                    </div>
-                    <div class="flex items-center justify-between mt-12 w-48">
-                        <span class="text-gray-800 font-bold text-sm truncate">Giá:</span>
-                        <span class="text-gray-800 font-bold text-sm truncate mr-8 md:mr-8">Điểm</span>
-                    </div>
-                    <div class="flex items-center justify-between w-48">
-                        <span class="text-red-500 font-bold truncate">122.000<sup>đ</sup></span>
-                        <span class="text-yellow-500 font-bold truncate truncate">★★★★☆</span>
-                    </div>
-
-                </div>
-            </div>
-            <!-- Card 4 -->
-            <div class="bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 backdrop-blur-sm bg-opacity-70">
-                <img src="https://images2.thanhnien.vn/zoom/686_429/Uploaded/ttt/images/Content/tan-huong/mon-ngon-nha-hang/2017_07_w3/6.jpg"
-                    alt="Dish 2" class="w-full h-48 object-cover rounded-lg">
-                <div class="p-4 flex flex-col justify-between h-40"> <!-- Fix chiều cao cho phần nội dung -->
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-800">Long tranh Hổ đấu</h3>
-                    </div>
-                    <div class="flex items-center justify-between mt-12 w-48">
-                        <span class="text-gray-800 font-bold text-sm truncate">Giá:</span>
-                        <span class="text-gray-800 font-bold text-sm truncate mr-8 md:mr-8">Điểm</span>
-                    </div>
-                    <div class="flex items-center justify-between w-48">
-                        <span class="text-red-500 font-bold truncate">122.000<sup>đ</sup></span>
-                        <span class="text-yellow-500 font-bold truncate truncate">★★★★☆</span>
-                    </div>
-
-                </div>
-            </div>
-            <!-- Card 5 -->
-            <div class="bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 backdrop-blur-sm bg-opacity-70">
-                <img src="https://images2.thanhnien.vn/zoom/686_429/Uploaded/ttt/images/Content/tan-huong/mon-ngon-nha-hang/2017_07_w3/6.jpg"
-                    alt="Dish 2" class="w-full h-48 object-cover rounded-lg">
-                <div class="p-4 flex flex-col justify-between h-40"> <!-- Fix chiều cao cho phần nội dung -->
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-800">Bún mộc</h3>
-                    </div>
-                    <div class="flex items-center justify-between mt-12 w-48">
-                        <span class="text-gray-800 font-bold text-sm truncate">Giá:</span>
-                        <span class="text-gray-800 font-bold text-sm truncate mr-8 md:mr-8">Điểm</span>
-                    </div>
-                    <div class="flex items-center justify-between w-48">
-                        <span class="text-red-500 font-bold truncate">122.000<sup>đ</sup></span>
-                        <span class="text-yellow-500 font-bold truncate truncate">★★★★☆</span>
-                    </div>
-
-                </div>
-            </div>
-            <!-- Card 6 -->
-            <div class="bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 backdrop-blur-sm bg-opacity-70">
-                <img src="https://images2.thanhnien.vn/zoom/686_429/Uploaded/ttt/images/Content/tan-huong/mon-ngon-nha-hang/2017_07_w3/6.jpg"
-                    alt="Dish 2" class="w-full h-48 object-cover rounded-lg">
-                <div class="p-4 flex flex-col justify-between h-40"> <!-- Fix chiều cao cho phần nội dung -->
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-800">Thiên an môn</h3>
-                    </div>
-                    <div class="flex items-center justify-between mt-12 w-48">
-                        <span class="text-gray-800 font-bold text-sm truncate">Giá:</span>
-                        <span class="text-gray-800 font-bold text-sm truncate mr-8 md:mr-8">Điểm</span>
-                    </div>
-                    <div class="flex items-center justify-between w-48">
-                        <span class="text-red-500 font-bold truncate">122.000<sup>đ</sup></span>
-                        <span class="text-yellow-500 font-bold truncate truncate">★★★★☆</span>
-                    </div>
-
+                    <!-- Nút Next -->
+                    <button id="food-nextBtn"
+                        class="text-2xl bg-white text-black shadow-lg rounded-full p-2 focus:outline-none shadow">
+                        &#10095;
+                    </button>
                 </div>
             </div>
         </div>
 
-        <br>
-        <br>
-        <!-- Thức uống -->
-        <strong class="text-2xl ml-8 text-black pt-4">Đồ UỐNG</strong>
-        <div class="grid grid-cols-2 md:grid-cols-6 gap-6 p-6">
-            <!-- Card 1 -->
-            <div class="bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 backdrop-blur-sm bg-opacity-70">
-                <img src="https://i.pinimg.com/564x/bd/b4/9a/bdb49aafd79e5261907339621121e295.jpg" alt="Món saimi"
-                    class="w-full h-48 object-cover rounded-lg">
-                <div class="p-4">
-                    <h3 class="text-lg font-semibold text-gray-800">Trà Mili</h3>
-                    <p class="text-gray-600 mt-2">Chất lượng tuyệt vời, Ngon.</p>
-                    <div class="mt-4 flex justify-between items-center">
-                        <span class="text-gray-800 font-bold">32.000<sup>đ</sup></span>
-                        <span class="text-yellow-500">★★★★☆</span>
+
+        <!-- Tab Content for Drinks -->
+        <div id="drink" class="tab-content hidden relative">
+            <div class="relative overflow-x-auto" id="drink-scroll">
+                <div class="flex space-x-4 p-4">
+                    <!-- Loop through drinklist for Drinks tab -->
+                    <div th:each="drink : ${drinklist}"
+                        class="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-md w-64 flex-shrink-0">
+                        <img th:src="${#lists.isEmpty(drink.photos) ? 'https://via.placeholder.com/400x300.png?text=No+Image' : drink.photos[0].photoUrl}"
+                            class="w-full h-48 md:h-56 object-cover" alt="Ảnh của đồ uống">
+                        <div class="p-4">
+                            <h3 class="font-bold text-lg mb-2" th:text="${drink.drinkName}">Tên Đồ Uống</h3>
+                            <p class="flex items-baseline text-red-500 mb-2">
+                                <span class="font-semibold text-lg" th:text="'Giá: ' + ${drink.Price}">Giá: 500</span>
+                                <sup class="text-sm ml-1">đ</sup>
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
-            <!-- Card 2 -->
-            <div class="bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 backdrop-blur-sm bg-opacity-70">
-                <img src="https://i.pinimg.com/564x/d6/54/ae/d654ae7b818571a7ef9feecd8386f7a0.jpg" alt="Dish 2"
-                    class="w-full h-48 object-cover rounded-lg">
-                <div class="p-4">
-                    <h3 class="text-lg font-semibold text-gray-800">Trà ô long</h3>
-                    <p class="text-gray-600 mt-2">Chất lượng tuyệt vời, Ngon.</p>
-                    <div class="mt-4 flex justify-between items-center">
-                        <span class="text-gray-800 font-bold">20.000<sup>đ</sup></span>
-                        <span class="text-yellow-500">★★★★★</span>
-                    </div>
-                </div>
-            </div>
-            <!-- Card 3 -->
-            <div class="bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 backdrop-blur-sm bg-opacity-70">
-                <img src="https://i.pinimg.com/564x/25/41/4d/25414d283649b1f8a871acf94f5df481.jpg" alt="Dish 2"
-                    class="w-full h-48 object-cover rounded-lg">
-                <div class="p-4">
-                    <h3 class="text-lg font-semibold text-gray-800">Cocktail</h3>
-                    <p class="text-gray-600 mt-2">Chất lượng tuyệt vời, Ngon. Thịt mền rất ngon</p>
-                    <div class="mt-4 flex justify-between items-center">
-                        <span class="text-gray-800 font-bold">140.000<sup>đ</sup></span>
-                        <span class="text-yellow-500">★★★★★</span>
-                    </div>
-                </div>
-            </div>
-            <!-- Card 4 -->
-            <div class="bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 backdrop-blur-sm bg-opacity-70">
-                <img src="https://i.pinimg.com/736x/45/8a/14/458a14b0d6e1041e50659be7cb7e1e26.jpg" alt="Món saimi"
-                    class="w-full h-48 object-cover rounded-lg">
-                <div class="p-4">
-                    <h3 class="text-lg font-semibold text-gray-800">Cocktail</h3>
-                    <p class="text-gray-600 mt-2">Chất lượng tuyệt vời, Ngon.</p>
-                    <div class="mt-4 flex justify-between items-center">
-                        <span class="text-gray-800 font-bold">100.000<sup>đ</sup></span>
-                        <span class="text-yellow-500">★★★★☆</span>
-                    </div>
-                </div>
-            </div>
-            <!-- Card 5 -->
-            <div class="bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 backdrop-blur-sm bg-opacity-70">
-                <img src="https://i.pinimg.com/564x/fe/9d/67/fe9d6754d6fb6b95fce971226000d4b9.jpg" alt="Dish 2"
-                    class="w-full h-48 object-cover rounded-lg">
-                <div class="p-4">
-                    <h3 class="text-lg font-semibold text-gray-800">Cocktail</h3>
-                    <p class="text-gray-600 mt-2">Ngon đậm đà.</p>
-                    <div class="mt-4 flex justify-between items-center">
-                        <span class="text-gray-800 font-bold">200.000<sup>đ</sup></span>
-                        <span class="text-yellow-500">★★★★★</span>
-                    </div>
-                </div>
-            </div>
-            <!-- C6 -->
-            <div class="bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 backdrop-blur-sm bg-opacity-70">
-                <img src="https://i.pinimg.com/564x/aa/96/82/aa9682723882073da9b7a8ff784f566e.jpg" alt="Dish 2"
-                    class="w-full h-48 object-cover rounded-lg">
-                <div class="p-4">
-                    <h3 class="text-lg font-semibold text-gray-800">Cocktail</h3>
-                    <p class="text-gray-600 mt-2">Chất lượng tuyệt vời, Ngon.</p>
-                    <div class="mt-4 flex justify-between items-center">
-                        <span class="text-gray-800 font-bold">150.000<sup>đ</sup></span>
-                        <span class="text-yellow-500">★★★★★</span>
-                    </div>
+            <div class="mt-14 py-2">
+                <div class="absolute bottom-0 right-0 flex space-x-2 z-10 p-4">
+                    <button id="drink-prevBtn"
+                        class="text-2xl bg-white text-black shadow-lg rounded-full p-2 focus:outline-none shadow">
+                        &#10094;
+                    </button>
+
+                    <button id="drink-nextBtn"
+                        class="text-2xl bg-white text-black shadow-lg rounded-full p-2 focus:outline-none shadow">
+                        &#10095;
+                    </button>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        // Scroll functionality for Food
+        const foodScrollContainer = document.getElementById('food-scroll');
+        const foodNextButton = document.getElementById('food-nextBtn');
+        const foodPrevButton = document.getElementById('food-prevBtn');
+
+        function checkFoodScrollButtons() {
+            const maxScrollLeft = foodScrollContainer.scrollWidth - foodScrollContainer.clientWidth;
+            foodPrevButton.style.display = foodScrollContainer.scrollLeft > 0 ? 'block' : 'none';
+            foodNextButton.style.display = foodScrollContainer.scrollLeft < maxScrollLeft ? 'block' : 'none';
+        }
+
+        foodScrollContainer.addEventListener('scroll', checkFoodScrollButtons);
+
+        foodNextButton.addEventListener('click', () => {
+            foodScrollContainer.scrollBy({ left: 300, behavior: 'smooth' });
+        });
+
+        foodPrevButton.addEventListener('click', () => {
+            foodScrollContainer.scrollBy({ left: -300, behavior: 'smooth' });
+        });
+
+        checkFoodScrollButtons();
+
+        // Scroll functionality for Drinks
+        const drinkScrollContainer = document.getElementById('drink-scroll');
+        const drinkNextButton = document.getElementById('drink-nextBtn');
+        const drinkPrevButton = document.getElementById('drink-prevBtn');
+
+        function checkDrinkScrollButtons() {
+            const maxScrollLeft = drinkScrollContainer.scrollWidth - drinkScrollContainer.clientWidth;
+            drinkPrevButton.style.display = drinkScrollContainer.scrollLeft > 0 ? 'block' : 'none';
+            drinkNextButton.style.display = drinkScrollContainer.scrollLeft < maxScrollLeft ? 'block' : 'none';
+        }
+
+        drinkScrollContainer.addEventListener('scroll', checkDrinkScrollButtons);
+
+        drinkNextButton.addEventListener('click', () => {
+            drinkScrollContainer.scrollBy({ left: 300, behavior: 'smooth' });
+        });
+
+        drinkPrevButton.addEventListener('click', () => {
+            drinkScrollContainer.scrollBy({ left: -300, behavior: 'smooth' });
+        });
+
+        checkDrinkScrollButtons();
+    </script>
+
+
+    <!-- JavaScript to handle tab switching -->
+    <script>
+        function openTab(event, tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.add('hidden');
+            });
+
+            // Remove active class from all tab buttons
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('bg-gray-300', 'text-black');
+            });
+
+            // Show the clicked tab content and add active class to the button
+            document.getElementById(tabName).classList.remove('hidden');
+            event.currentTarget.classList.add('bg-gray-300', 'text-black');
+        }
+
+        // Show the default tab
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelector('.tab-button[data-tab="food"]').click();
+        });
+    </script>
 
     <br>
     <!--  -->

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Review</title>
     <link rel="stylesheet" href="/css/index.css">
     <link rel="stylesheet" href="/build/css/tailwind.css">
@@ -20,24 +20,20 @@
     <script src="/js/loaddata.js" defer></script>
 </head>
 
-<body class="bg-gray-200">
+<body class="bg-gray-100">
     <!-- Loading -->
-    <div id="loadingOverlay"
-        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; z-index: 1000;">
-        <div class="loading-spinner"></div>
-    </div>
-
+    <div th:replace="/layout/_loading.html"></div>
     <!-- Màn hình chào mừng -->
-    <div id="welcome-screen" class="fixed inset-0 bg-white flex items-center justify-center z-50">
+    <!--  <div id="welcome-screen" class="fixed inset-0 bg-white flex items-center justify-center z-50">
         <h1 class="text-4xl font-bold zoom-in gradient-text">Welcome To Review</h1>
-    </div>
+    </div> -->
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const welcomeScreen = document.getElementById('welcome-screen');
             const mainContent = document.getElementById('main-content');
             const displayTime = 2000; // Thời gian hiển thị màn hình chào (3 giây)
-            const expirationTime = 24 * 60 * 60 * 1000; // 24 giờ hết hạn (1 ngày)
+            const expirationTime = 12 * 60 * 60 * 1000; // 12 giờ hết hạn (0.5 ngày)
 
             // Lấy giá trị từ localStorage
             const welcomeScreenData = JSON.parse(localStorage.getItem('welcomeScreenShown'));
@@ -123,7 +119,7 @@
                     <div class="px-10 max-w-xl">
                         <h2 class="text-2xl text-white font-semibold">Cửa hàng</h2>
                         <p class="mt-2 text-gray-100">Đi đến xem những cửa hàng mà bạn có thể sẽ thích.</p>
-                        <a th:href="@{/stores}"
+                        <a th:href="@{/store}"
                             class="flex items-center mt-4 p-2 text-center w-32 bg-blue-500 text-white text-sm uppercase font-medium rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600">
                             <span>Bắt đầu</span>
                             <svg class="h-5 w-5 mx-2" fill="none" stroke-linecap="round" stroke-linejoin="round"
@@ -134,87 +130,43 @@
                     </div>
                 </div>
             </div>
-            <div class="flex mt-8 md:-mx-4 gap-2">
-                <div class="w-full h-64 md:mx-4 rounded-md shadow-md overflow-hidden bg-cover bg-center w-1/2"
-                    style="background-image: url('https://i.pinimg.com/564x/c6/09/99/c609990a07ec080ec152ef0611f37966.jpg')">
-
-                </div>
-                <div class="w-full h-64 mt-8 md:mx-4 rounded-md shadow-md overflow-hidden bg-cover bg-center md:mt-0 w-1/2"
-                    style="background-image: url('https://i.pinimg.com/564x/5b/32/22/5b3222bbf8dea9828e5b8a5818d78636.jpg')">
-
-                </div>
-            </div>
-
         </div>
     </main>
 
+    <div class="p-4 gap-2">
+        <h2 class="text-xl font-semibold text-gray-800 mb-2 top-0 ml-2">LOẠI CỬA HÀNG</h2>
+        <div class="relative w-full space-y-4">
+            <div id="category-scroll"
+                class="flex overflow-x-auto scroll-smooth snap-x snap-mandatory gap-2 hide-scrollbar">
+                <!-- Image Tiles -->
+                <a th:each="category : ${categories}" 
+                th:href="@{/store/category(categoryId=${category.categoriesId})}"
+                class="flex bg-white rounded-lg shadow-md p-4 m-2 min-w-max">
+                 <div class="w-40 rounded-lg overflow-hidden">
+                     <img src="https://i.pinimg.com/564x/4e/a0/31/4ea0315ab5b65ca0997c17e7f08b324d.jpg" 
+                          alt="Category Image"
+                          class="w-full h-full object-cover rounded-lg">
+                 </div>
+                 <div class="flex flex-col items-start ml-4">
+                     <h4 class="text-xl text-blue-500 font-semibold" 
+                     th:text="${category.categoriesName}">Category Name</h4>
+                 </div>
+             </a>
+            </div>
 
-    <!-- -Carousel header--- -->
-    <div class="relative w-full ">
-        <!-- Image container with horizontal scroll -->
-        <div id="category-scroll" class="flex overflow-x-auto scroll-smooth snap-x snap-mandatory gap-2 hide-scrollbar">
-            <!-- Image Tiles -->
-            <a href="#" class="flex bg-white rounded-lg shadow-md p-4 m-2 min-w-max">
-                <div class="w-48 rounded-lg overflow-hidden">
-                    <img src="https://kientruchoanmy.vn/wp-content/uploads/2023/05/1_Camera_6_2.jpg" alt=""
-                        class="w-full h-full object-cover rounded-lg">
-                </div>
-                <div class="flex flex-col items-start ml-4">
-                    <h4 class="text-xl text-black font-semibold">Beatesk</h4>
-                    <p class="text-sm text-black">Thế giới thịt.</p>
-                </div>
-            </a>
-            <!-- Tile 2 -->
-            <a href="#" class="flex bg-white rounded-lg shadow-md p-4 m-2 min-w-max">
-                <div class="w-48 rounded-lg overflow-hidden">
-                    <img src="https://nhahangdep.vn/wp-content/uploads/2018/12/kinh-nghiem-thiet-ke-nha-hang-hai-mat-tien-hieu-qua-3.jpg"
-                        alt="" class="w-full h-full object-cover rounded-lg">
-                </div>
-                <div class="flex flex-col items-start ml-4">
-                    <h4 class="text-xl text-black font-semibold">Chicken Plus</h4>
-                    <p class="text-sm text-black">Ẩm thực Phương Tấy.</p>
-                </div>
-            </a>
-            <!-- Các tile khác... -->
-            <!-- Image Tiles -->
-            <a href="#" class="flex bg-white rounded-lg shadow-md p-4 m-2 min-w-max">
-                <div class="w-48 rounded-lg overflow-hidden">
-                    <img src="https://kientruchoanmy.vn/wp-content/uploads/2023/05/1_Camera_6_2.jpg" alt=""
-                        class="w-full h-full object-cover rounded-lg">
-                </div>
-                <div class="flex flex-col items-start ml-4">
-                    <h4 class="text-xl text-black font-semibold">Beatesk</h4>
-                    <p class="text-sm text-black">Thế giới thịt.</p>
-                </div>
-            </a>
-            <!-- Tile 2 -->
-            <a href="#" class="flex bg-white rounded-lg shadow-md p-4 m-2 min-w-max">
-                <div class="w-48 rounded-lg overflow-hidden">
-                    <img src="https://nhahangdep.vn/wp-content/uploads/2018/12/kinh-nghiem-thiet-ke-nha-hang-hai-mat-tien-hieu-qua-3.jpg"
-                        alt="" class="w-full h-full object-cover rounded-lg">
-                </div>
-                <div class="flex flex-col items-start ml-4">
-                    <h4 class="text-xl text-black font-semibold">Chicken Plus</h4>
-                    <p class="text-sm text-black">Ẩm thực Phương Tấy.</p>
-                </div>
-            </a>
-            <!-- Các tile khác... -->
+            <!-- Previous button -->
+            <button id="prevBtncate"
+                class="absolute top-1/2 transform -translate-y-1/2 left-2 bg-white text-black rounded-full p-2 focus:outline-none">
+                &#10094;
+            </button>
 
+            <!-- Next button -->
+            <button id="nextBtcate"
+                class="absolute top-1/2 transform -translate-y-1/2 right-2 bg-white text-black rounded-full p-2 focus:outline-none">
+                &#10095;
+            </button>
         </div>
-
-        <!-- Previous button -->
-        <button id="prevBtncate"
-            class="absolute top-1/2 transform -translate-y-1/2 left-2 bg-white text-black rounded-full p-2 focus:outline-none">
-            &#10094;
-        </button>
-
-        <!-- Next button -->
-        <button id="nextBtcate"
-            class="absolute top-1/2 transform -translate-y-1/2 right-2 bg-white text-black rounded-full p-2 focus:outline-none">
-            &#10095;
-        </button>
     </div>
-
     <!-- JavaScript for scrolling -->
     <script>
         const scrollContainer1 = document.getElementById('category-scroll');
@@ -244,7 +196,6 @@
     </script>
 
     <!-- ------------------- -->
-
     <!-- Store -->
     <div th:replace="/layout/_store.html"></div>
     <!-- ---- -->

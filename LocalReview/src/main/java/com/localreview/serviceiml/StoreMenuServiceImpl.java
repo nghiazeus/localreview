@@ -5,44 +5,67 @@ import org.springframework.stereotype.Service;
 
 import com.localreview.entity.Store;
 import com.localreview.entity.StoreMenu;
+import com.localreview.entity.User;
 import com.localreview.repository.StoreMenuRepository;
 import com.localreview.repository.StoreRepository;
 import com.localreview.service.StoreMenuService;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class StoreMenuServiceImpl implements StoreMenuService {
 
 	@Autowired
-	private StoreMenuRepository menuRepository;
-
+	private StoreMenuRepository storeMenuRepository;
+	
 	@Autowired
 	private StoreRepository storeRepository;
 
-	@Override
-	public List<StoreMenu> getMenuByStoreId(String storeId) {
+	/*
+	 * @Autowired private StoreRepository storeRepository;
+	 */
 
-		Store store = storeRepository.findById(storeId).orElse(null);
-		if (store != null) {
-			return menuRepository.findByStore_StoreId(storeId);
-		} else {
-			return null;
-		}
+	@Override
+	public List<StoreMenu> findByStore_StoreId(String storeId) {
+		return storeMenuRepository.findByStore_StoreId(storeId);
 	}
+	
+	public void save(StoreMenu storeMenu) {
+        storeMenuRepository.save(storeMenu);
+    }
+	
+
+    @Override
+    public StoreMenu updateStoreMenu(String menuId, String foodFirst, String foodMain, String foodDessert) {
+        StoreMenu existingMenu = storeMenuRepository.findById(menuId).orElse(null);
+
+        if (existingMenu == null) {
+            throw new IllegalArgumentException("Menu không tồn tại");
+        }
+
+        existingMenu.setFoodFirst(foodFirst);
+        existingMenu.setFoodMain(foodMain);
+        existingMenu.setFoodDessert(foodDessert);
+
+        return storeMenuRepository.save(existingMenu);
+    }
+
+    @Override
+    public StoreMenu deleteStoreMenu(String menuId) {
+        StoreMenu menu = storeMenuRepository.findById(menuId).orElse(null);
+
+        if (menu == null) {
+            throw new IllegalArgumentException("Menu không tồn tại");
+        }
+
+        storeMenuRepository.delete(menu);
+        return menu; // Trả về menu đã xóa để lấy storeId
+    }
 
 	@Override
-	public StoreMenu getMenuById(String menuId) {
-		return menuRepository.findById(menuId).orElse(null);
-	}
-
-	@Override
-	public StoreMenu saveMenu(StoreMenu menu) {
-		return menuRepository.save(menu);
-	}
-
-	@Override
-	public void deleteMenu(String menuId) {
-		menuRepository.deleteById(menuId);
+	public Optional<StoreMenu> findById(String menuId) {
+		return storeMenuRepository.findById(menuId);
 	}
 }

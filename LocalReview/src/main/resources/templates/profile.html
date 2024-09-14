@@ -21,10 +21,7 @@
 
 <body class="bg-gray-100 antialiased">
     <!-- Loading -->
-    <div id="loadingOverlay"
-        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; z-index: 1000;">
-        <div class="loading-spinner"></div>
-    </div>
+     <div th:replace="/layout/_loading.html"></div>
     <!-- -------------Thông báo-------------- -->
     <div class="fixed top-4 inset-x-0 flex justify-center z-50">
         <!-- Thông báo thành công -->
@@ -91,7 +88,7 @@
 
     <div class="mt-4">
         <div class="bg-white fixed top-0 left-0 right-0 z-40 border border-slate-200 p-2 h-10">
-            <nav class="mb-4 ml-6 relative">
+            <nav class="mb-4 ml-2 relative">
                 <ol class="flex flex-wrap items-center space-x-2 text-gray-700 dark:text-gray-300">
                     <li th:each="breadcrumb, iterStat : ${breadcrumbs}" class="flex items-center">
                         <a th:if="${not #strings.isEmpty(breadcrumb.url) and !iterStat.last}"
@@ -109,14 +106,14 @@
             </nav>
         </div>
 
-        <div class="mx-auto p-8 mt-4">
+        <div class="mx-auto mt-4">
             <!-- Profile Header -->
             <div class="bg-white shadow-md border border-slate-200 rounded-lg overflow-hidden">
                 <div class="relative">
                     <img class="w-full h-48 object-cover"
                         src="https://i.pinimg.com/564x/25/06/05/2506053a53717e121f504a45e1d15dd2.jpg"
                         alt="Profile Background">
-                    <div class="absolute top-1/2 left-4 transform -translate-y-1/2">
+                    <div class="absolute top-1/2 left-12 transform -translate-y-1/2">
                         <!-- avata th:src="${profile.avatar}" -->
                         <img class="w-32 h-32 object-cover rounded-full border-4 border-white shadow-lg"
                             src="https://i.pinimg.com/564x/b2/11/04/b21104d2403f29042630ca36cbec3484.jpg"
@@ -127,7 +124,7 @@
                         </button>
                     </div>
                 </div>
-                <div class="pt-16 px-6 pb-8">
+                <div class="pt-16 px-6 pb-8 ml-2 ">
                     <h2 class="text-2xl font-bold text-gray-900" th:text="${profile.name}">User Name</h2>
                     <div class="mt-4 flex space-x-4">
                         <a th:href="@{/index}" class="text-gray-600 text-xl hover:text-gray-800">
@@ -152,7 +149,7 @@
             <!-- -------- -->
 
             <!-- <div class="bg-white shadow-md border border-slate-200 rounded-xl mt-8 p-6"> -->
-            <div class="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div class="mt-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
                 <!-- Thẻ 1: Thông tin cá nhân -->
                 <div class="relative bg-white shadow-md border border-slate-200 rounded-xl mt-2 p-4 text-center cursor-pointer"
                     data-toggle="modal" data-target="#exampleModal">
@@ -216,24 +213,63 @@
                 </div>
 
                 <!-- Thẻ 2: Xem của hàng -->
+                <div th:each="store : ${stores}">
                 <a th:href="@{/stores/{userId}(userId=${profile.userId})}"
                     class="relative bg-white nav-link shadow-md border border-slate-200 rounded-xl mt-2 p-4 text-center cursor-pointer">
                     <div class="flex items-center justify-start space-x-4">
-                        <i class="bi bi-star text-2xl text-white bg-yellow-400 rounded-full py-1 px-2"></i>
-                        <span class="text-lg font-semibold text-gray-700">Cửa hàng của tôi</span>
+                        <i class="bi bi-house-up text-2xl text-white bg-yellow-400 rounded-full py-1 px-2"></i>
+                        <span class="flex text-lg font-semibold text-gray-700">Cửa hàng</span>
+                         <span class="text-lg font-semibold text-pink-500" th:text="${store.storeName}"></span>
                     </div>
                 </a>
+                </div>
 
 
-                <!-- Thẻ 3: Thêm Nhà Hàng -->
-                <a th:href="@{/register-store}"
+                <!-- Thẻ 3: Loại Nhà Hàng -->
+                <div th:each="store : ${stores}">
+                    <a th:href="@{/stores/menu(storeId=${store.storeId})}"
+                       class="relative bg-white nav-link shadow-md border border-slate-200 rounded-xl mt-2 p-4 text-center cursor-pointer">
+                       <div class="flex items-center justify-start space-x-4">
+                           <i class="bi bi-tags text-2xl text-white bg-purple-500 rounded-full py-1 px-2"></i>
+                           <span class="text-lg font-semibold text-gray-700">Loại nhà hàng</span>
+                       </div>
+                    </a>
+                </div>
+
+                <!-- Thẻ 4: Thêm menu -->
+                <div th:each="store : ${stores}">
+                    <a th:href="@{/stores/menu(storeId=${store.storeId})}"
+                       class="relative bg-white nav-link shadow-md border border-slate-200 rounded-xl mt-2 p-4 text-center cursor-pointer">
+                       <div class="flex items-center justify-start space-x-4">
+                           <i class="bi bi-card-checklist text-2xl text-white bg-pink-500 rounded-full py-1 px-2"></i>
+                           <span class="text-lg font-semibold text-gray-700">Menu</span>
+                       </div>
+                    </a>
+                </div>
+                
+
+
+                <!-- Thẻ 5: Thêm Nhà Hàng -->
+                 <div th:each="store : ${stores}">
+                    <a th:href="@{/stores/food(storeId=${store.storeId})}"
                     class="relative bg-white nav-link shadow-md border border-slate-200 rounded-xl mt-2 p-4 text-center cursor-pointer">
                     <div class="flex items-center justify-start space-x-4">
-                        <i class="bi bi-house-add text-2xl text-white bg-purple-500 rounded-full py-1 px-2"></i>
-                        <span class="text-lg font-semibold text-gray-700">Thêm nhà hàng</span>
+                        <i class="bi bi-cloud-fog text-2xl text-white bg-green-500 rounded-full py-1 px-2"></i>
+                        <span class="text-lg font-semibold text-gray-700">Món ăn</span>
                     </div>
                 </a>
+                 </div>
 
+                <!-- Thẻ 6: Thêm Nhà Hàng -->
+                <div th:each="store : ${stores}">
+                    <a th:href="@{/stores/drink(storeId=${store.storeId})}"
+                    class="relative bg-white nav-link shadow-md border border-slate-200 rounded-xl mt-2 p-4 text-center cursor-pointer">
+                    <div class="flex items-center justify-start space-x-4">
+                        <i class="bi bi-cup-straw text-2xl text-white bg-blue-500 rounded-full py-1 px-2"></i>
+                        <span class="text-lg font-semibold text-gray-700">Đồ uống</span>
+                    </div>
+                </a>
+                </div>
             </div>
 
             <!-- Cửa hàng -->

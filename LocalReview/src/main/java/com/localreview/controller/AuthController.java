@@ -76,7 +76,7 @@ public class AuthController {
                                 @RequestParam(value = "logout", required = false) String logout,
                                 RedirectAttributes redirectAttributes) {
         if (error != null) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Invalid username or password.");
+            redirectAttributes.addFlashAttribute("error", "Invalid username or password.");
         }
         if (logout != null) {
             redirectAttributes.addFlashAttribute("message", "Logged out successfully.");

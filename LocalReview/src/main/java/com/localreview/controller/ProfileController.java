@@ -57,7 +57,7 @@ public class ProfileController {
 
             return "profile"; // Trang profile.html sẽ được sử dụng để hiển thị thông tin cá nhân
         } else {
-            model.addAttribute("error", "User not found");
+            model.addAttribute("error", "Không tìm thấy người dùng");
             return "error"; // Chuyển hướng đến trang lỗi hoặc thông báo lỗi
         }
     }
@@ -84,9 +84,9 @@ public class ProfileController {
             }
 
             userRepository.save(existingUser);
-            redirectAttributes.addFlashAttribute("successMessage", "Thông tin cá nhân đã được cập nhật thành công.");
+            redirectAttributes.addFlashAttribute("success", "Thông tin cá nhân đã được cập nhật thành công.");
         } else {
-            redirectAttributes.addFlashAttribute("errorMessage", "Không tìm thấy người dùng.");
+            redirectAttributes.addFlashAttribute("error", "Không tìm thấy người dùng.");
         }
 
         return "redirect:/profile/" + userId;

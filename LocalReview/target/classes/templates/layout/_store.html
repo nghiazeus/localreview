@@ -1,19 +1,19 @@
 <div class="rounded-lg mt-8 p-2 duration-300">
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
         <!-- Store Card -->
         <div th:each="store : ${stores}" class="h-full w-full flex-shrink-0 md:p-2">
             <a th:href="@{/store/detail/{id}(id=${store.storeId})}" class="block h-full 
             bg-gradient-to-r from-pink-50 via-gray-50 to-purple-50 shadow-md
              rounded-lg overflow-hidden">
                 <!-- Image -->
-                <img class="w-full h-48 md:h-60 object-cover"
+                <img class="w-full h-40 md:h-60 object-fill"
              th:src="${#lists.isEmpty(store.photos) ? 'https://via.placeholder.com/400x300.png?text=No+Image' : store.photos[0].photoUrl}"
              alt="Store Image">
                 <!-- Information Container -->
-                <div class="p-4 flex flex-col space-y-2">
+                <div class="p-2 flex flex-col space-y-2">
                     <!-- Store Name -->
-                    <div class="font-semibold text-lg text-gray-900 dark:text-gray-100">
-                        <i class="bi bi-shop font-semibold mr-1 text-lg text-purple-500"></i>
+                    <div class="font-semibold text-base text-gray-900 dark:text-gray-100 text-sm">
+                        <i class="bi bi-shop mr-1 text-lg text-purple-500"></i>
                         <span th:text="${store.storeName}">Store Name</span>
                     </div>
 

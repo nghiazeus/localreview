@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Menu của cửa hàng</title>
+    <link rel="stylesheet" href="/css/index.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/loading.css">
+    <script src="/js/loading.js" defer></script>
+</head>
+
+<body class="bg-gray-100">
+    <!-- Loading -->
+    <div th:replace="/layout/_loading.html"></div>
+
+    <div class="bg-white p-px shadow-sm py-4 text-sm">
+        <nav class="ml-4 relative">
+            <ol class="flex flex-wrap items-center space-x-2 text-gray-700 dark:text-gray-300">
+                <li th:each="breadcrumb, iterStat : ${breadcrumbs}" class="flex items-center"><a
+                        th:if="${not #strings.isEmpty(breadcrumb.url) and !iterStat.last}" th:href="${breadcrumb.url}"
+                        class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+                        th:text="${breadcrumb.title}"></a> <span
+                        th:if="${#strings.isEmpty(breadcrumb.url) or iterStat.last}"
+                        class="text-gray-500 dark:text-gray-400" th:text="${breadcrumb.title}"></span> <i
+                        th:if="${!iterStat.last}"
+                        class="bi bi-chevron-compact-right text-gray-500 dark:text-gray-400"></i>
+                </li>
+            </ol>
+        </nav>
+    </div>
+
+    <div class="max-w-4xl mx-auto p-2 mt-2">
+        <div class="flex justify-between mb:space-x-2 gap-2 text-sm">
+            <a th:href="@{/stores/{userId}(userId=${currentUser.userId})}"
+                class="flex-1 text-center bg-red-500 hover:bg-red-600 text-white font-semibold py-3 rounded-lg transition duration-300">
+                Cửa hàng
+            </a>
+            <a th:href="@{/stores/menu(storeId=${storeId})}"
+                class="flex-1 text-center bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-lg transition duration-300">
+                Menu
+            </a>
+            <a th:href="@{/stores/food(storeId=${storeId})}"
+                class="flex-1 text-center bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-3 rounded-lg transition duration-300">
+                Món ăn
+            </a>
+            <a th:href="@{/stores/drink(storeId=${storeId})}"
+                class="flex-1 text-center bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-lg transition duration-300">
+                Món nước
+            </a>
+        </div>
+    </div>
+    <div class="mx-auto mt-2 p-2">
+        <div class="flex flex-col md:flex-row md:space-x-4">
+            <!-- Form thêm thực đơn -->
+            <div class="mt-4 bg-white rounded-lg shadow-lg flex-1 md:w-60">
+                <h2 class="text-xl font-semibold bg-gradient-to-r from-indigo-600 text-center rounded-t-lg py-4
+                        to-blue-600 text-white">Thêm món vào thực đơn</h2>
+                <form th:action="@{/stores/menu/add}" method="post" class="space-y-4 p-4">
+                    <input type="hidden" name="storeId" th:value="${storeId}"> <!-- Hiển thị storeId từ model -->
+
+                    <div class="flex gap-8 w-full">
+                        <div class="flex-1">
+                            <label class="block text-gray-700 font-medium mb-1" for="foodFirst">Món Khai Vị</label>
+                            <input
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                                type="text" id="foodFirst" name="foodFirst" required placeholder="Soup...">
+                        </div>
+
+                        <div class="flex-1">
+                            <label class="block text-gray-700 font-medium mb-1" for="foodMain">Món Chính</label>
+                            <input
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                                type="text" id="foodMain" name="foodMain" required placeholder="Thịt, Cá, Hải sản...">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-1" for="foodDessert">Món Tráng Miệng</label>
+                        <input
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                            type="text" id="foodDessert" name="foodDessert" required placeholder="Trái cây, đồ ngọt...">
+                    </div>
+
+                    <div class="text-right">
+                        <button type="submit"
+                            class="ring-4 ring-indigo-300 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg transition duration-300">Thêm
+                            thực đơn</button>
+                    </div>
+                </form>
+            </div>
+            <!-- Hiển thị danh sách thực đơn -->
+            <div
+                class="mt-4 bg-white shadow-lg rounded-lg overflow-x-auto h-80 overflow-y-auto flex-1 min-w-[calc(100%-16px)] md:flex-7">
+                <table class="min-w-full bg-white">
+                    <thead>
+                        <tr
+                            class="bg-gradient-to-r from-indigo-600 to-blue-600 text-white text-left text-sm sm:text-base">
+                            <th class="py-4 px-6 font-semibold whitespace-nowrap">Món Khai Vị</th>
+                            <th class="py-4 px-6 font-semibold whitespace-nowrap">Món Chính</th>
+                            <th class="py-4 px-6 font-semibold whitespace-nowrap">Món Tráng Miệng</th>
+                            <th class="py-4 px-6 font-semibold text-center whitespace-nowrap">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Lặp qua danh sách thực đơn từ controller -->
+                        <tr th:each="menu : ${menulist}"
+                            class="border-b border-gray-200 hover:bg-gray-50 transition duration-200">
+                            <td class="py-3 px-6 text-sm sm:text-base" th:text="${menu.foodFirst}">Khai Vị</td>
+                            <td class="py-3 px-6 text-sm sm:text-base" th:text="${menu.foodMain}">Món Chính</td>
+                            <td class="py-3 px-6 text-sm sm:text-base" th:text="${menu.foodDessert}">Tráng Miệng</td>
+                            <td class="py-3 px-6 text-sm sm:text-base flex justify-center space-x-2">
+                                <!-- Nút cập nhật -->
+                                <a th:href="@{/stores/menu/edit(menuId=${menu.menuId})}"
+                                    class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 whitespace-nowrap">Cập
+                                    nhật</a>
+
+                                <!-- Nút xóa -->
+                                <form th:action="@{/stores/menu/delete}" method="post" class="inline-block">
+                                    <input type="hidden" name="menuId" th:value="${menu.menuId}">
+                                    <button type="submit"
+                                        class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300">Xóa</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div th:if="${#lists.isEmpty(menulist)}" class="text-center flex flex-col items-center justify-center mt-20">
+            <p class="text-white text-2xl mb-4 bg-pink-500 p-2 w-full">
+                Chưa có menu nào!
+            </p>
+        </div>
+    </div>
+
+</body>
+
+</html>

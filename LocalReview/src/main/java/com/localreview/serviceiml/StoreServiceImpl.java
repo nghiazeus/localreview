@@ -109,6 +109,11 @@ public class StoreServiceImpl implements StoreService {
 		return storeRepository.save(store);
 	}
 
+	@Override
+	public List<Store> getStoresByCategoryId(String categoriesId) {
+		return storeRepository.findByStoreCategories_CategoriesId(categoriesId);
+	}
+
 
 
 }

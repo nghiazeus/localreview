@@ -1,5 +1,7 @@
 package com.localreview.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -21,5 +23,11 @@ public class GlobalExceptionHandler {
             model.addAttribute("success", model.asMap().get("success"));
         }
     }
+    
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
 }
 

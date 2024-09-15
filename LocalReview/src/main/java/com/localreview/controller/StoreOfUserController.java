@@ -1,30 +1,40 @@
 package com.localreview.controller;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.localreview.entity.Categories;
+import com.localreview.entity.Photo;
 import com.localreview.entity.Store;
 import com.localreview.entity.StoreDrink;
 import com.localreview.entity.StoreFood;
 import com.localreview.entity.StoreMenu;
 import com.localreview.entity.User;
 import com.localreview.entity.Breadcrumb; // Giả sử bạn có một lớp Breadcrumb
+import com.localreview.service.CategoriesService;
+import com.localreview.service.PhotoService;
 import com.localreview.service.StoreDrinkService;
 import com.localreview.service.StoreFoodService;
 import com.localreview.service.StoreMenuService;
@@ -66,53 +76,135 @@ public class StoreOfUserController {
 
 	@Autowired
 	private StoreDrinkService storeDrinkService;
+	
+	@Autowired
+	private CategoriesService categoryService;
+	
+	@Autowired
+	private PhotoService photoService;
 
 	@GetMapping("/{userId}")
 	public String getUserStores(@PathVariable("userId") String userId, @RequestParam(required = false) String storeId,
-			Model model) {
-		User currentUser = userRepository.findById(userId).orElse(null);
-		if (currentUser == null) {
-			model.addAttribute("error", "Không tìm thấy người dùng");
-			return "error";
-		}
+	                            Model model) {
+	    User currentUser = userRepository.findById(userId).orElse(null);
+	    if (currentUser == null) {
+	        model.addAttribute("error", "Không tìm thấy người dùng");
+	        return "error";
+	    }
 
-		List<Store> stores = storeService.getStoresByOwnerId(userId);
+	    List<Store> stores = storeService.getStoresByOwnerId(userId);
+	    model.addAttribute("stores", stores);
 
-		model.addAttribute("stores", stores);
+	    List<Breadcrumb> breadcrumbs = new ArrayList<>();
+	    breadcrumbs.add(new Breadcrumb("Trang chủ", "/index"));
+	    breadcrumbs.add(new Breadcrumb("Tài khoản", "/profile/" + userId));
+	    breadcrumbs.add(new Breadcrumb("Cửa hàng của tôi", "/stores/" + userId)); // Sửa đường dẫn breadcrumb
+	    model.addAttribute("breadcrumbs", breadcrumbs);
 
-		List<Breadcrumb> breadcrumbs = new ArrayList<>();
-		breadcrumbs.add(new Breadcrumb("Trang chủ", "/index"));
-		breadcrumbs.add(new Breadcrumb("Tài khoản", "/profile/" + userId));
-		breadcrumbs.add(new Breadcrumb("Cửa hàng của tôi", storeId));
-		model.addAttribute("breadcrumbs", breadcrumbs);
-
-		return "stores/user_stores";
+	    return "stores/user_stores";
 	}
 
-	@PostMapping("/updatestoreuser")
-	public String updateStore(@ModelAttribute("store") Store store, Model model) {
-		Optional<Store> existingStoreOptional = storeRepository.findById(store.getStoreId());
-
-		if (existingStoreOptional.isPresent()) {
-			Store existingStore = existingStoreOptional.get();
-			existingStore.setStoreName(store.getStoreName());
-			existingStore.setAddressCity(store.getAddressCity());
-			existingStore.setAddressDistrict(store.getAddressDistrict());
-			existingStore.setAddressCommune(store.getAddressCommune());
-			existingStore.setAddressStreet(store.getAddressStreet());
-			existingStore.setPhoneNumber(store.getPhoneNumber());
-
-			storeRepository.save(existingStore);
-
-			model.addAttribute("store", existingStore);
-			model.addAttribute("success", "Cập nhật cửa hàng thành công");
-
-			return "redirect:/stores/" + existingStore.getOwnerId();
-		} else {
-			model.addAttribute("error", "Không tìm thấy cửa hàng");
-			return "error";
-		}
+	@GetMapping("/edit/{storeId}")
+	public String showEditForm(@PathVariable("storeId") String storeId, Model model) {
+	    Store store = storeService.getStoreById(storeId)
+	            .orElseThrow(() -> new IllegalArgumentException("Invalid store Id:" + storeId));
+	    model.addAttribute("store", store);
+	    
+	    // Lấy danh sách danh mục để hiển thị trong dropdown
+	    List<Categories> categories = categoryRepository.findAll(); // Hoặc phương thức tương tự
+	    model.addAttribute("categories", categories);
+	    
+	    return "stores/edit_user_store";
 	}
+
+
+	@PostMapping("/update-store")
+	public String updateStore(@RequestParam("storeId") String storeId,
+	                           @RequestParam("storeName") String storeName,
+	                           @RequestParam("storeCategories") String storeCategoriesId,
+	                           @RequestParam("addressStreet") String addressStreet,
+	                           @RequestParam("addressCommune") String addressCommune,
+	                           @RequestParam("addressDistrict") String addressDistrict,
+	                           @RequestParam("addressCity") String addressCity,
+	                           @RequestParam("phoneNumber") String phoneNumber,
+	                           @RequestParam(value = "photo", required = false) MultipartFile photo,
+	                           RedirectAttributes redirectAttributes) throws IOException {
+
+	    try {
+	        // Lấy cửa hàng theo ID
+	        Store store = storeService.getStoreById(storeId)
+	                .orElseThrow(() -> new IllegalArgumentException("Invalid store Id:" + storeId));
+
+	        // Cập nhật thông tin cửa hàng
+	        store.setStoreName(storeName);
+
+	        // Lấy danh mục từ ID
+	        Categories category = categoryService.getCategoryById(storeCategoriesId)
+	                .orElseThrow(() -> new IllegalArgumentException("Invalid category Id:" + storeCategoriesId));
+	        store.setStoreCategories(category);
+
+	        store.setAddressStreet(addressStreet);
+	        store.setAddressCommune(addressCommune);
+	        store.setAddressDistrict(addressDistrict);
+	        store.setAddressCity(addressCity);
+	        store.setPhoneNumber(phoneNumber);
+
+	        // Xử lý ảnh
+	        if (photo != null && !photo.isEmpty()) {
+	            Path tempFilePath = null;
+	            try {
+	                tempFilePath = saveFile(photo);
+	                String imageUrl = storeService.uploadImageToImgur(tempFilePath.toString());
+	                // Cập nhật ảnh mới cho cửa hàng
+	                store.getPhotos().clear(); // Xóa ảnh cũ nếu cần
+	                Photo newPhoto = new Photo();
+	                newPhoto.setPhotoUrl(imageUrl);
+	                newPhoto.setStoreId(storeId);
+	                storeService.savePhoto(newPhoto);
+	            } finally {
+	                if (tempFilePath != null && Files.exists(tempFilePath)) {
+	                    try {
+	                        Files.delete(tempFilePath);
+	                    } catch (IOException e) {
+	                        e.printStackTrace();
+	                    }
+	                }
+	            }
+	        }
+
+	        // Lưu cửa hàng
+	        storeService.saveStore(store);
+
+	        // Lấy userId từ cửa hàng
+	        String userId = store.getOwnerId();
+
+	        // Redirect đến trang của người dùng
+	        redirectAttributes.addFlashAttribute("success", "Cập nhật cửa hàng thành công!");
+	        return "redirect:/stores/" + userId;
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        redirectAttributes.addFlashAttribute("error", "Đã xảy ra lỗi khi cập nhật cửa hàng.");
+	        return "redirect:/stores/edit/" + storeId;
+	    }
+	}
+	
+	
+//	Delete Store
+	@PostMapping("/delete")
+    public String deleteStore(@RequestParam("storeId") String storeId) {
+        storeService.deleteStore(storeId);
+        return "redirect:/stores"; 
+    }
+
+
+
+	private Path saveFile(MultipartFile file) throws IOException {
+		Path tempFile = Files.createTempFile("upload-", file.getOriginalFilename());
+		file.transferTo(tempFile.toFile());
+		return tempFile;
+	}
+
 
 //    Menu-----------------------
 	// Hiển thị danh sách menu của cửa hàng
@@ -220,8 +312,12 @@ public class StoreOfUserController {
 		Store store = storeOptional.get();
 		String ownerId = store.getOwnerId();
 
-		// Tìm thực đơn của cửa hàng
 		List<StoreFood> storeFood = storeFoodService.findByStore_StoreId(storeId);
+		
+		for (StoreFood food : storeFood) {
+            food.getFormattedPrice();
+        }
+		
 		model.addAttribute("foodlist", storeFood);
 		model.addAttribute("storeId", storeId);
 
@@ -304,8 +400,12 @@ public class StoreOfUserController {
 		Store store = storeOptional.get();
 		String ownerId = store.getOwnerId();
 
-		// Tìm danh sách thức uống của cửa hàng
 		List<StoreDrink> storeDrinks = storeDrinkService.findByStore_StoreId(storeId);
+		
+		for (StoreDrink drink : storeDrinks) {
+            drink.getFormattedPrice();
+        }
+		
 		model.addAttribute("drinklist", storeDrinks);
 		model.addAttribute("storeId", storeId);
 

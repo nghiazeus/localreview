@@ -18,6 +18,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.localreview.entity.Photo;
 import com.localreview.entity.Store;
@@ -55,13 +56,16 @@ public class StoreServiceImpl implements StoreService {
 		return storeRepository.findByOwnerId(ownerId);
 	}
 
-	public void updateStore(Store store) {
-		storeRepository.save(store);
-	}
+	@Override
+    public Store updateStore(Store store) {
+        return storeRepository.save(store);
+    }
 
-	public void deleteStore(String id) {
-		storeRepository.deleteById(id);
-	}
+
+	@Override
+    public void deleteStore(String storeId) {
+        storeRepository.deleteById(storeId);
+    }
 
 	@Override
 	public List<Store> getRandomStores() {
@@ -112,6 +116,11 @@ public class StoreServiceImpl implements StoreService {
 	@Override
 	public List<Store> getStoresByCategoryId(String categoriesId) {
 		return storeRepository.findByStoreCategories_CategoriesId(categoriesId);
+	}
+
+	@Override
+	public Optional<Store> getStoreById(String storeId) {
+		return storeRepository.findById(storeId);
 	}
 
 

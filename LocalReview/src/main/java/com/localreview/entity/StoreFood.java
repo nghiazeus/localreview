@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,10 +30,10 @@ public class StoreFood {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id", nullable = false, columnDefinition = "CHAR(36)")
     private Store store; // Liên kết tới Store
-    
+
     @OneToMany(mappedBy = "food", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Photo> photos;
-    
+
     @OneToMany(mappedBy = "storeFood", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<StoreFoodReview> reviews;
 
@@ -40,7 +41,7 @@ public class StoreFood {
     private String foodName;
 
     @Column(name = "price", nullable = false)
-    private BigDecimal price; // Sử dụng Double cho giá
+    private BigDecimal price; // Sử dụng BigDecimal cho giá
 
     @Column(name = "created_at", updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp createdAt;
@@ -48,5 +49,8 @@ public class StoreFood {
     @Column(name = "updated_at", insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private Timestamp updatedAt;
 
-    // Getters and Setters có thể được sinh ra bởi @Data của Lombok
+    public String getFormattedPrice() {
+        DecimalFormat formatter = new DecimalFormat("#,###"); // Định dạng với dấu phẩy và 2 số thập phân
+        return formatter.format(price) + " VND";
+    }
 }

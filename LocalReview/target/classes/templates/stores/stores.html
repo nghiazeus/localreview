@@ -17,9 +17,9 @@
 
 <body class="bg-gray-100">
 	<!-- Loading -->
-	 <div th:replace="/layout/_loading.html"></div>
+	<div th:replace="/layout/_loading.html"></div>
 	<!-- Header -->
-    <div th:replace="/layout/_header.html"></div>
+	<div th:replace="/layout/_header.html"></div>
 
 	<div class="bg-white p-px shadow-sm">
 		<nav class="mb-4 ml-4 relative mt-20">
@@ -30,21 +30,22 @@
 						th:text="${breadcrumb.title}"></a> <span
 						th:if="${#strings.isEmpty(breadcrumb.url) or iterStat.last}"
 						class="text-gray-500 dark:text-gray-400" th:text="${breadcrumb.title}"></span> <i
-						th:if="${!iterStat.last}" class="bi bi-chevron-compact-right text-gray-500 dark:text-gray-400"></i>
+						th:if="${!iterStat.last}"
+						class="bi bi-chevron-compact-right text-gray-500 dark:text-gray-400"></i>
 				</li>
 			</ol>
 		</nav>
 	</div>
 
 	<div th:if="${#lists.isEmpty(stores)}" class="text-center flex flex-col items-center justify-center mt-20">
-    <p class="text-white text-2xl mb-4 bg-pink-500 p-2 md:rounded-full">
-        Rất tiếc. Tên cửa hàng mà bạn tìm kiếm, không tìm thấy cửa hàng nào.
-    </p>
-    
-    <img alt=""
-        src="https://img.tripi.vn/cdn-cgi/image/width=700,height=700/https://gcs.tripi.vn/public-tripi/tripi-feed/img/474113OKf/hinh-anh-gif-buon-chan_013940871.gif"
-        class="md:rounded-lg shadow-md">
-</div>
+		<p class="text-white text-2xl mb-4 bg-pink-500 p-2 md:rounded-full">
+			Rất tiếc. Tên cửa hàng mà bạn tìm kiếm, không tìm thấy cửa hàng nào.
+		</p>
+
+		<img alt=""
+			src="https://img.tripi.vn/cdn-cgi/image/width=700,height=700/https://gcs.tripi.vn/public-tripi/tripi-feed/img/474113OKf/hinh-anh-gif-buon-chan_013940871.gif"
+			class="md:rounded-lg shadow-md">
+	</div>
 
 	<!-- Store -->
 	<div th:replace="/layout/_store.html"></div>

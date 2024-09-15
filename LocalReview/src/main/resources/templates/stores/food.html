@@ -100,7 +100,7 @@
                         <tr th:each="food : ${foodlist}"
                             class="border-b border-gray-200 hover:bg-gray-50 transition duration-200">
                             <td class="py-3 px-6 text-sm sm:text-base" th:text="${food.foodName}"></td>
-                            <td class="py-3 px-6 text-sm sm:text-base" th:text="${food.Price}"></td>
+                            <td class="py-3 px-6 text-sm sm:text-base" th:text="${food.formattedPrice}"></td>
                             <td class="py-3 px-6 text-sm sm:text-base flex justify-center space-x-2">
                                 <!-- Nút cập nhật -->
                                 <a th:href="@{/stores/food/edit(foodId=${food.foodId})}"

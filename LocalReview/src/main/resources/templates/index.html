@@ -57,12 +57,98 @@
             }
         });
     </script>
+
+
+    <!-- Header -->
+    <div class="relative w-full bg-gray-100 md:hidden">
+        <!-- Carousel Section -->
+        <div id="carousel" class="carousel w-full h-36 bg-gray-800 overflow-hidden relative">
+            <!-- Carousel Items -->
+            <div class="carousel-items flex transition-transform duration-500 ease-in-out" style="width: 300%;">
+                <!-- Carousel Slide 1 -->
+                <div class="carousel-item w-full h-full" style="flex: 0 0 100%;">
+                    <img src="https://i.pinimg.com/564x/23/cd/37/23cd3706b0cd612e94babd18c6304266.jpg" alt="Slide 1"
+                        class="w-full h-screen object-cover">
+                </div>
+                <!-- Carousel Slide 2 -->
+                <div class="carousel-item w-full h-full" style="flex: 0 0 100%;">
+                    <img src="https://i.pinimg.com/564x/67/dc/ae/67dcae6c683c2e69ce656bf8d02b348b.jpg" alt="Slide 2"
+                        class="w-full h-screen object-cover">
+                </div>
+                <!-- Carousel Slide 3 -->
+                <div class="carousel-item w-full h-full" style="flex: 0 0 100%;">
+                    <img src="https://i.pinimg.com/564x/b9/b3/df/b9b3dfb6e5afbe1b0c2de51fba05e2d2.jpg" alt="Slide 3"
+                        class="w-full h-screen object-cover">
+                </div>
+            </div>
+        </div>
+
+        <!-- QR Code Card Section -->
+        <div class="relative w-11/12 md:w-3/5 lg:w-2/5 mx-auto -mt-10 bg-gray-20 bg-opacity-25 rounded-lg shadow-lg p-4 z-10">
+            <div class="text-center grid grid-cols-3 gap-4">
+                <!-- QR Code Button -->
+                <button
+                    class="bg-blue-400 text-white font-semibold p-2 rounded-lg shadow hover:bg-blue-600 transition duration-300 flex items-center justify-center">
+                    <i class="bi bi-qr-code-scan text-xl"></i>
+                </button>
+                <!-- Points Button -->
+                <button
+                    class="bg-purple-400 text-white font-semibold p-2 rounded-lg shadow hover:bg-purple-600 transition duration-300 flex items-center justify-center">
+                    <i class="bi bi-coin text-xl"></i>
+                </button>
+                <!-- Another Button -->
+                <button
+                    class="bg-pink-400 text-white font-semibold p-2 rounded-lg shadow hover:bg-red-600 transition duration-300 flex items-center justify-center">
+                    <i class="bi bi-heart text-xl"></i>
+                </button>
+            </div>
+        </div>
+
+    </div>
+    <!-- JavaScript -->
+    <script>
+        // JavaScript for Carousel
+        const carouselItems = document.querySelector('.carousel-items');
+        const totalSlides = document.querySelectorAll('.carousel-item').length;
+        let currentSlide = 0;
+
+        function moveToNextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides; // Loop back to first slide when at the end
+            carouselItems.style.transform = `translateX(-${currentSlide * 100}%)`; // Move to next slide
+        }
+
+        // Set interval for auto sliding every 2 seconds
+        setInterval(moveToNextSlide, 10000);
+    </script>
+
+
     <!-- Header -->
     <div th:replace="/layout/_header.html"></div>
 
-    <!-- Card container -->
-    <div class="mt-6"></div>
-
+    <div class="mt-2 md:mt-6"></div>
+    <!-- Store -->
+    <main class="my-8"></main>
+        <div class="mx-auto px-2 md:px-0">
+            <div class="h-52 md:h-80 rounded-md md:rounded-none overflow-hidden bg-cover bg-center"
+                style="background-image: url('https://i.pinimg.com/564x/20/2f/6a/202f6aae057141201a71bb15b8e30d73.jpg')">
+                <div class="bg-gray-900 bg-opacity-50 flex items-center h-full">
+                    <div class="px-10 max-w-xl">
+                        <h2 class="text-2xl text-white font-semibold">Cửa hàng</h2>
+                        <p class="mt-2 text-gray-100">Đi đến xem những cửa hàng mà bạn có thể sẽ thích.</p>
+                        <a th:href="@{/store}"
+                            class="flex items-center mt-4 p-2 text-center w-32 bg-blue-500 text-white text-sm uppercase font-medium rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600">
+                            <span>Bắt đầu</span>
+                            <svg class="h-5 w-5 mx-2" fill="none" stroke-linecap="round" stroke-linejoin="round"
+                                stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                                <path d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- Store -->
     <div class="relative w-full">
         <!-- Image container with horizontal scroll -->
         <div id="image-scroll" class="flex overflow-x-auto scroll-smooth snap-x snap-mandatory">
@@ -110,61 +196,39 @@
         checkScrollButtons();
     </script>
 
-    <!-- Main -->
-    <main class="my-8">
-        <div class="mx-auto px-6">
-            <div class="h-52 md:h-80 rounded-md overflow-hidden bg-cover bg-center"
-                style="background-image: url('https://i.pinimg.com/564x/20/2f/6a/202f6aae057141201a71bb15b8e30d73.jpg')">
-                <div class="bg-gray-900 bg-opacity-50 flex items-center h-full">
-                    <div class="px-10 max-w-xl">
-                        <h2 class="text-2xl text-white font-semibold">Cửa hàng</h2>
-                        <p class="mt-2 text-gray-100">Đi đến xem những cửa hàng mà bạn có thể sẽ thích.</p>
-                        <a th:href="@{/store}"
-                            class="flex items-center mt-4 p-2 text-center w-32 bg-blue-500 text-white text-sm uppercase font-medium rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600">
-                            <span>Bắt đầu</span>
-                            <svg class="h-5 w-5 mx-2" fill="none" stroke-linecap="round" stroke-linejoin="round"
-                                stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
-                                <path d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                            </svg>
-                        </a>
-                    </div>
-                </div>
+    <!-- Categories -->
+    <div class="relative p-4 gap-2">
+        <h2 class="text-xl font-semibold text-gray-800 mb-2 top-0 ml-2">LOẠI CỬA HÀNG</h2>
+        <div class="py-2 hidden md:block">
+            <div class="absolute top-0 mb-2 right-0 flex space-x-2 z-10 p-4">
+                <button id="prevBtncate"
+                    class="text-2xl bg-white text-black shadow-lg rounded-full p-2 focus:outline-none shadow">
+                    &#10094;
+                </button>
+
+                <!-- Next button -->
+                <button id="nextBtcate"
+                    class="text-2xl bg-white text-black shadow-lg rounded-full p-2 focus:outline-none shadow">
+                    &#10095;
+                </button>
             </div>
         </div>
-    </main>
-
-    <div class="p-4 gap-2">
-        <h2 class="text-xl font-semibold text-gray-800 mb-2 top-0 ml-2">LOẠI CỬA HÀNG</h2>
         <div class="relative w-full space-y-4">
             <div id="category-scroll"
                 class="flex overflow-x-auto scroll-smooth snap-x snap-mandatory gap-2 hide-scrollbar">
                 <!-- Image Tiles -->
-                <a th:each="category : ${categories}" 
-                th:href="@{/store/category(categoryId=${category.categoriesId})}"
-                class="flex bg-white rounded-lg shadow-md p-4 m-2 min-w-max">
-                 <div class="w-40 rounded-lg overflow-hidden">
-                     <img src="https://i.pinimg.com/564x/4e/a0/31/4ea0315ab5b65ca0997c17e7f08b324d.jpg" 
-                          alt="Category Image"
-                          class="w-full h-full object-cover rounded-lg">
-                 </div>
-                 <div class="flex flex-col items-start ml-4">
-                     <h4 class="text-xl text-blue-500 font-semibold" 
-                     th:text="${category.categoriesName}">Category Name</h4>
-                 </div>
-             </a>
+                <a th:each="category : ${categories}" th:href="@{/store/category(categoryId=${category.categoriesId})}"
+                    class="flex bg-white rounded-lg shadow-md p-4 m-2 min-w-max">
+                    <div class="w-40 rounded-lg overflow-hidden">
+                        <img src="https://i.pinimg.com/564x/4e/a0/31/4ea0315ab5b65ca0997c17e7f08b324d.jpg"
+                            alt="Category Image" class="w-full h-full object-cover rounded-lg">
+                    </div>
+                    <div class="flex flex-col items-start ml-4">
+                        <h4 class="text-xl text-blue-500 font-semibold" th:text="${category.categoriesName}">Category
+                            Name</h4>
+                    </div>
+                </a>
             </div>
-
-            <!-- Previous button -->
-            <button id="prevBtncate"
-                class="absolute top-1/2 transform -translate-y-1/2 left-2 bg-white text-black rounded-full p-2 focus:outline-none">
-                &#10094;
-            </button>
-
-            <!-- Next button -->
-            <button id="nextBtcate"
-                class="absolute top-1/2 transform -translate-y-1/2 right-2 bg-white text-black rounded-full p-2 focus:outline-none">
-                &#10095;
-            </button>
         </div>
     </div>
     <!-- JavaScript for scrolling -->

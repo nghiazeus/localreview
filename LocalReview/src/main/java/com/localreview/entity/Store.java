@@ -37,12 +37,14 @@ public class Store {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_categories", nullable = false)
     private Categories storeCategories;
-    
-    @OneToMany(mappedBy = "store", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+
+    // Cascade REMOVE để tự động xóa các thực đơn liên quan khi xóa cửa hàng
+    @OneToMany(mappedBy = "store", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<StoreMenu> storeMenus;
-    
-    @OneToMany(mappedBy = "store", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Photo> photos; // Liên kết với bảng Photo
+
+    // Cascade REMOVE để tự động xóa các ảnh liên quan khi xóa cửa hàng
+    @OneToMany(mappedBy = "store", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<Photo> photos;
 
     @Column(name = "address_city", nullable = false)
     private String addressCity;

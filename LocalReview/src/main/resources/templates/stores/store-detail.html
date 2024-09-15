@@ -144,7 +144,7 @@
                             <p class="text-gray-700 mb-4 text-sm">Bạn có muốn mở Google Maps để xem vị trí này?</p>
                             <div class="flex justify-end mt-6 py-2 gap-4">
                                 <button onclick="cancelOpenMaps()"
-                                    class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded ">Hủy</button>
+                                    class="bg-gray-700 hover:bg-gray-800 text-white font-bold py-2 px-4 rounded ">Hủy</button>
                                 <button id="confirmBtn"
                                     class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">OK</button>
                             </div>
@@ -228,18 +228,17 @@
                         class="w-full h-full object-cover rounded-lg">
                 </div>
             </div>
+            <div class="hidden md:block">
+                <button id="prevBtn"
+                    class="absolute top-1/2 transform -translate-y-1/2 left-2 text-xl bg-white text-black rounded-full p-2 focus:outline-none hidden">
+                    &#10094;
+                </button>
 
-            <!-- Previous button -->
-            <button id="prevBtn"
-                class="absolute top-1/2 transform -translate-y-1/2 left-2 text-xl bg-white text-black rounded-full p-2 focus:outline-none hidden">
-                &#10094;
-            </button>
-
-            <!-- Next button -->
-            <button id="nextBtn"
-                class="absolute top-1/2 transform -translate-y-1/2 right-2 text-xl bg-white text-black rounded-full p-2 focus:outline-none">
-                &#10095;
-            </button>
+                <button id="nextBtn"
+                    class="absolute top-1/2 transform -translate-y-1/2 right-2 text-xl bg-white text-black rounded-full p-2 focus:outline-none">
+                    &#10095;
+                </button>
+            </div>
         </div>
 
         <script>
@@ -410,6 +409,15 @@
         <!-- Tab Content for Food -->
         <div id="food" class="tab-content relative">
 
+            <div th:if="${#lists.isEmpty(foodlist)}" class="text-center flex flex-col items-center justify-center mt-8">
+                <p class="text-white text-2xl mb-4 bg-pink-500 p-2 rounded-full">
+                    Chưa có món ăn nào
+                </p>
+
+                <img alt="" src="https://cdn.pixabay.com/animation/2023/03/21/10/41/10-41-09-561_512.gif"
+                    class="md:rounded-lg w-40 h-16">
+            </div>
+
             <!-- Phần chứa các thẻ món ăn -->
             <div class="relative overflow-x-auto" id="food-scroll">
                 <div class="flex space-x-4 p-4">
@@ -421,14 +429,13 @@
                         <div class="p-4">
                             <h3 class="font-bold text-lg mb-2" th:text="${food.foodName}">Tên Món Ăn</h3>
                             <p class="flex items-baseline text-red-500 mb-2">
-                                <span class="font-semibold text-lg" th:text="'Giá: ' + ${food.Price}">Giá: 500</span>
-                                <sup class="text-sm ml-1">đ</sup>
+                                <span class="font-semibold text-lg" th:text="${food.formattedPrice}">Giá</span>
                             </p>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="mt-14 py-2">
+            <div class="mt-14 py-2 hidden md:block">
                 <div class="absolute bottom-0 right-0 flex space-x-2 z-10 p-4">
                     <!-- Nút Prev -->
                     <button id="food-prevBtn"
@@ -448,6 +455,17 @@
 
         <!-- Tab Content for Drinks -->
         <div id="drink" class="tab-content hidden relative">
+
+            <div th:if="${#lists.isEmpty(drinklist)}"
+                class="text-center flex flex-col items-center justify-center mt-8">
+                <p class="text-white text-2xl mb-4 bg-pink-500 p-2 rounded-full">
+                    Chưa có nước uống nào
+                </p>
+
+                <img alt="" src="https://cdn.pixabay.com/animation/2023/03/21/10/41/10-41-09-561_512.gif"
+                    class="md:rounded-lg w-40 h-16">
+            </div>
+
             <div class="relative overflow-x-auto" id="drink-scroll">
                 <div class="flex space-x-4 p-4">
                     <!-- Loop through drinklist for Drinks tab -->
@@ -458,14 +476,13 @@
                         <div class="p-4">
                             <h3 class="font-bold text-lg mb-2" th:text="${drink.drinkName}">Tên Đồ Uống</h3>
                             <p class="flex items-baseline text-red-500 mb-2">
-                                <span class="font-semibold text-lg" th:text="'Giá: ' + ${drink.Price}">Giá: 500</span>
-                                <sup class="text-sm ml-1">đ</sup>
+                                <span class="font-semibold text-lg" th:text="${drink.formattedPrice}">Giá</span>
                             </p>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="mt-14 py-2">
+            <div class="mt-14 py-2 hidden md:block">
                 <div class="absolute bottom-0 right-0 flex space-x-2 z-10 p-4">
                     <button id="drink-prevBtn"
                         class="text-2xl bg-white text-black shadow-lg rounded-full p-2 focus:outline-none shadow">

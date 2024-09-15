@@ -22,6 +22,7 @@ import com.localreview.service.StoreService;
 import com.localreview.service.UserService;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -114,6 +116,8 @@ public class StoreController {
 		model.addAttribute("categories", list);
 		return "stores/register-store";
 	}
+	
+//	Đăng ký cửa hàng
 
 	@PostMapping("/register-store")
 	public String registerStore(@RequestParam("store_name") String storeName,
@@ -228,58 +232,67 @@ public class StoreController {
 		file.transferTo(tempFile.toFile());
 		return tempFile;
 	}
+	
+//	----------------------------------
 
 	@GetMapping("/store/detail/{id}")
-	public String showStoreDetail(@PathVariable("id") String id, Model model) {
-		try {
-			Store store = storeService.findStoreById(id);
-			if (store != null) {
-				model.addAttribute("store", store);
+    public String showStoreDetail(@PathVariable("id") String id, Model model) {
+        try {
+            Store store = storeService.findStoreById(id);
+            if (store != null) {
+                model.addAttribute("store", store);
 
-				// Tìm thực đơn của cửa hàng
-				List<StoreFood> storeFoodList = storeFoodService.findByStore_StoreId(id);
-				List<StoreDrink> storeDrinkList = storeDrinkService.findByStore_StoreId(id);
+                List<StoreFood> storeFoodList = storeFoodService.findByStore_StoreId(id);
+                List<StoreDrink> storeDrinkList = storeDrinkService.findByStore_StoreId(id);
+                
+                for (StoreFood food : storeFoodList) {
+                    food.getFormattedPrice();
+                }
 
-				model.addAttribute("foodlist", storeFoodList);
-				model.addAttribute("drinklist", storeDrinkList);
+                model.addAttribute("foodlist", storeFoodList);
+                model.addAttribute("drinklist", storeDrinkList);
 
-				// Thêm thông tin breadcrumb
-				List<Breadcrumb> breadcrumbs = new ArrayList<>();
-				breadcrumbs.add(new Breadcrumb("Trang chủ", "/index"));
-				breadcrumbs.add(new Breadcrumb("Cửa hàng", "/store"));
-				breadcrumbs.add(new Breadcrumb(store.getStoreName(), "/store/detail/" + store.getStoreId()));
-				model.addAttribute("breadcrumbs", breadcrumbs);
+                // Thêm thông tin breadcrumb
+                List<Breadcrumb> breadcrumbs = new ArrayList<>();
+                breadcrumbs.add(new Breadcrumb("Trang chủ", "/index"));
+                breadcrumbs.add(new Breadcrumb("Cửa hàng", "/store"));
+                breadcrumbs.add(new Breadcrumb(store.getStoreName(), "/store/detail/" + store.getStoreId()));
+                model.addAttribute("breadcrumbs", breadcrumbs);
 
-				return "stores/store-detail"; // Tên của view HTML
-			} else {
-				model.addAttribute("error", "Cửa hàng không tồn tại.");
-				return "error";
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			model.addAttribute("error", "Đã xảy ra lỗi khi lấy thông tin cửa hàng.");
-			return "error";
-		}
-	}
+                return "stores/store-detail";
+            } else {
+                model.addAttribute("error", "Cửa hàng không tồn tại.");
+                return "error";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            model.addAttribute("error", "Đã xảy ra lỗi khi lấy thông tin cửa hàng.");
+            return "error";
+        }
+    }
+	
+//	-----------------------------------------------
 
 	@GetMapping("/store/category")
 	public String getStoresByCategory(@RequestParam("categoryId") String categoryId, Model model) {
-		List<Store> stores = storeService.getStoresByCategoryId(categoryId);
-		model.addAttribute("stores", stores);
-		model.addAttribute("categoryId", categoryId);
+	    List<Store> stores = storeService.getStoresByCategoryId(categoryId);
+	    model.addAttribute("stores", stores);
+	    model.addAttribute("categoryId", categoryId);
 
-		Categories category = categoriesService.getCategoryById(categoryId);
-		String categoryName = category != null ? category.getCategoriesName() : "Danh mục không xác định";
+	    // Lấy danh mục từ ID
+	    Optional<Categories> categoryOpt = categoriesService.getCategoryById(categoryId);
+	    String categoryName = categoryOpt.map(Categories::getCategoriesName).orElse("Danh mục không xác định");
 
-		// Thêm breadcrumb với tên danh mục
-		List<Breadcrumb> breadcrumbs = new ArrayList<>();
-		breadcrumbs.add(new Breadcrumb("Trang chủ", "/index"));
-		breadcrumbs.add(new Breadcrumb("Cửa hàng", "/store"));
-		breadcrumbs.add(new Breadcrumb("Danh mục", "/stores/category?categoryId=" + categoryId));
-		breadcrumbs.add(new Breadcrumb(categoryName, "/stores/category?categoryId=" + categoryId));
-		model.addAttribute("breadcrumbs", breadcrumbs);
+	    // Thêm breadcrumb với tên danh mục
+	    List<Breadcrumb> breadcrumbs = new ArrayList<>();
+	    breadcrumbs.add(new Breadcrumb("Trang chủ", "/index"));
+	    breadcrumbs.add(new Breadcrumb("Cửa hàng", "/store"));
+	    breadcrumbs.add(new Breadcrumb("Danh mục", "/stores/category?categoryId=" + categoryId));
+	    breadcrumbs.add(new Breadcrumb(categoryName, "/stores/category?categoryId=" + categoryId));
+	    model.addAttribute("breadcrumbs", breadcrumbs);
 
-		return "stores/stores";
+	    return "stores/stores";
 	}
+
 
 }

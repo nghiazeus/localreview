@@ -70,5 +70,6 @@ public class GlobalControllerAdvice {
         model.addAttribute("stores", randomStores);
         model.addAttribute("categories", listscategori);
     }
+   
     
 }

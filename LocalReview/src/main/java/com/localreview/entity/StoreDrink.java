@@ -8,6 +8,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -47,7 +48,7 @@ public class StoreDrink {
     @Column(name = "drink_name", nullable = false, length = 255)
     private String drinkName;
 
-    @Column(name = "price", nullable = false, precision = 10, scale = 2)
+    @Column(name = "price", nullable = false)
     private BigDecimal price;
 
     @Column(name = "created_at", updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
@@ -60,4 +61,9 @@ public class StoreDrink {
     @ManyToOne
     @JoinColumn(name = "store_id", insertable = false, updatable = false)
     private Store store;
+    
+    public String getFormattedPrice() {
+        DecimalFormat formatter = new DecimalFormat("#,###");
+        return formatter.format(price) + " VND";
+    }
 }

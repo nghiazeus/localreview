@@ -21,61 +21,12 @@
 </head>
 
 <body>
-  <div class="relative w-full h-screen bg-gray-100">
-    <!-- Carousel Section -->
-    <div id="carousel" class="carousel w-full h-3/4 bg-gray-800 overflow-hidden relative">
-      <!-- Carousel Items -->
-      <div class="carousel-items flex transition-transform duration-500 ease-in-out" style="width: 300%;">
-        <!-- Carousel Slide 1 -->
-        <div class="carousel-item w-full h-full" style="flex: 0 0 100%;">
-          <img src="https://via.placeholder.com/1920x1080/0000FF/808080?text=Slide+1" alt="Slide 1" class="w-full h-full object-cover">
-        </div>
-        <!-- Carousel Slide 2 -->
-        <div class="carousel-item w-full h-full" style="flex: 0 0 100%;">
-          <img src="https://via.placeholder.com/1920x1080/FF0000/FFFFFF?text=Slide+2" alt="Slide 2" class="w-full h-full object-cover">
-        </div>
-        <!-- Carousel Slide 3 -->
-        <div class="carousel-item w-full h-full" style="flex: 0 0 100%;">
-          <img src="https://via.placeholder.com/1920x1080/00FF00/000000?text=Slide+3" alt="Slide 3" class="w-full h-full object-cover">
-        </div>
-      </div>
-    </div>
-  
-    <!-- QR Code Card Section -->
-    <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-11/12 md:w-3/5 lg:w-2/5 bg-white rounded-lg shadow-lg p-6">
-      <div class="text-center">
-        <h3 class="text-2xl font-bold text-gray-700 mb-4">Quét mã QR và nhận điểm</h3>
-        <p class="text-gray-600 mb-6">Sử dụng camera của bạn để quét mã QR và tích điểm vào tài khoản của bạn.</p>
-        
-        <!-- QR Code Button -->
-        <button class="bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg shadow hover:bg-blue-600 transition duration-300">
-          Quét Mã QR
-        </button>
-  
-        <!-- Points Section -->
-        <div class="mt-4">
-          <p class="text-gray-600">Điểm hiện tại: <span class="font-bold text-gray-800">120</span></p>
-        </div>
-      </div>
-    </div>
+  <div class="bg-white dark:bg-gray-800">
+    <h1 class="text-gray-900 dark:text-white">Dark mode is here!</h1>
+    <p class="text-gray-600 dark:text-gray-300">
+      Lorem ipsum...
+    </p>
   </div>
-  
-  <!-- JavaScript -->
-  <script>
-    // JavaScript for Carousel
-    const carouselItems = document.querySelector('.carousel-items');
-    const totalSlides = document.querySelectorAll('.carousel-item').length;
-    let currentSlide = 0;
-  
-    function moveToNextSlide() {
-      currentSlide = (currentSlide + 1) % totalSlides; // Loop back to first slide when at the end
-      carouselItems.style.transform = `translateX(-${currentSlide * 100}%)`; // Move to next slide
-    }
-  
-    // Set interval for auto sliding every 2 seconds
-    setInterval(moveToNextSlide, 2000);
-  </script>
-  
       
 </body>
 

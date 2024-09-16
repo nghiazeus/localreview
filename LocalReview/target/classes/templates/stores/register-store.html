@@ -71,7 +71,7 @@
                         <label for="store_categories" class="block text-sm font-semibold text-gray-600">Loại cửa
                             hàng</label>
                         <select id="store_categories" name="store_categories" required
-                            class="block w-full px-4 py-2 border-2 rounded-lg border-gray-300 text-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 invalid:border-red-500">
+                            class="block w-full sm:max-w-xs md:max-w-md lg:max-w-lg px-4 py-2 border-2 rounded-lg border-gray-300 text-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 invalid:border-red-500 appearance-none text-lg">
                             <option value="" disabled selected>Chọn loại cửa hàng</option>
                             <th:block th:each="category : ${categories}">
                                 <option th:value="${category.categoriesId}" th:text="${category.categoriesName}">
@@ -81,13 +81,12 @@
                         <div class="text-sm text-red-600 mt-1 hidden" id="storeCategoriesFeedback">Loại cửa hàng là bắt
                             buộc.</div>
                     </div>
-
                     <!-- Tỉnh/Thành phố -->
                     <div>
                         <label for="address_city" class="block text-sm font-semibold text-gray-600">Tỉnh/Thành
                             phố</label>
                         <select id="address_city" name="address_city" required
-                            class="block w-full px-4 py-2 border-2 rounded-lg border-gray-300 text-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 invalid:border-red-500">
+                            class="block w-full sm:max-w-xs md:max-w-md lg:max-w-lg px-4 py-2 border-2 rounded-lg border-gray-300 text-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 invalid:border-red-500 appearance-none text-lg">
                             <option value="">Chọn Tỉnh/Thành phố</option>
                         </select>
                         <div class="text-sm text-red-600 mt-1 hidden" id="addressCityFeedback">Tỉnh/Thành phố là bắt
@@ -99,7 +98,7 @@
                         <label for="address_district"
                             class="block text-sm font-semibold text-gray-600">Quận/Huyện</label>
                         <select id="address_district" name="address_district" required
-                            class="block w-full px-4 py-2 border-2 rounded-lg border-gray-300 text-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 invalid:border-red-500">
+                            class="block w-full sm:max-w-xs md:max-w-md lg:max-w-lg px-4 py-2 border-2 rounded-lg border-gray-300 text-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 invalid:border-red-500 appearance-none text-lg">
                             <option value="">Chọn Quận/Huyện</option>
                         </select>
                         <div class="text-sm text-red-600 mt-1 hidden" id="addressDistrictFeedback">Quận/Huyện là bắt
@@ -110,12 +109,13 @@
                     <div>
                         <label for="address_commune" class="block text-sm font-semibold text-gray-600">Xã/Phường</label>
                         <select id="address_commune" name="address_commune" required
-                            class="block w-full px-4 py-2 border-2 rounded-lg border-gray-300 text-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 invalid:border-red-500">
+                            class="block w-full sm:max-w-xs md:max-w-md lg:max-w-lg px-4 py-2 border-2 rounded-lg border-gray-300 text-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 invalid:border-red-500 appearance-none text-lg">
                             <option value="">Chọn Xã/Phường</option>
                         </select>
                         <div class="text-sm text-red-600 mt-1 hidden" id="addressCommuneFeedback">Xã/Phường là bắt buộc.
                         </div>
                     </div>
+
                 </div>
 
                 <!-- Bên phải: Địa chỉ và thông tin liên lạc -->

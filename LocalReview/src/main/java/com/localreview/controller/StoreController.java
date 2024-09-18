@@ -7,6 +7,7 @@ import com.localreview.entity.QRCodeScans;
 import com.localreview.entity.Store;
 import com.localreview.entity.StoreDrink;
 import com.localreview.entity.StoreFood;
+import com.localreview.entity.StoreMenu;
 import com.localreview.entity.User;
 import com.localreview.entityEnum.UserRole;
 import com.localreview.repository.CategoriesRepository;
@@ -242,6 +243,7 @@ public class StoreController {
             if (store != null) {
                 model.addAttribute("store", store);
 
+                List<StoreMenu> storeMenuList = storeMenuService.findByStore_StoreId(id);
                 List<StoreFood> storeFoodList = storeFoodService.findByStore_StoreId(id);
                 List<StoreDrink> storeDrinkList = storeDrinkService.findByStore_StoreId(id);
                 
@@ -249,6 +251,7 @@ public class StoreController {
                     food.getFormattedPrice();
                 }
 
+                model.addAttribute("menulist", storeMenuList);
                 model.addAttribute("foodlist", storeFoodList);
                 model.addAttribute("drinklist", storeDrinkList);
 

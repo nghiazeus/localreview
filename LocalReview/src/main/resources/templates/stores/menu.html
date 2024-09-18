@@ -60,39 +60,51 @@
                 <form th:action="@{/stores/menu/add}" method="post" class="space-y-4 p-4">
                     <input type="hidden" name="storeId" th:value="${storeId}"> <!-- Hiển thị storeId từ model -->
 
-                    <div class="flex gap-8 w-full">
+                    <div class="md:flex md:gap-8 w-full">
                         <div class="flex-1">
                             <label class="block text-gray-700 font-medium mb-1" for="foodFirst">Món Khai Vị</label>
-                            <input
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
-                                type="text" id="foodFirst" name="foodFirst" required placeholder="Soup...">
+                            <textarea
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                                id="foodFirst" name="foodFirst" required rows="3"></textarea>
+
+                            <script>
+                                document.getElementById('foodFirst').placeholder = "Chả giò...\nSuops...\nGỏi...";
+                            </script>
+
                         </div>
 
                         <div class="flex-1">
                             <label class="block text-gray-700 font-medium mb-1" for="foodMain">Món Chính</label>
-                            <input
+                            <textarea
                                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
-                                type="text" id="foodMain" name="foodMain" required placeholder="Thịt, Cá, Hải sản...">
+                                id="foodMain" name="foodMain" required rows="3"></textarea>
+                            <script>
+                                document.getElementById('foodMain').placeholder = "Hải sản...\nThịt...\nCá...";
+                            </script>
                         </div>
                     </div>
 
                     <div>
                         <label class="block text-gray-700 font-medium mb-1" for="foodDessert">Món Tráng Miệng</label>
-                        <input
+                        <textarea
                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
-                            type="text" id="foodDessert" name="foodDessert" required placeholder="Trái cây, đồ ngọt...">
+                            id="foodDessert" name="foodDessert" required rows="3"></textarea>
+                        <script>
+                            document.getElementById('foodDessert').placeholder = "Sửa chua...\nTrái cây...\nChè...";
+                        </script>
                     </div>
 
-                    <div class="text-right">
+                    <div class="text-right" th:if="${#lists.size(menulist) == 0}">
                         <button type="submit"
-                            class="ring-4 ring-indigo-300 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg transition duration-300">Thêm
-                            thực đơn</button>
+                            class="ring-4 ring-indigo-300 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg transition duration-300">
+                            Thêm thực đơn
+                        </button>
                     </div>
                 </form>
             </div>
             <!-- Hiển thị danh sách thực đơn -->
             <div
-                class="mt-4 bg-white shadow-lg rounded-lg overflow-x-auto h-80 overflow-y-auto flex-1 min-w-[calc(100%-16px)] md:flex-7">
+                class="mt-4 bg-white shadow-lg rounded-lg overflow-x-auto h-auto overflow-y-auto flex-1 min-w-[calc(100%-16px)] md:flex-7">
                 <table class="min-w-full bg-white">
                     <thead>
                         <tr
@@ -107,9 +119,16 @@
                         <!-- Lặp qua danh sách thực đơn từ controller -->
                         <tr th:each="menu : ${menulist}"
                             class="border-b border-gray-200 hover:bg-gray-50 transition duration-200">
-                            <td class="py-3 px-6 text-sm sm:text-base" th:text="${menu.foodFirst}">Khai Vị</td>
-                            <td class="py-3 px-6 text-sm sm:text-base" th:text="${menu.foodMain}">Món Chính</td>
-                            <td class="py-3 px-6 text-sm sm:text-base" th:text="${menu.foodDessert}">Tráng Miệng</td>
+                            <td class="py-3 px-6 text-sm sm:text-base" style="vertical-align: top;">
+                                <pre th:text="${menu.foodFirst}"></pre>
+                            </td>
+                            <td class="py-3 px-6 text-sm sm:text-base" style="vertical-align: top;">
+                                <pre th:text="${menu.foodMain}"></pre>
+                            </td>
+                            <td class="py-3 px-6 text-sm sm:text-base" style="vertical-align: top;">
+                                <pre th:text="${menu.foodDessert}"></pre>
+                            </td>
+
                             <td class="py-3 px-6 text-sm sm:text-base flex justify-center space-x-2">
                                 <!-- Nút cập nhật -->
                                 <a th:href="@{/stores/menu/edit(menuId=${menu.menuId})}"
@@ -125,6 +144,7 @@
                             </td>
                         </tr>
                     </tbody>
+
                 </table>
             </div>
         </div>

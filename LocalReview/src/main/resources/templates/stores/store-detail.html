@@ -269,34 +269,6 @@
         </script>
 
 
-        <!-- ---- -->
-        <!--  -->
-        <!-- <div class="mt-8 bg-white shadow-lg rounded-lg p-4">
-            <div class="flex space-x-4 overflow-x-scroll scrollbar-hide cursor-grab" id="scroll-container">
-                
-            </div>
-        </div> -->
-        <!-- Time -->
-        <!-- Thẻ đầu tiên -->
-        <!-- <section class="bg-blue-100 rounded-lg p-4 shadow-md">
-                    <h2 class="text-2xl font-semibold mb-4">Giờ mở cửa</h2>
-                    <div class="flex items-start space-x-4">
-                        <i class="bi bi-clock text-gray-500 text-3xl"></i>
-                        <div>
-                            <p class="mb-2 text-gray-700">
-                                Thứ hai - Thứ sáu ~
-                                <strong class="text-gray-900">7:00 AM - 20:00 PM</strong>
-                            </p>
-                            <p class="mb-2 text-gray-700">
-                                Saturday ~
-                                <strong class="text-gray-900">8:00 AM - 23:00 PM</strong>
-                            </p>
-                            <p class="text-gray-700">Chủ nhật ~ Đóng Cửa</p>
-                        </div>
-                    </div>
-                </section> -->
-        <!-- Card Menu -->
-
         <div class="mt-8 bg-gray-100 rounded-lg p-4">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
@@ -304,40 +276,37 @@
                 <div class="bg-gray-50 rounded-lg p-4 shadow-md col-span-1 md:col-span-1">
                     <h3 class="text-lg font-semibold text-gray-800 font-bold">THỰC ĐƠN</h3>
                     <br>
-                    <div class="khaivi">
+                    <div th:if="${#lists.isEmpty(menulist)}"
+                        class="text-center flex flex-col items-center justify-center mt-8">
+                        <p class="text-white text-2xl mb-4 bg-pink-500 p-2 rounded-full">
+                            Chưa có menu nào
+                        </p>
+                    </div>
+                    <div th:each="menu, iterStat : ${menulist}" class="khaivi">
                         <strong>Khai vị:</strong>
                         <ul class="text-gray-800 mt-2">
-                            <li>Gỏi Cuốn: Cuốn bánh tráng với tôm, thịt heo, rau sống và bún.</li>
-                            <li>Chả Giò: Cuốn chả giò giòn rụm với nhân thịt heo, nấm, và rau củ.</li>
-                            <li>Súp Ngô: Súp ngô ngọt với thịt gà và rau củ.</li>
+                            <li class="whitespace-pre-wrap" th:text="${menu.foodFirst}"></li>
                         </ul>
                         <br>
-                        <div id="dishList" class="hidden">
+                        <div id="dishList-[[${iterStat.index}]]" class="hidden">
                             <strong>Món Chính:</strong>
                             <ul class="text-gray-800 mt-2">
-                                <li>Phở: Món phở truyền thống với nước dùng thơm ngon, thịt bò hoặc gà, cùng bánh phở
-                                    mềm.</li>
-                                <li>Bún Chả: Bún chả với thịt nướng thơm lừng, nước mắm chua ngọt và rau sống.</li>
-                                <li>Bò Kho: Món bò kho mềm mại với nước sốt đậm đà, ăn kèm với bánh mì hoặc cơm.</li>
-                            </ul>
-                            <br>
-                            <strong>Món Hải Sản:</strong>
-                            <ul class="text-gray-800 mt-2">
-                                <li>Tôm Nướng: Tôm nướng trên lửa than, gia vị đậm đà.</li>
-                                <li>Mực Xào Sa Tế: Mực xào với sa tế, ớt và các loại gia vị.</li>
-                                <li>Cá Kho Tộ: Cá kho tộ với nước sốt đậm đà và hành tím.</li>
+                                <li class="whitespace-pre-wrap" th:text="${menu.foodMain}"></li>
                             </ul>
                             <br>
                             <strong>Món Tráng Miệng:</strong>
                             <ul class="text-gray-800 mt-2">
-                                <li>Chè Ba Màu: Chè với ba lớp màu sắc khác nhau, gồm đậu xanh, thạch, và nước cốt dừa.
-                                </li>
-                                <li>Bánh Flan: Bánh flan mềm mịn với lớp caramel ngọt ngào.</li>
-                                <li>Kem Xôi: Xôi với kem tươi mát lạnh.</li>
+                                <li class="whitespace-pre-wrap" th:text="${menu.foodDessert}"></li>
                             </ul>
                         </div>
-                        <button class="text-red-500 mt-2" onclick="toggleContent('dishList')">Xem thêm</button>
+                        <button class="text-red-500 mt-2"
+                            onclick="toggleContent('dishList-[[${iterStat.index}]]', this)">Xem thêm</button>
                     </div>
+                    <style>
+                        .whitespace-pre-wrap {
+                            white-space: pre-wrap;
+                        }
+                    </style>
                 </div>
 
                 <!-- Thẻ món nước -->
@@ -382,16 +351,19 @@
 
 
         <script>
-            function toggleContent(id) {
+            function toggleContent(id, button) {
                 var content = document.getElementById(id);
                 if (content.classList.contains('hidden')) {
                     content.classList.remove('hidden');
                     content.classList.add('block');
+                    button.textContent = 'Ẩn bớt'; // Đổi văn bản thành "Ẩn bớt"
                 } else {
                     content.classList.remove('block');
                     content.classList.add('hidden');
+                    button.textContent = 'Xem thêm'; // Đổi văn bản thành "Xem thêm"
                 }
             }
+
         </script>
     </div>
     <br>

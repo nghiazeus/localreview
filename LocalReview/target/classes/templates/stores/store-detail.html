@@ -70,8 +70,8 @@
                         <div class="carousel-container" id="carousel">
                             <div class="carousel-slide">
                                 <!-- Duyệt qua các ảnh từ cơ sở dữ liệu -->
-                                <div th:each="photo : ${store.photos}" class="carousel-item">
-                                    <img th:src="${photo.photoUrl}" alt="Slide"
+                                <div class="carousel-item" th:each="photo : ${storePhotos}">
+                                    <img th:src="@{${photo.photoUrl}}" alt="Slide"
                                         class="rounded-lg object-fill w-full h-full">
                                 </div>
                             </div>
@@ -549,56 +549,19 @@
         <strong class="text-2xl ml-8 text-black">Bình luận</strong>
         <section class="article mt-10 flex flex-col md:flex-row">
             <div class="md:w-7/12 w-full scrollable-container py-6 px-8">
-                <div class="space-y-4">
+                <div th:each="review : ${reviews}" class="space-y-4 py-1">
                     <!-- Card 1 -->
                     <div class="card">
                         <div class="p-4">
                             <div class="flex items-center">
                                 <img class="avatar" src="https://via.placeholder.com/150" alt="User Avatar">
                                 <div class="ml-4">
-                                    <h3 class="text-lg font-semibold">Nguyễn Văn A</h3>
-                                    <p class="text-sm text-gray-600">Có những nhà hàng ăn ngon như Kasaki</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Card 2 -->
-                    <div class="card">
-                        <div class="p-4">
-                            <div class="flex items-center">
-                                <img class="avatar" src="https://via.placeholder.com/150" alt="User Avatar">
-                                <div class="ml-4">
-                                    <h3 class="text-lg font-semibold">Trần Thị B</h3>
-                                    <p class="text-sm text-gray-600">Có các nhà hàng, quán ăn không ngon như giới thiệu
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Card 3 -->
-                    <div class="card">
-                        <div class="p-4">
-                            <div class="flex items-center">
-                                <img class="avatar" src="https://via.placeholder.com/150" alt="User Avatar">
-                                <div class="ml-4">
-                                    <h3 class="text-lg font-semibold">Nguyễn Văn A</h3>
-                                    <p class="text-sm text-gray-600">Có những nhà hàng ăn ngon như Kasaki</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Card 2 -->
-                    <div class="card">
-                        <div class="p-4">
-                            <div class="flex items-center">
-                                <img class="avatar" src="https://via.placeholder.com/150" alt="User Avatar">
-                                <div class="ml-4">
-                                    <h3 class="text-lg font-semibold">Trần Thị B</h3>
-                                    <p class="text-sm text-gray-600">Có các nhà hàng, quán ăn không ngon như giới thiệu
-                                    </p>
+                                    <h3 class="text-lg font-semibold" th:text="${review.user.name}"></h3>
+                                    <p class="text-sm text-gray-600" th:text="${review.rating}"></p>
+                                    <p class="text-sm text-gray-600" th:text="${review.comment}"></p>
+                                    <div class="review-images" th:if="${review.photos.size() > 0}">
+                                        <img th:each="photo : ${review.photos}" th:src="${photo.photoUrl}" class="w-10 h-0"/>
+                                    </div>
                                 </div>
                             </div>
                         </div>

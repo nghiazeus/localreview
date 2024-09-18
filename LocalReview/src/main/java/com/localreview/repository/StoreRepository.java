@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.localreview.entity.Review;
 import com.localreview.entity.Store;
 
 @Repository
@@ -22,7 +23,5 @@ public interface StoreRepository extends JpaRepository<Store, String> {
     List<Store> searchStoresByName(@Param("searchTerm") String searchTerm);
 	
 	List<Store> findByStoreCategories_CategoriesId(String categoriesId);
-
-
-    
+	
 }

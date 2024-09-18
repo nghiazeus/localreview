@@ -1,6 +1,7 @@
 package com.localreview.serviceiml;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.localreview.entity.Photo;
+import com.localreview.entity.Review;
 import com.localreview.repository.PhotoRepository;
 import com.localreview.repository.StoreRepository;
 import com.localreview.service.PhotoService;
@@ -94,5 +96,13 @@ public class PhotoServiceImpl implements PhotoService {
 
         return tempFilePath;
     }
+
+	@Override
+	public List<Photo> getPhotosByStoreId(String storeId) {
+		return photoRepository.findByStoreId(storeId);
+	}
+
+
+
 
 }

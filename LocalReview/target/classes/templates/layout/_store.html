@@ -1,39 +1,42 @@
-
-<div class="bg-white shadow-lg rounded-lg mt-8 p-2">
-    <div class="grid grid-cols-2 md:grid-cols-5 gap-4 p-2">
-        <div th:each="store : ${stores}" class="h-full">
-            <a th:href="@{/store/detail/{id}(id=${store.storeId})}" class="h-full">
-                <div
-                    class="flex flex-col justify-between gap-1 dark:text-white bg-gray-20 dark:bg-neutral-900 p-4 
-                    rounded-md  border-2 dark:border-neutral-700 hover:scale-105 
-                    transition duration-150 ease-in-out h-full min-h-[250px]">
-                    <div class="flex justify-between items-center space-x-2 text-ellipsis">
-                        <div class="dark:bg-neutral-700 w-30 text-center font-semibold text-black text-ellipsis text-sm bg-blue-400 
-                        text-white px-2 py-1 rounded-md">
-                            <i class="bi bi-shop text-white font-semibold dark:bg-neutral-700"></i>
-                            <span th:text="${store.storeName}" 
-                            class="text-ellipsis rounded-md text-ellipsis truncate">
-                            Store Name</span>
-                        </div>                   
+<div class="rounded-lg mt-8 p-2 duration-300">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+        <!-- Store Card -->
+        <div th:each="store : ${stores}" class="h-full w-full flex-shrink-0 md:p-2">
+            <a th:href="@{/store/detail/{id}(id=${store.storeId})}" class="block h-full 
+            bg-gradient-to-r from-pink-50 via-gray-50 to-purple-50 shadow-md
+             rounded-lg overflow-hidden">
+                <!-- Image -->
+                <img class="w-full h-40 md:h-60 object-fill"
+             th:src="${#lists.isEmpty(store.photos) ? 'https://via.placeholder.com/400x300.png?text=No+Image' : store.photos[0].photoUrl}"
+             alt="Store Image">
+                <!-- Information Container -->
+                <div class="p-2 flex flex-col space-y-2">
+                    <!-- Store Name -->
+                    <div class="font-semibold text-base text-gray-900 dark:text-gray-100 text-sm">
+                        <i class="bi bi-shop mr-1 text-lg text-purple-500"></i>
+                        <span th:text="${store.storeName}">Store Name</span>
                     </div>
-                    <div class="flex justify-between items-center mt-2 space-x-2 text-xs">
-                        <div class="w-30 text-center text-xs bg-red-300 text-white px-2 py-1 rounded-md">
-                            <i class="bi bi-geo-alt text-white dark:bg-neutral-700"></i>
-                            <span th:text="${store.addressCity}" class="text-white">Address</span>
-                        </div>
-                        <div class="text-xs">
-                            <div class="text-center text-white bg-red-300 dark:bg-neutral-700 rounded-md px-2">
-                                <i class="bi bi-tags"></i>
-                                <span th:text="${store.storeCategories.categoriesName}">Loại</span>
-                            </div>
-                        </div>
-                    </div>                
-                    <img class="rounded-md w-full h-36 object-cover mt-2"
-                        th:src="@{https://noithattugia.com/wp-content/uploads/2022/10/thiet-ke-nha-hang-16.jpg}"
-                        alt="Store Image">
+
+                    <!-- Address -->
+                    <div class="flex items-center text-gray-700 dark:text-gray-300 text-sm">
+                        <i class="bi bi-geo-alt text-red-500 text-lg mr-1"></i>
+                        <span th:text="${store.addressCity}">Address</span>
+                    </div>
+
+                    <!-- Category -->
+                    <div class="text-gray-700 dark:text-gray-300 text-sm">
+                        <i class="bi bi-tag text-blue-500 text-lg mr-1"></i>
+                        <span th:text="${store.storeCategories.categoriesName}">Category</span>
+                    </div>
+
+                    <!-- Rating -->
+                    <div class="flex items-center text-gray-900 dark:text-gray-100 text-sm">
+                        <i class="bi bi-star-fill text-yellow-500 text-lg mr-1"></i>
+                        <span>4.5</span> <!-- Assuming store.rating is available -->
+                    </div>
                 </div>
             </a>
         </div>
+        <!-- End of Store Card -->
     </div>
 </div>
-

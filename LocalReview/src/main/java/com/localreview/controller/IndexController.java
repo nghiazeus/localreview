@@ -31,61 +31,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class IndexController {
 
-	@Autowired
-    private  StoreService storesv;
-    
-    @Autowired
-    private  UserService usersv;
-    
-	@Autowired
-	private CategoriesRepository category;
-	
-	@Autowired UserRepository ustory;
-
-
-
 	@GetMapping("/index")
-	public String store(Model model) {
-	    // Lấy thông tin xác thực hiện tại
-	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-	    String currentEmail = null;
-
-	    // Kiểm tra nếu authentication là hợp lệ và principal là UserDetails
-        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            currentEmail = userDetails.getUsername(); // Lấy email của người dùng hiện tại
-        } else if (authentication != null && authentication.getPrincipal() instanceof OAuth2User) {
-            OAuth2User oauthUser = (OAuth2User) authentication.getPrincipal();
-            currentEmail = oauthUser.getAttribute("email"); // Lấy email từ OAuth2
-        }
-
-        // Lấy thông tin người dùng từ email nếu email không phải là null
-        if (currentEmail != null) {
-            User currentUser = usersv.findByEmail(currentEmail);
-            if (currentUser != null) {
-                model.addAttribute("currentUser", currentUser); // Thêm người dùng vào model
-            } else {
-                model.addAttribute("error", "Không tìm thấy thông tin người dùng.");
-            }
-        }
-
-
-	    // Lấy danh sách các cửa hàng
-	    List<Store> list = storesv.getAllStores();
-	    List<Categories> lists = category.findAll();
-	    model.addAttribute("stores", list);
-	    model.addAttribute("categories", lists);
-
-	    return "index"; // Trả về tên của trang Thymeleaf
+	public String index(Model model) {
+	    return "index"; 
 	}
 
-	
-	
-    @GetMapping("/storedetail")
-    public String Storedetail() {
-        return "detailstore";
-    }
-    
-    
 }
 

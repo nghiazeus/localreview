@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Detail</title>
+    <link href="dist/output.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@latest/dist/tailwind.min.css" />
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans:200,400&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/emoji-button@4.6.0/dist/index.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <link rel="stylesheet" href="/css/loading.css">
+    <script src="/js/loading.js"></script>
+
+</head>
+
+<body class="bg-gray-100">
+    <!-- Loading -->
+    <div th:replace="/layout/_loading.html"></div>
+
+    <div class="fixed top-0 left-0 w-full shadow-sm z-50">
+        <nav id="header" class="w-full flex z-30 top-0 py-2 bg-gray-50 dark:bg-neutral-800">
+            <div class="container mx-auto flex items-center justify-between px-5 relative">
+                <!-- Tiêu đề mobile -->
+                <div class="block md:hidden flex items-center">
+                    <a th:href="@{/index}" class="font-bold text-xl">
+                        <strong class="text-yellow-400">RE</strong>VIEW
+                    </a>
+                </div>
+
+                <!-- Tiêu đề laptop -->
+                <div class="hidden md:flex md:items-center md:w-auto">
+                    <a class="flex items-center tracking-wide no-underline hover:no-underline font-bold text-xl"
+                        th:href="@{/index}">
+                        <strong class="text-yellow-400">RE</strong>VIEW
+                    </a>
+                </div>
+                <!-- filter -->
+                <div th:replace="/layout/_filter.html"></div>
+                <!-- ----- -->
+            </div>
+        </nav>
+    </div>
+    <nav class="mb-4 ml-4 relative mt-16">
+        <ol class="flex flex-wrap items-center space-x-2 text-gray-700 dark:text-gray-300">
+            <li th:each="breadcrumb, iterStat : ${breadcrumbs}" class="flex items-center"><a
+                    th:if="${not #strings.isEmpty(breadcrumb.url) and !iterStat.last}" th:href="${breadcrumb.url}"
+                    class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+                    th:text="${breadcrumb.title}"></a> <span
+                    th:if="${#strings.isEmpty(breadcrumb.url) or iterStat.last}"
+                    class="text-gray-500 dark:text-gray-400" th:text="${breadcrumb.title}"></span> <i
+                    th:if="${!iterStat.last}" class="bi bi-chevron-compact-right text-gray-500 dark:text-gray-400"></i>
+            </li>
+        </ol>
+    </nav>
+    <div class="relative">
+        <!-- --------------------- -->
+        <div class="bg-gray-100 rounded-lg overflow-hidden">
+            <!-- Container Flex -->
+            <div class="flex flex-col md:flex-row">
+                <!-- Hình ảnh (Carousel) -->
+                <div class="w-full p-4">
+                    <div class="relative w-full h-60 md:h-80"> <!-- Thay đổi chiều cao cho desktop -->
+                        <!-- Carousel -->
+                        <div class="carousel-container" id="carousel">
+                            <div class="carousel-slide">
+                                <!-- Duyệt qua các ảnh từ cơ sở dữ liệu -->
+                                <div class="carousel-item" th:each="photo : ${storePhotos}">
+                                    <img th:src="@{${photo.photoUrl}}" alt="Slide"
+                                        class="rounded-lg object-fill w-full h-full">
+                                </div>
+                            </div>
+
+                            <button class="carousel-button left" onclick="prevSlide()">&#10094;</button>
+                            <button class="carousel-button right" onclick="nextSlide()">&#10095;</button>
+                        </div>
+
+                        <script>
+                            const carousel = document.getElementById('carousel');
+                            const slides = carousel.querySelector('.carousel-slide');
+                            let index = 0;
+
+                            function showSlide(n) {
+                                const totalSlides = carousel.querySelectorAll('.carousel-item').length;
+                                if (n >= totalSlides) index = 0;
+                                else if (n < 0) index = totalSlides - 1;
+                                else index = n;
+                                const offset = -index * 100;
+                                slides.style.transform = `translateX(${offset}%)`;
+                            }
+
+                            function nextSlide() {
+                                showSlide(index + 1);
+                            }
+
+                            function prevSlide() {
+                                showSlide(index - 1);
+                            }
+                        </script>
+                    </div>
+                </div>
+
+                <!-- Thông tin nhà hàng -->
+                <div class="w-full md:w-2/3 p-6 flex flex-col justify-center">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4 gap-4">
+                        Nhà hàng:
+                        <strong class="text-red-400" th:text="${store.storeName}"></strong>
+                    </h2>
+                    <div class="flex font-bold text-xl text-gray-800 mb-4 gap-4">
+                        Loại nhà hàng:
+                        <div class="text-center text-white bg-blue-400 dark:bg-neutral-700 rounded-md px-2 w-40">
+                            <i class="bi bi-tags"></i>
+                            <span th:text="${store.storeCategories.categoriesName}">Loại</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">
+                        <strong>Địa chỉ: </strong>
+                        <a onclick="confirmOpenMaps(event, this)" th:href="'https://www.google.com/maps/search/?api=1&query=' 
+                            + ${store.addressStreet} + ', ' + ${store.addressCommune} + ', ' 
+                            + ${store.addressDistrict} + ', ' + ${store.addressCity}"
+                            class="text-blue-500 hover:underline">
+                            <span th:text="${store.addressStreet}"></span>,
+                            <span th:text="${store.addressCommune}"></span>,
+                            <span th:text="${store.addressDistrict}"></span>,
+                            <span th:text="${store.addressCity}"></span>.
+                        </a>
+                    </p>
+
+                    <!-- Modal -->
+                    <div id="mapModal"
+                        class="fixed z-40 inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center hidden">
+                        <div class="bg-white p-4 rounded-lg shadow-lg">
+                            <h2 class="flex text-lg font-semibold mb-4">
+                                <!-- <i class="bi bi-geo-alt-fill text-red-600 mr-2"></i> -->
+                                <img src="https://s3.cloud.cmctelecom.vn/tinhte2/2020/02/4902204_cover_bieu_tuong_moi_google_maps.jpg"
+                                    class="h-8 w-14">
+                                Mở Google Maps
+                            </h2>
+                            <p class="text-gray-700 mb-4 text-sm">Bạn có muốn mở Google Maps để xem vị trí này?</p>
+                            <div class="flex justify-end mt-6 py-2 gap-4">
+                                <button onclick="cancelOpenMaps()"
+                                    class="bg-gray-700 hover:bg-gray-800 text-white font-bold py-2 px-4 rounded ">Hủy</button>
+                                <button id="confirmBtn"
+                                    class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">OK</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                        function confirmOpenMaps(event, linkElement) {
+                            event.preventDefault(); // Ngăn chặn liên kết mở ngay lập tức
+                            document.getElementById('mapModal').classList.remove('hidden');
+
+                            // Lấy URL từ thuộc tính href của thẻ <a>
+                            const mapUrl = linkElement.getAttribute('href');
+
+                            // Gán URL Google Maps cho nút OK
+                            const confirmBtn = document.getElementById('confirmBtn');
+                            confirmBtn.onclick = function () {
+                                window.open(mapUrl, '_blank'); // Mở Google Maps trong tab mới
+                                cancelOpenMaps(); // Ẩn modal
+                            };
+                        }
+
+                        function cancelOpenMaps() {
+                            document.getElementById('mapModal').classList.add('hidden'); // Ẩn modal
+                        }
+                    </script>
+
+                    <p class="flex items-center mb-4">
+                        <i class="bi bi-geo-alt-fill text-red-600 mr-2"></i>
+                        <span th:text="${store.addressCity}" class="font-bold text-red-500"></span>
+                    </p>
+                    <span class="text-yellow-500 text-2xl">★★★★☆</span>
+                </div>
+            </div>
+        </div>
+        <!-- --------------------- -->
+        <!-- Croll -->
+        <!-- Story -->
+        <div class="relative max-w-full mt-4 mx-auto">
+            <!-- Image container with horizontal scroll -->
+            <div id="image-scroll" class="flex overflow-x-auto py-2 px-2 scroll-smooth snap-x snap-mandatory">
+                <!-- Individual images -->
+                <div class="flex-shrink-0 w-60 h-60 bg-gray-200 rounded-lg mx-2 snap-center">
+                    <img src="https://i.pinimg.com/236x/08/66/1b/08661ba50a6558bd690329f1fdda2806.jpg" alt="Image 1"
+                        class="w-full h-full object-cover rounded-lg">
+                </div>
+                <div class="flex-shrink-0 w-60 h-60 bg-gray-200 rounded-lg mx-2 snap-center">
+                    <img src="https://i.pinimg.com/236x/b0/7f/d5/b07fd5e0ce5f83664f6e53b358c00561.jpg" alt="Image 2"
+                        class="w-full h-full object-cover rounded-lg">
+                </div>
+                <div class="flex-shrink-0 w-60 h-60 bg-gray-200 rounded-lg mx-2 snap-center">
+                    <img src="https://i.pinimg.com/236x/49/e4/34/49e434c1e4c4906ab4a00afbd6aab180.jpg" alt="Image 3"
+                        class="w-full h-full object-cover rounded-lg">
+                </div>
+                <div class="flex-shrink-0 w-60 h-60 bg-gray-200 rounded-lg mx-2 snap-center">
+                    <img src="https://i.pinimg.com/236x/eb/3b/8c/eb3b8c4b3306f91f11ef1f05180a8613.jpg" alt="Image 4"
+                        class="w-full h-full object-cover rounded-lg">
+                </div>
+                <div class="flex-shrink-0 w-60 h-60 bg-gray-200 rounded-lg mx-2 snap-center">
+                    <img src="https://i.pinimg.com/236x/d7/8f/61/d78f619fbe39f158c603913851de47d6.jpg" alt="Image 5"
+                        class="w-full h-full object-cover rounded-lg">
+                </div>
+                <div class="flex-shrink-0 w-60 h-60 bg-gray-200 rounded-lg mx-2 snap-center">
+                    <img src="https://images2.thanhnien.vn/zoom/686_429/Uploaded/ttt/images/Content/tan-huong/mon-ngon-nha-hang/2017_07_w3/6.jpg"
+                        alt="Image 1" class="w-full h-full object-cover rounded-lg">
+                </div>
+                <div class="flex-shrink-0 w-60 h-60 bg-gray-200 rounded-lg mx-2 snap-center">
+                    <img src="https://i.pinimg.com/236x/b0/7f/d5/b07fd5e0ce5f83664f6e53b358c00561.jpg" alt="Image 2"
+                        class="w-full h-full object-cover rounded-lg">
+                </div>
+                <div class="flex-shrink-0 w-60 h-60 bg-gray-200 rounded-lg mx-2 snap-center">
+                    <img src="https://i.pinimg.com/236x/49/e4/34/49e434c1e4c4906ab4a00afbd6aab180.jpg" alt="Image 3"
+                        class="w-full h-full object-cover rounded-lg">
+                </div>
+                <div class="flex-shrink-0 w-60 h-60 bg-gray-200 rounded-lg mx-2 snap-center">
+                    <img src="https://i.pinimg.com/236x/eb/3b/8c/eb3b8c4b3306f91f11ef1f05180a8613.jpg" alt="Image 4"
+                        class="w-full h-full object-cover rounded-lg">
+                </div>
+                <div class="flex-shrink-0 w-60 h-60 bg-gray-200 rounded-lg mx-2 snap-center">
+                    <img src="https://i.pinimg.com/236x/d7/8f/61/d78f619fbe39f158c603913851de47d6.jpg" alt="Image 5"
+                        class="w-full h-full object-cover rounded-lg">
+                </div>
+            </div>
+            <div class="hidden md:block">
+                <button id="prevBtn"
+                    class="absolute top-1/2 transform -translate-y-1/2 left-2 text-xl bg-white text-black rounded-full p-2 focus:outline-none hidden">
+                    &#10094;
+                </button>
+
+                <button id="nextBtn"
+                    class="absolute top-1/2 transform -translate-y-1/2 right-2 text-xl bg-white text-black rounded-full p-2 focus:outline-none">
+                    &#10095;
+                </button>
+            </div>
+        </div>
+
+        <script>
+            const scrollContainer = document.getElementById('image-scroll');
+            const nextButton = document.getElementById('nextBtn');
+            const prevButton = document.getElementById('prevBtn');
+
+            // Kiểm tra xem có cần ẩn/hiện nút không
+            function checkScrollButtons() {
+                const maxScrollLeft = scrollContainer.scrollWidth - scrollContainer.clientWidth;
+                prevButton.style.display = scrollContainer.scrollLeft > 0 ? 'block' : 'none';
+                nextButton.style.display = scrollContainer.scrollLeft < maxScrollLeft ? 'block' : 'none';
+            }
+
+            // Sự kiện cuộn
+            scrollContainer.addEventListener('scroll', checkScrollButtons);
+
+            nextButton.addEventListener('click', () => {
+                scrollContainer.scrollBy({ left: 300, behavior: 'smooth' });
+            });
+
+            prevButton.addEventListener('click', () => {
+                scrollContainer.scrollBy({ left: -300, behavior: 'smooth' });
+            });
+
+            // Kiểm tra nút ngay từ lúc tải trang
+            checkScrollButtons();
+        </script>
+
+
+        <div class="mt-8 bg-gray-100 rounded-lg p-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                <!-- Thẻ món ăn -->
+                <div class="bg-gray-50 rounded-lg p-4 shadow-md col-span-1 md:col-span-1">
+                    <h3 class="text-lg font-semibold text-gray-800 font-bold">THỰC ĐƠN</h3>
+                    <br>
+                    <div th:if="${#lists.isEmpty(menulist)}"
+                        class="text-center flex flex-col items-center justify-center mt-8">
+                        <p class="text-white text-2xl mb-4 bg-pink-500 p-2 rounded-full">
+                            Chưa có menu nào
+                        </p>
+                    </div>
+                    <div th:each="menu, iterStat : ${menulist}" class="khaivi">
+                        <strong>Khai vị:</strong>
+                        <ul class="text-gray-800 mt-2">
+                            <li class="whitespace-pre-wrap" th:text="${menu.foodFirst}"></li>
+                        </ul>
+                        <br>
+                        <div id="dishList-[[${iterStat.index}]]" class="hidden">
+                            <strong>Món Chính:</strong>
+                            <ul class="text-gray-800 mt-2">
+                                <li class="whitespace-pre-wrap" th:text="${menu.foodMain}"></li>
+                            </ul>
+                            <br>
+                            <strong>Món Tráng Miệng:</strong>
+                            <ul class="text-gray-800 mt-2">
+                                <li class="whitespace-pre-wrap" th:text="${menu.foodDessert}"></li>
+                            </ul>
+                        </div>
+                        <button class="text-red-500 mt-2"
+                            onclick="toggleContent('dishList-[[${iterStat.index}]]', this)">Xem thêm</button>
+                    </div>
+                    <style>
+                        .whitespace-pre-wrap {
+                            white-space: pre-wrap;
+                        }
+                    </style>
+                </div>
+
+                <!-- Thẻ món nước -->
+                <div class="bg-gray-50 rounded-lg p-4 shadow-md col-span-1 md:col-span-1">
+                    <h3 class="text-lg font-semibold text-gray-800 font-bold">MÓN NƯỚC</h3>
+                    <br>
+                    <div class="drink-content">
+                        <strong>Nước Ngọt:</strong>
+                        <ul class="text-gray-800 mt-2">
+                            <li>Coca Cola: Nước ngọt có gas.</li>
+                            <li>Pepsi: Lựa chọn nước ngọt có gas.</li>
+                            <li>7Up: Lựa chọn nước ngọt có gas.</li>
+                        </ul>
+                        <br>
+                        <div id="drinkList" class="hidden">
+                            <strong>Nước Trái Cây:</strong>
+                            <ul class="text-gray-800 mt-2">
+                                <li>Nước Cam: Nước cam tươi ngon, có thể thêm đá hoặc không.</li>
+                                <li>Nước Dưa Hấu: Nước dưa hấu mát lạnh và ngọt ngào.</li>
+                                <li>Nước Táo: Nước táo tự nhiên, có thể thêm một ít chanh để thêm phần thơm ngon.</li>
+                            </ul>
+                            <br>
+                            <strong>Nước Uống Bestseller:</strong>
+                            <ul class="text-gray-800 mt-2">
+                                <li>Trà Sữa: Truyền thốn hoặc matcha...</li>
+                                <li>Nước Mía: Nước mía tươi mát, có thể thêm chút chanh để tăng thêm hương vị.</li>
+                                <li>Sinh Tố: Sinh tố từ các loại trái cây như bơ, chuối, hoặc dâu tây.</li>
+                            </ul>
+                            <br>
+                            <strong>Rượu và Cocktail:</strong>
+                            <ul class="text-gray-800 mt-2">
+                                <li>Rượu Vang: Rượu vang đỏ hoặc trắng tùy theo sở thích.</li>
+                                <li>Mojito: Cocktail với bạc hà, chanh, rượu rum và soda.</li>
+                                <li>Margarita: Cocktail với tequila, nước chanh và chút muối trên miệng ly.</li>
+                            </ul>
+                        </div>
+                        <button class="text-red-500 mt-2" onclick="toggleContent('drinkList')">Xem thêm</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <script>
+            function toggleContent(id, button) {
+                var content = document.getElementById(id);
+                if (content.classList.contains('hidden')) {
+                    content.classList.remove('hidden');
+                    content.classList.add('block');
+                    button.textContent = 'Ẩn bớt'; // Đổi văn bản thành "Ẩn bớt"
+                } else {
+                    content.classList.remove('block');
+                    content.classList.add('hidden');
+                    button.textContent = 'Xem thêm'; // Đổi văn bản thành "Xem thêm"
+                }
+            }
+
+        </script>
+    </div>
+    <br>
+    <!--  -->
+    <div class="tabs-container relative">
+        <!-- Tab Links -->
+        <div class="flex space-x-4 mb-4 p-4">
+            <button
+                class="tab-button py-2 px-4 text-lg font-semibold rounded-lg focus:outline-none bg-gray-300 text-black"
+                data-tab="food" onclick="openTab(event, 'food')">MÓN ĂN</button>
+            <button class="tab-button py-2 px-4 text-lg font-semibold rounded-lg focus:outline-none" data-tab="drink"
+                onclick="openTab(event, 'drink')">ĐỒ UỐNG</button>
+        </div>
+
+        <!-- Tab Content for Food -->
+        <div id="food" class="tab-content relative">
+
+            <div th:if="${#lists.isEmpty(foodlist)}" class="text-center flex flex-col items-center justify-center mt-8">
+                <p class="text-white text-2xl mb-4 bg-pink-500 p-2 rounded-full">
+                    Chưa có món ăn nào
+                </p>
+
+                <img alt="" src="https://cdn.pixabay.com/animation/2023/03/21/10/41/10-41-09-561_512.gif"
+                    class="md:rounded-lg w-40 h-16">
+            </div>
+
+            <!-- Phần chứa các thẻ món ăn -->
+            <div class="relative overflow-x-auto" id="food-scroll">
+                <div class="flex space-x-4 p-4">
+                    <!-- Loop through foodlist for Food tab -->
+                    <div th:each="food : ${foodlist}"
+                        class="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-md w-64 flex-shrink-0">
+                        <img th:src="${#lists.isEmpty(food.photos) ? 'https://via.placeholder.com/400x300.png?text=No+Image' : food.photos[0].photoUrl}"
+                            class="w-full h-48 md:h-56 object-cover" alt="Ảnh của món ăn">
+                        <div class="p-4">
+                            <h3 class="font-bold text-lg mb-2" th:text="${food.foodName}">Tên Món Ăn</h3>
+                            <p class="flex items-baseline text-red-500 mb-2">
+                                <span class="font-semibold text-lg" th:text="${food.formattedPrice}">Giá</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-14 py-2 hidden md:block">
+                <div class="absolute bottom-0 right-0 flex space-x-2 z-10 p-4">
+                    <!-- Nút Prev -->
+                    <button id="food-prevBtn"
+                        class="text-2xl bg-white text-black shadow-lg rounded-full p-2 focus:outline-none shadow">
+                        &#10094;
+                    </button>
+
+                    <!-- Nút Next -->
+                    <button id="food-nextBtn"
+                        class="text-2xl bg-white text-black shadow-lg rounded-full p-2 focus:outline-none shadow">
+                        &#10095;
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Tab Content for Drinks -->
+        <div id="drink" class="tab-content hidden relative">
+
+            <div th:if="${#lists.isEmpty(drinklist)}"
+                class="text-center flex flex-col items-center justify-center mt-8">
+                <p class="text-white text-2xl mb-4 bg-pink-500 p-2 rounded-full">
+                    Chưa có nước uống nào
+                </p>
+
+                <img alt="" src="https://cdn.pixabay.com/animation/2023/03/21/10/41/10-41-09-561_512.gif"
+                    class="md:rounded-lg w-40 h-16">
+            </div>
+
+            <div class="relative overflow-x-auto" id="drink-scroll">
+                <div class="flex space-x-4 p-4">
+                    <!-- Loop through drinklist for Drinks tab -->
+                    <div th:each="drink : ${drinklist}"
+                        class="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-md w-64 flex-shrink-0">
+                        <img th:src="${#lists.isEmpty(drink.photos) ? 'https://via.placeholder.com/400x300.png?text=No+Image' : drink.photos[0].photoUrl}"
+                            class="w-full h-48 md:h-56 object-cover" alt="Ảnh của đồ uống">
+                        <div class="p-4">
+                            <h3 class="font-bold text-lg mb-2" th:text="${drink.drinkName}">Tên Đồ Uống</h3>
+                            <p class="flex items-baseline text-red-500 mb-2">
+                                <span class="font-semibold text-lg" th:text="${drink.formattedPrice}">Giá</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-14 py-2 hidden md:block">
+                <div class="absolute bottom-0 right-0 flex space-x-2 z-10 p-4">
+                    <button id="drink-prevBtn"
+                        class="text-2xl bg-white text-black shadow-lg rounded-full p-2 focus:outline-none shadow">
+                        &#10094;
+                    </button>
+
+                    <button id="drink-nextBtn"
+                        class="text-2xl bg-white text-black shadow-lg rounded-full p-2 focus:outline-none shadow">
+                        &#10095;
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Scroll functionality for Food
+        const foodScrollContainer = document.getElementById('food-scroll');
+        const foodNextButton = document.getElementById('food-nextBtn');
+        const foodPrevButton = document.getElementById('food-prevBtn');
+
+        function checkFoodScrollButtons() {
+            const maxScrollLeft = foodScrollContainer.scrollWidth - foodScrollContainer.clientWidth;
+            foodPrevButton.style.display = foodScrollContainer.scrollLeft > 0 ? 'block' : 'none';
+            foodNextButton.style.display = foodScrollContainer.scrollLeft < maxScrollLeft ? 'block' : 'none';
+        }
+
+        foodScrollContainer.addEventListener('scroll', checkFoodScrollButtons);
+
+        foodNextButton.addEventListener('click', () => {
+            foodScrollContainer.scrollBy({ left: 300, behavior: 'smooth' });
+        });
+
+        foodPrevButton.addEventListener('click', () => {
+            foodScrollContainer.scrollBy({ left: -300, behavior: 'smooth' });
+        });
+
+        checkFoodScrollButtons();
+
+        // Scroll functionality for Drinks
+        const drinkScrollContainer = document.getElementById('drink-scroll');
+        const drinkNextButton = document.getElementById('drink-nextBtn');
+        const drinkPrevButton = document.getElementById('drink-prevBtn');
+
+        function checkDrinkScrollButtons() {
+            const maxScrollLeft = drinkScrollContainer.scrollWidth - drinkScrollContainer.clientWidth;
+            drinkPrevButton.style.display = drinkScrollContainer.scrollLeft > 0 ? 'block' : 'none';
+            drinkNextButton.style.display = drinkScrollContainer.scrollLeft < maxScrollLeft ? 'block' : 'none';
+        }
+
+        drinkScrollContainer.addEventListener('scroll', checkDrinkScrollButtons);
+
+        drinkNextButton.addEventListener('click', () => {
+            drinkScrollContainer.scrollBy({ left: 300, behavior: 'smooth' });
+        });
+
+        drinkPrevButton.addEventListener('click', () => {
+            drinkScrollContainer.scrollBy({ left: -300, behavior: 'smooth' });
+        });
+
+        checkDrinkScrollButtons();
+    </script>
+
+
+    <!-- JavaScript to handle tab switching -->
+    <script>
+        function openTab(event, tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.add('hidden');
+            });
+
+            // Remove active class from all tab buttons
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('bg-gray-300', 'text-black');
+            });
+
+            // Show the clicked tab content and add active class to the button
+            document.getElementById(tabName).classList.remove('hidden');
+            event.currentTarget.classList.add('bg-gray-300', 'text-black');
+        }
+
+        // Show the default tab
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelector('.tab-button[data-tab="food"]').click();
+        });
+    </script>
+
+    <br>
+    <!--  -->
+    <div class="bg-gray-100 shadow-lg rounded-lg overflow-hidden">
+        <strong class="text-2xl ml-8 text-black">Bình luận</strong>
+        <section class="article mt-10 flex flex-col md:flex-row">
+            <div class="md:w-7/12 w-full scrollable-container py-6 px-8">
+                <div th:each="review : ${reviews}" class="space-y-4 py-1">
+                    <!-- Card 1 -->
+                    <div class="card">
+                        <div class="p-4">
+                            <div class="flex items-center">
+                                <img class="avatar" src="https://via.placeholder.com/150" alt="User Avatar">
+                                <div class="ml-4">
+                                    <h3 class="text-lg font-semibold" th:text="${review.user.name}"></h3>
+                                    <p class="text-sm text-gray-600" th:text="${review.rating}"></p>
+                                    <p class="text-sm text-gray-600" th:text="${review.comment}"></p>
+                                    <div class="review-images" th:if="${review.photos.size() > 0}">
+                                        <img th:each="photo : ${review.photos}" th:src="${photo.photoUrl}" class="w-10 h-0"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cột bên phải chứa quảng cáo (3 phần) -->
+            <div class="md:w-3/12 w-full md:ml-20 mt-8 md:mt-6">
+                <form id="reviewForm">
+                    <label for="comment">Comment:</label>
+                    <textarea id="comment" name="comment"></textarea><br>
+
+                    <label for="rating">Rating:</label>
+                    <input type="number" id="rating" name="rating" min="1" max="5" /><br>
+
+                    <label for="images">Images:</label>
+                    <input type="file" id="images" name="images" multiple /><br>
+
+                    <button type="submit">Submit Review</button>
+                </form>
+            </div>
+
+        </section>
+    </div>
+    <br>
+    <!-- footer -->
+    <div class="containerer"></div>
+    <!-- ------- -->
+
+
+    <script src="/build/js/reviews.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"
+        integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

@@ -3,530 +3,266 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Review</title>
-    <link href="dist/output.css" rel="stylesheet">
-    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/build/css/tailwind.css">
     <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css" />
-    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@latest/dist/tailwind.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@glidejs/glide@3.4.1/dist/css/glide.core.min.css">
+    <!-- <link rel="stylesheet" href="https://unpkg.com/tailwindcss@latest/dist/tailwind.min.css" /> -->
     <link href="https://fonts.googleapis.com/css?family=Work+Sans:200,400&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/emoji-button@4.6.0/dist/index.min.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@glidejs/glide@3.4.1/dist/glide.min.js"></script>
+    <link rel="stylesheet" href="/css/loading.css">
+    <script src="/js/loading.js" defer></script>
+    <script src="/js/loaddata.js" defer></script>
 </head>
 
-<body>
+<body class="bg-gray-100">
+    <!-- Loading -->
+    <div th:replace="/layout/_loading.html"></div>
+    <!-- Màn hình chào mừng -->
+    <!--  <div id="welcome-screen" class="fixed inset-0 bg-white flex items-center justify-center z-50">
+        <h1 class="text-4xl font-bold zoom-in gradient-text">Welcome To Review</h1>
+    </div> -->
 
-    <div class="containe work-sans leading-normal text-base tracking-normal">
-        <!--Nav-->
-        <div class="fixed top-0 left-0 w-full shadow-sm z-50">
-            <nav id="header" class="w-full z-30 top-0 py-2 bg-gray-50 dark:bg-neutral-800">
-                <div class="container mx-auto flex items-center justify-between px-5 relative">
-                    <!-- Tiêu đề mobile -->
-                    <div class="block md:hidden flex items-center">
-                        <a th:href="@{/index}" class="font-bold text-xl">
-                            <strong class="text-yellow-400">RE</strong>VIEW
-                        </a>
-                    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const welcomeScreen = document.getElementById('welcome-screen');
+            const mainContent = document.getElementById('main-content');
+            const displayTime = 2000; // Thời gian hiển thị màn hình chào (3 giây)
+            const expirationTime = 12 * 60 * 60 * 1000; // 12 giờ hết hạn (0.5 ngày)
 
-                    <!-- Tiêu đề laptop -->
-                    <div class="hidden md:flex md:items-center md:w-auto">
-                        <a class="flex items-center tracking-wide no-underline hover:no-underline font-bold text-xl"
-                            th:href="@{/index}">
-                            <strong class="text-yellow-400">RE</strong>VIEW
-                        </a>
-                    </div>
+            // Lấy giá trị từ localStorage
+            const welcomeScreenData = JSON.parse(localStorage.getItem('welcomeScreenShown'));
 
-                    <!-- Thanh tìm kiếm cho desktop -->
-                    <div class="flex-grow mx-4 hidden md:flex items-center justify-center relative">
-                        <div class="relative flex items-center w-full max-w-2xl">
-                            <input id="searchInput" type="text" placeholder="Tìm kiếm..."
-                                class="w-full py-3 pl-4 pr-10 text-sm bg-white border border-gray-300 rounded-full shadow-sm dark:bg-neutral-800 dark:border-neutral-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300 ease-in-out">
-                            <button id="searchButton" class="absolute right-0 mr-3 text-blue-500">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
+            // Kiểm tra nếu không có hoặc đã hết hạn
+            if (!welcomeScreenData || (new Date().getTime() - welcomeScreenData.timestamp) > expirationTime) {
+                // Nếu chưa xem hoặc đã hết hạn, hiển thị màn hình chào mừng
+                setTimeout(function () {
+                    welcomeScreen.classList.add('fade-out');
+                    setTimeout(function () {
+                        welcomeScreen.style.display = 'none';
+                        mainContent.classList.remove('hidden');
+                        // Lưu trạng thái đã xem và thời gian hiện tại vào localStorage
+                        localStorage.setItem('welcomeScreenShown', JSON.stringify({ timestamp: new Date().getTime() }));
+                    }, 1000); // Thời gian cho hiệu ứng fade-out
+                }, displayTime);
+            } else {
+                // Nếu đã xem và chưa hết hạn, ẩn màn hình chào ngay lập tức
+                welcomeScreen.style.display = 'none';
+                mainContent.classList.remove('hidden');
+            }
+        });
+    </script>
 
-                    <!-- Thanh tìm kiếm cho mobile -->
-                    <div class="flex-grow mx-4 md:hidden flex items-center justify-center relative">
-                        <div class="relative flex items-center w-full max-w-xs">
-                            <input id="searchInputMobile" type="text" placeholder="Tìm kiếm..."
-                                class="w-full py-3 pl-4 pr-10 text-sm bg-white border border-gray-300 rounded-full shadow-sm dark:bg-neutral-800 dark:border-neutral-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300 ease-in-out">
-                            <button id="searchButtonMobile" class="absolute right-0 mr-3 text-blue-500">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                </svg>
-                            </button>
-                        </div>
-                        <!-- Lịch sử tìm kiếm trên mobile -->
-                        <div id="searchHistoryMobile"
-                            class="absolute inset-x-0 top-full mt-1 w-full max-w-xs bg-white border border-gray-300 rounded-lg shadow-lg hidden">
-                            <ul id="searchHistoryListMobile" class="divide-y divide-gray-200">
 
-                            </ul>
-                        </div>
-                    </div>
-
-                    <!-- Icon người dùng -->
-                    <div class="relative inline-block text-left">
-                        <div class="flex flex-col items-center space-y-1">
-                            <h1 th:if="${#request.remoteUser}"
-                                class="text-xs font-medium text-gray-700 text-center max-w-xs overflow-hidden text-ellipsis">
-                                Welcome, <span th:text="${currentUser.name}">User</span>!
-                            </h1>
-                            <i class="bi bi-person-circle text-yellow-500 text-3xl cursor-pointer"
-                                onclick="toggleMenu()"></i>
-                        </div>
-                        <!-- Dropdown menu -->
-                        <div class="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none hidden"
-                            role="menu" aria-orientation="vertical" aria-labelledby="menu-button" id="dropdown-menu">
-                            <!--  -->
-                            <th:block th:if="${#request.remoteUser}" class="py-1" role="none">
-                                <p>
-                                    <a th:href="@{/profile}"
-                                        class="block px-4 py-2 text-sm text-gray-700 hover:text-yellow-400">
-                                        <i class="bi bi-house-add"></i> Tài khoản
-                                    </a>
-                                </p>
-
-                                <a th:href="@{/register-store}"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:text-yellow-400" role="menuitem"
-                                    tabindex="-1" id="menu-item-2"><i class="bi bi-house-add"></i>
-                                    Đăng ký cửa hàng
-                                </a>
-                                <!--  -->
-                                <!-- Đăng xuất -->
-                                <a th:href="@{/logout}"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:text-yellow-400" role="menuitem"
-                                    tabindex="-1" id="menu-item-2"><i class="bi bi-box-arrow-right"></i>
-                                    Đăng xuất
-                                </a>
-                            </th:block>
-                            <!--  -->
-                            <th:block th:unless="${#request.remoteUser}">
-                                <a th:href="@{/login}"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:text-yellow-400" role="menuitem"
-                                    tabindex="-1" id="menu-item-0"><i class="bi bi-box-arrow-in-right"></i> Đăng
-                                    nhập</a>
-                                <a th:href="@{/register}"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:text-yellow-400" role="menuitem"
-                                    tabindex="-1" id="menu-item-1"><i class="bi bi-person-fill-add"></i>
-                                    Đăng ký</a>
-                            </th:block>
-                        </div>
-                        <script>
-                            function toggleMenu() {
-                                const menu = document.getElementById('dropdown-menu');
-                                menu.classList.toggle('hidden');
-                            }
-
-                            // Ẩn menu khi nhấp ra ngoài
-                            window.addEventListener('click', function (e) {
-                                const menu = document.getElementById('dropdown-menu');
-                                const button = document.getElementById('menu-button');
-                                if (!button.contains(e.target) && !menu.contains(e.target)) {
-                                    menu.classList.add('hidden');
-                                }
-                            });
-                        </script>
-                    </div>
-
+    <!-- Header -->
+    <div class="relative w-full bg-gray-100 md:hidden">
+        <!-- Carousel Section -->
+        <div id="carousel" class="carousel w-full h-36 bg-gray-800 overflow-hidden relative">
+            <!-- Carousel Items -->
+            <div class="carousel-items flex transition-transform duration-500 ease-in-out" style="width: 300%;">
+                <!-- Carousel Slide 1 -->
+                <div class="carousel-item w-full h-full" style="flex: 0 0 100%;">
+                    <img src="https://i.pinimg.com/564x/23/cd/37/23cd3706b0cd612e94babd18c6304266.jpg" alt="Slide 1"
+                        class="w-full h-screen object-cover">
                 </div>
-
-                <!-- Lịch sử tìm kiếm trên desktop -->
-                <div id="searchHistory"
-                    class="absolute inset-x-0 mt-2 mr-15 max-w-2xl mx-auto bg-white border border-gray-300 rounded-lg shadow-lg hidden">
-                    <ul id="searchHistoryList" class="divide-y divide-gray-200">
-                        <!--  <li class="flex justify-between items-center border-b py-2">Diamon</li>
-                        <li class="flex justify-between items-center border-b py-2">Diamon</li> -->
-                    </ul>
+                <!-- Carousel Slide 2 -->
+                <div class="carousel-item w-full h-full" style="flex: 0 0 100%;">
+                    <img src="https://i.pinimg.com/564x/67/dc/ae/67dcae6c683c2e69ce656bf8d02b348b.jpg" alt="Slide 2"
+                        class="w-full h-screen object-cover">
                 </div>
-            </nav>
-            <script>
-                document.addEventListener('DOMContentLoaded', function () {
-                    const searchInput = document.getElementById('searchInput');
-                    const searchButton = document.getElementById('searchButton');
-                    const searchInputMobile = document.getElementById('searchInputMobile');
-                    const searchButtonMobile = document.getElementById('searchButtonMobile');
-                    const searchHistory = document.getElementById('searchHistory');
-                    const searchHistoryList = document.getElementById('searchHistoryList');
-                    const searchHistoryMobile = document.getElementById('searchHistoryMobile');
-                    const searchHistoryListMobile = document.getElementById('searchHistoryListMobile');
-
-                    let searchTerms = JSON.parse(localStorage.getItem('searchHistory')) || [];
-
-                    // Hiển thị lịch sử tìm kiếm khi nhấn vào input
-                    function toggleSearchHistory(inputElement, historyElement) {
-                        historyElement.classList.toggle('hidden');
-                        updateSearchHistory();
-                    }
-
-                    searchInput.addEventListener('focus', () => toggleSearchHistory(searchInput, searchHistory));
-                    searchInputMobile.addEventListener('focus', () => toggleSearchHistory(searchInputMobile, searchHistoryMobile));
-
-                    // Xử lý khi nhấn nút tìm kiếm
-                    function handleSearch(inputElement) {
-                        const term = inputElement.value.trim();
-                        if (term !== '') {
-                            searchTerms = [term, ...searchTerms.filter(item => item !== term)].slice(0, 5);
-                            localStorage.setItem('searchHistory', JSON.stringify(searchTerms));
-                            updateSearchHistory();
-                        }
-                        inputElement.value = '';
-                    }
-
-                    searchButton.addEventListener('click', () => handleSearch(searchInput));
-                    searchButtonMobile.addEventListener('click', () => handleSearch(searchInputMobile));
-
-                    // Xử lý khi nhấn phím Enter
-                    searchInput.addEventListener('keydown', function (event) {
-                        if (event.key === 'Enter') {
-                            handleSearch(searchInput);
-                        }
-                    });
-
-                    searchInputMobile.addEventListener('keydown', function (event) {
-                        if (event.key === 'Enter') {
-                            handleSearch(searchInputMobile);
-                        }
-                    });
-
-                    // Cập nhật danh sách lịch sử tìm kiếm
-                    function updateSearchHistory() {
-                        searchHistoryList.innerHTML = '';
-                        searchHistoryListMobile.innerHTML = '';
-                        if (searchTerms.length > 0) {
-                            searchTerms.forEach((term, index) => {
-                                const li = document.createElement('li');
-                                li.classList.add('flex', 'justify-between', 'items-center', 'border-b', 'py-2');
-
-                                const icon = document.createElement('i');
-                                icon.classList.add('bi', 'bi-stopwatch', 'mr-2');
-
-                                const termSpan = document.createElement('span');
-                                termSpan.textContent = term;
-                                termSpan.classList.add('flex-grow', 'cursor-pointer');
-                                termSpan.addEventListener('click', function () {
-                                    searchInput.value = term;
-                                    searchInputMobile.value = term;
-                                    searchHistory.classList.add('hidden');
-                                    searchHistoryMobile.classList.add('hidden');
-                                });
-
-                                const deleteButton = document.createElement('button');
-                                deleteButton.innerHTML = '&times;';
-                                deleteButton.classList.add('delete-button');
-                                deleteButton.addEventListener('click', function (event) {
-                                    event.stopPropagation(); // Ngăn sự kiện click trên nút xóa được truyền lên
-                                    searchTerms.splice(index, 1);
-                                    localStorage.setItem('searchHistory', JSON.stringify(searchTerms));
-                                    updateSearchHistory();
-                                });
-
-                                // Thêm icon và termSpan vào li
-                                li.appendChild(icon);
-                                li.appendChild(termSpan);
-                                li.appendChild(deleteButton);
-                                searchHistoryList.appendChild(li);
-                                searchHistoryListMobile.appendChild(li.cloneNode(true));
-                            });
-                            searchHistory.classList.remove('hidden');
-                            searchHistoryMobile.classList.remove('hidden');
-                        } else {
-                            searchHistory.classList.add('hidden');
-                            searchHistoryMobile.classList.add('hidden');
-                        }
-                    }
-
-                    // Ẩn bảng lịch sử khi nhấp ra ngoài
-                    function clickOutsideHandler(event) {
-                        if (!searchHistory.contains(event.target) && event.target !== searchInput && !searchHistoryMobile.contains(event.target) && event.target !== searchInputMobile) {
-                            searchHistory.classList.add('hidden');
-                            searchHistoryMobile.classList.add('hidden');
-                        }
-                    }
-
-                    document.addEventListener('click', clickOutsideHandler);
-                });
-
-            </script>
-        </div>
-        <br>
-
-        <!-- ---------------- -->
-        <section class="body mt-10">
-            <div class="container mx-auto flex items-center flex-wrap pt-4">
-                <nav id="store" class="w-full z-30 top-0 px-6 py-1">
-                    <div class="w-full container mx-auto flex flex-wrap items-center justify-between mt-0 px-2 py-3">
-                        <a class="relative border hover:border-yellow-400 hover:bg-gray-50 text-1xl duration-500 group cursor-pointer overflow-hidden h-14 w-56 rounded-md bg-white p-2 flex justify-center items-center font-extrabold"
-                            href="#">
-                            Cửa hàng
-                        </a>
-                        <div class="flex items-center" id="store-nav-content">
-                            <button class="flex pl-3 inline-block no-underline hover:text-black" id="openModal">
-                                <svg class="fill-current hover:text-black" xmlns="http://www.w3.org/2000/svg" width="24"
-                                    height="24" viewBox="0 0 24 24">
-                                    <path d="M7 11H17V13H7zM4 7H20V9H4zM10 15H14V17H10z" />
-                                </svg> LỌC
-                            </button>
-
-                            <!-- Modal -->
-                            <div id="modal-container"
-                                class="fixed inset-0 bg-gray-400 bg-opacity-75 flex justify-center items-center z-50 hidden">
-                                <!-- Modal Container -->
-                                <div class="bg-white rounded-lg shadow-lg">
-                                    <!-- Modal Header -->
-                                    <div
-                                        class="flex justify-between items-center bg-gray-100 p-4 rounded-t-lg md-7 space-x-5">
-                                        <h2 class="font-bold">Lọc nhà hàng/quán ăn</h2>
-                                        <button class="text-gray-500 hover:text-gray-700 focus:outline-none"
-                                            id="closeModal">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
-                                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M6 18L18 6M6 6l12 12" />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                    <!-- Modal Body -->
-                                    <div class="p-6">
-                                        <!-- Filter Option 1: Category -->
-                                        <div class="mb-4">
-                                            <label class="block text-gray-700 text-sm font-bold mb-2">Nhà hàng/Quán
-                                                ăn</label>
-                                            <select
-                                                class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                                <option value="">Chọn nhà hàng/quán ăn</option>
-                                                <option value="star">(5 SAO) 🌟🌟🌟🌟🌟</option>
-                                                <option value="star">(4 SAO) 🌟🌟🌟🌟</option>
-                                                <option value="star">(3 SAO) 🌟🌟🌟</option>
-                                                <option value="star">(2 SAO) 🌟🌟</option>
-                                                <option value="star">(1 SAO) 🌟</option>
-                                            </select>
-                                        </div>
-                                        <!-- Filter Option 3: Availability -->
-                                        <div class="mb-4">
-                                            <label class="block text-gray-700 text-sm font-bold mb-2">Phổ biến</label>
-                                            <div class="flex items-center">
-                                                <input type="checkbox" id="in-stock" class="mr-2">
-                                                <label for="in-stock" class="text-gray-600">Được xem nhiều</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- Modal Footer -->
-                                    <div class="flex justify-end p-4 bg-gray-100 rounded-b-lg">
-                                        <button
-                                            class="bg-red-500 text-white px-4 py-2 rounded-md mr-2 hover:bg-red-600 transition duration-300"
-                                            id="closeModal2">Hủy</button>
-                                        <button
-                                            class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300">Áp
-                                            dụng</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <script>
-                            // Lấy các phần tử
-                            const openModalButton = document.getElementById('openModal');
-                            const modalContainer = document.getElementById('modal-container');
-                            const closeModalButtons = document.querySelectorAll('#closeModal, #closeModal2');
-
-                            // Mở modal
-                            openModalButton.addEventListener('click', () => {
-                                modalContainer.classList.remove('hidden');
-                            });
-
-                            // Đóng modal
-                            closeModalButtons.forEach(button => {
-                                button.addEventListener('click', () => {
-                                    modalContainer.classList.add('hidden');
-                                });
-                            });
-                        </script>
-
-                    </div>
-                </nav>
-                <!--  -->
+                <!-- Carousel Slide 3 -->
+                <div class="carousel-item w-full h-full" style="flex: 0 0 100%;">
+                    <img src="https://i.pinimg.com/564x/b9/b3/df/b9b3dfb6e5afbe1b0c2de51fba05e2d2.jpg" alt="Slide 3"
+                        class="w-full h-screen object-cover">
+                </div>
             </div>
-        </section>
+        </div>
+
+        <!-- QR Code Card Section -->
+        <div class="relative w-11/12 md:w-3/5 lg:w-2/5 mx-auto -mt-10 bg-gray-20 bg-opacity-25 rounded-lg shadow-lg p-4 z-10">
+            <div class="text-center grid grid-cols-3 gap-4">
+                <!-- QR Code Button -->
+                <button
+                    class="bg-blue-400 text-white font-semibold p-2 rounded-lg shadow hover:bg-blue-600 transition duration-300 flex items-center justify-center">
+                    <i class="bi bi-qr-code-scan text-xl"></i>
+                </button>
+                <!-- Points Button -->
+                <button
+                    class="bg-purple-400 text-white font-semibold p-2 rounded-lg shadow hover:bg-purple-600 transition duration-300 flex items-center justify-center">
+                    <i class="bi bi-coin text-xl"></i>
+                </button>
+                <!-- Another Button -->
+                <button
+                    class="bg-pink-400 text-white font-semibold p-2 rounded-lg shadow hover:bg-red-600 transition duration-300 flex items-center justify-center">
+                    <i class="bi bi-heart text-xl"></i>
+                </button>
+            </div>
+        </div>
+
+    </div>
+    <!-- JavaScript -->
+    <script>
+        // JavaScript for Carousel
+        const carouselItems = document.querySelector('.carousel-items');
+        const totalSlides = document.querySelectorAll('.carousel-item').length;
+        let currentSlide = 0;
+
+        function moveToNextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides; // Loop back to first slide when at the end
+            carouselItems.style.transform = `translateX(-${currentSlide * 100}%)`; // Move to next slide
+        }
+
+        // Set interval for auto sliding every 2 seconds
+        setInterval(moveToNextSlide, 10000);
+    </script>
+
+
+    <!-- Header -->
+    <div th:replace="/layout/_header.html"></div>
+
+    <div class="mt-2 md:mt-6"></div>
+    <!-- Store -->
+    <main class="my-8"></main>
+        <div class="mx-auto px-2 md:px-0">
+            <div class="h-52 md:h-80 rounded-md md:rounded-none overflow-hidden bg-cover bg-center object-fill"
+                style="background-image: url('https://i.pinimg.com/564x/ab/67/b2/ab67b2895134f378f534cb4f3b60985a.jpg')">
+                <div class="bg-gray-900 bg-opacity-50 flex items-center h-full ">
+                    <div class="px-10 max-w-xl">
+                        <h2 class="text-2xl text-white font-semibold">Cửa hàng</h2>
+                        <p class="mt-2 text-gray-100">Đi đến xem những cửa hàng mà bạn có thể sẽ thích.</p>
+                        <a th:href="@{/store}"
+                            class="flex items-center mt-4 p-2 text-center w-32 bg-blue-500 text-white text-sm uppercase font-medium rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600">
+                            <span>Bắt đầu</span>
+                            <svg class="h-5 w-5 mx-2" fill="none" stroke-linecap="round" stroke-linejoin="round"
+                                stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                                <path d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- Store -->
+    <div class="relative w-full">
+        <!-- Image container with horizontal scroll -->
+        <div id="image-scroll" class="flex overflow-x-auto scroll-smooth snap-x snap-mandatory">
+            <!-- Individual images -->
+            <div th:replace="/layout/_storeone.html"></div>
+        </div>
+
+        <!-- Previous button -->
+        <button id="prevBtn"
+            class="absolute top-2/3 transform -translate-y-1/2 left-2 bg-white text-2xl text-black rounded-full p-2 focus:outline-none hidden">
+            &#10094;
+        </button>
+
+        <!-- Next button -->
+        <button id="nextBtn"
+            class="absolute top-2/3 transform -translate-y-1/2 right-2 bg-white text-2xl text-black rounded-full p-2 focus:outline-none">
+            &#10095;
+        </button>
     </div>
 
-    <!-- Container for Horizontal Scroll -->
-    <div class="flex ml-8 text-sm text-blue-500 gap-2">
-        <i class="bi bi-emoji-smile text-pink-400"></i>
-        <p>Cửa hàng được bình chọn tốt nhất!</p>
-    </div>
-    <div class="overflow-x-auto py-4">
-        <div class="flex space-x-4 px-4">
-            <!-- Store Card -->
-            <div th:replace="/layout/_storeone.html"></div>
-            <!-- End of Store Card -->
+    <script>
+        const scrollContainer = document.getElementById('image-scroll');
+        const nextButton = document.getElementById('nextBtn');
+        const prevButton = document.getElementById('prevBtn');
+
+        // Kiểm tra xem có cần ẩn/hiện nút không
+        function checkScrollButtons() {
+            const maxScrollLeft = scrollContainer.scrollWidth - scrollContainer.clientWidth;
+            prevButton.style.display = scrollContainer.scrollLeft > 0 ? 'block' : 'none';
+            nextButton.style.display = scrollContainer.scrollLeft < maxScrollLeft ? 'block' : 'none';
+        }
+
+        // Sự kiện cuộn
+        scrollContainer.addEventListener('scroll', checkScrollButtons);
+
+        nextButton.addEventListener('click', () => {
+            scrollContainer.scrollBy({ left: 375, behavior: 'smooth' });
+        });
+
+        prevButton.addEventListener('click', () => {
+            scrollContainer.scrollBy({ left: -375, behavior: 'smooth' });
+        });
+
+        // Kiểm tra nút ngay từ lúc tải trang
+        checkScrollButtons();
+    </script>
+
+    <!-- Categories -->
+    <div class="relative p-4 gap-2">
+        <h2 class="text-xl font-semibold text-gray-800 mb-2 top-0 ml-2">LOẠI CỬA HÀNG</h2>
+        <div class="py-2 hidden md:block">
+            <div class="absolute top-0 mb-2 right-0 flex space-x-2 z-10 p-4">
+                <button id="prevBtncate"
+                    class="text-2xl bg-white text-black shadow-lg rounded-full p-2 focus:outline-none shadow">
+                    &#10094;
+                </button>
+
+                <!-- Next button -->
+                <button id="nextBtcate"
+                    class="text-2xl bg-white text-black shadow-lg rounded-full p-2 focus:outline-none shadow">
+                    &#10095;
+                </button>
+            </div>
+        </div>
+        <div class="relative w-full space-y-4">
+            <div id="category-scroll"
+                class="flex overflow-x-auto scroll-smooth snap-x snap-mandatory gap-2 hide-scrollbar">
+                <!-- Image Tiles -->
+                <a th:each="category : ${categories}" th:href="@{/store/category(categoryId=${category.categoriesId})}"
+                    class="flex bg-white rounded-lg shadow-md p-4 m-2 min-w-max">
+                    <div class="w-40 rounded-lg overflow-hidden">
+                        <img src="https://i.pinimg.com/564x/4e/a0/31/4ea0315ab5b65ca0997c17e7f08b324d.jpg"
+                            alt="Category Image" class="w-full h-full object-cover rounded-lg">
+                    </div>
+                    <div class="flex flex-col items-start ml-4">
+                        <h4 class="text-xl text-blue-500 font-semibold" th:text="${category.categoriesName}">Category
+                            Name</h4>
+                    </div>
+                </a>
+            </div>
         </div>
     </div>
+    <!-- JavaScript for scrolling -->
+    <script>
+        const scrollContainer1 = document.getElementById('category-scroll');
+        const nextButton1 = document.getElementById('nextBtcate');
+        const prevButton1 = document.getElementById('prevBtncate');
 
+        // Kiểm tra xem có cần ẩn/hiện nút không
+        function checkScrollButtons1() {
+            const maxScrollLeft = scrollContainer1.scrollWidth - scrollContainer1.clientWidth;
+            prevButton1.style.display = scrollContainer1.scrollLeft > 0 ? 'block' : 'none';
+            nextButton1.style.display = scrollContainer1.scrollLeft < maxScrollLeft ? 'block' : 'none';
+        }
 
+        // Sự kiện cuộn
+        scrollContainer1.addEventListener('scroll', checkScrollButtons1);
+
+        nextButton1.addEventListener('click', () => {
+            scrollContainer1.scrollBy({ left: 357, behavior: 'smooth' });
+        });
+
+        prevButton1.addEventListener('click', () => {
+            scrollContainer1.scrollBy({ left: -357, behavior: 'smooth' });
+        });
+
+        // Kiểm tra nút ngay từ lúc tải trang
+        checkScrollButtons1();
+    </script>
+
+    <!-- ------------------- -->
     <!-- Store -->
     <div th:replace="/layout/_store.html"></div>
     <!-- ---- -->
-
-    <br>
-    <br>
-
-    <section class="article flex flex-col md:flex-row bg-white shadow-lg shadow-sm rounded-lg mt-8 p-2">
-        <!-- Phần chính (7 phần) -->
-        <div class="md:w-7/12 w-full scrollable-container py-6 px-8">
-            <div class="space-y-4">
-                <!-- Card 1 -->
-                <div class="card">
-                    <div class="p-4">
-                        <div class="flex items-center">
-                            <img class="avatar" src="https://via.placeholder.com/150" alt="User Avatar">
-                            <div class="ml-4">
-                                <h3 class="text-lg font-semibold">Nguyễn Văn A</h3>
-                                <p class="text-sm text-gray-600">Có những nhà hàng ăn ngon như Kasaki</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 2 -->
-                <div class="card">
-                    <div class="p-4">
-                        <div class="flex items-center">
-                            <img class="avatar" src="https://via.placeholder.com/150" alt="User Avatar">
-                            <div class="ml-4">
-                                <h3 class="text-lg font-semibold">Trần Thị B</h3>
-                                <p class="text-sm text-gray-600">Có các nhà hàng, quán ăn không ngon như giới thiệu</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 3 -->
-                <div class="card">
-                    <div class="p-4">
-                        <div class="flex items-center">
-                            <img class="avatar" src="https://via.placeholder.com/150" alt="User Avatar">
-                            <div class="ml-4">
-                                <h3 class="text-lg font-semibold">Nguyễn Văn A</h3>
-                                <p class="text-sm text-gray-600">Có những nhà hàng ăn ngon như Kasaki</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 2 -->
-                <div class="card">
-                    <div class="p-4">
-                        <div class="flex items-center">
-                            <img class="avatar" src="https://via.placeholder.com/150" alt="User Avatar">
-                            <div class="ml-4">
-                                <h3 class="text-lg font-semibold">Trần Thị B</h3>
-                                <p class="text-sm text-gray-600">Có các nhà hàng, quán ăn không ngon như giới thiệu</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Cột bên phải chứa quảng cáo (3 phần) -->
-        <div class="md:w-3/12 w-full md:ml-20 mt-8 md:mt-1">
-            <!-- Thẻ div đầu tiên với khoảng cách dưới -->
-            <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-lg flex items-center mb-4">
-                <a href="#" class="flex-shrink-0">
-                    <img src="https://i.pinimg.com/736x/0d/8c/04/0d8c0476837f5be5577698ee67d2ed62.jpg"
-                        alt="Profile Image" class="rounded-lg w-24 h-24 object-cover">
-                </a>
-                <div class="ml-4">
-                    <h2 class="text-xl font-semibold text-gray-800">Tên Người Dùng</h2>
-                    <p class="text-gray-600">Thông tin chi tiết hoặc mô tả ngắn về người dùng ở đây.</p>
-                </div>
-            </div>
-
-            <!-- Thẻ div thứ hai -->
-            <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-lg flex items-center">
-                <a href="#" class="flex-shrink-0">
-                    <img src="https://i.pinimg.com/736x/0d/8c/04/0d8c0476837f5be5577698ee67d2ed62.jpg"
-                        alt="Profile Image" class="rounded-lg w-24 h-24 object-cover">
-                </a>
-                <div class="ml-4">
-                    <h2 class="text-xl font-semibold text-gray-800">Tên Người Dùng</h2>
-                    <p class="text-gray-600">Thông tin chi tiết hoặc mô tả ngắn về người dùng ở đây.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-    <br>
-    <!-- ------carousel-- -->
-    <div class="marquee mt-2 overflow-hidden relative">
-        <div class="marquee-content flex">
-            <!-- Image Tiles -->
-            <a href="#" class="flex bg-gray-200 rounded-lg p-4 m-2 min-w-max">
-                <div class="w-48 bg-gray-400 rounded-lg overflow-hidden">
-                    <img src="https://kientruchoanmy.vn/wp-content/uploads/2023/05/1_Camera_6_2.jpg" alt=""
-                        class="w-full h-full object-cover rounded-lg">
-                </div>
-                <div class="flex flex-col items-start ml-4">
-                    <h4 class="text-xl text-black font-semibold">Beatesk</h4>
-                    <p class="text-sm text-black">Thế giới thịt.</p>
-                </div>
-            </a>
-            <!-- Tile 2 -->
-            <a href="#" class="flex bg-gray-200 rounded-lg p-4 m-2 min-w-max">
-                <div class="w-48 bg-gray-400 rounded-lg overflow-hidden">
-                    <img src="https://nhahangdep.vn/wp-content/uploads/2018/12/kinh-nghiem-thiet-ke-nha-hang-hai-mat-tien-hieu-qua-3.jpg"
-                        alt="" class="w-full h-full object-cover rounded-lg">
-                </div>
-                <div class="flex flex-col items-start ml-4">
-                    <h4 class="text-xl text-black font-semibold">Chicken Plus</h4>
-                    <p class="text-sm text-black">Ẩm thực Phương Tấy.</p>
-                </div>
-            </a>
-            <!-- Image Tiles -->
-            <a href="#" class="flex bg-gray-200 rounded-lg p-4 m-2 min-w-max">
-                <div class="w-48 bg-gray-400 rounded-lg overflow-hidden">
-                    <img src="https://kientruchoanmy.vn/wp-content/uploads/2023/05/1_Camera_6_2.jpg" alt=""
-                        class="w-full h-full object-cover rounded-lg">
-                </div>
-                <div class="flex flex-col items-start ml-4">
-                    <h4 class="text-xl text-black font-semibold">Beatesk</h4>
-                    <p class="text-sm text-black">Thế giới thịt.</p>
-                </div>
-            </a>
-            <!-- Tile 2 -->
-            <a href="#" class="flex bg-gray-200 rounded-lg p-4 m-2 min-w-max">
-                <div class="w-48 bg-gray-400 rounded-lg overflow-hidden">
-                    <img src="https://nhahangdep.vn/wp-content/uploads/2018/12/kinh-nghiem-thiet-ke-nha-hang-hai-mat-tien-hieu-qua-3.jpg"
-                        alt="" class="w-full h-full object-cover rounded-lg">
-                </div>
-                <div class="flex flex-col items-start ml-4">
-                    <h4 class="text-xl text-black font-semibold">Chicken Plus</h4>
-                    <p class="text-sm text-black">Ẩm thực Phương Tấy.</p>
-                </div>
-            </a>
-        </div>
-        <script>
-            const root = document.documentElement;
-            const marqueeElementsDisplayed = getComputedStyle(root).getPropertyValue("--marquee-elements-displayed");
-            const marqueeContent = document.querySelector(".marquee-content");
-
-            root.style.setProperty("--marquee-elements", marqueeContent.children.length);
-
-            for (let i = 0; i < marqueeElementsDisplayed; i++) {
-                marqueeContent.appendChild(marqueeContent.children[i].cloneNode(true));
-            }
-        </script>
-    </div>
     <br>
     <!-- Main -->
     <div class="flex bg-gray-100 overflow-hidden shadow-lg">
@@ -563,19 +299,12 @@
             <!--- more free and premium Tailwind CSS components at https://tailwinduikit.com/ --->
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 md:gap-8 gap-4">
                 <div class="flex flex-col flex-shrink-0">
-                    <div class="dark:text-white">
-                        <svg width="57" height="17" viewBox="0 0 57 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M5.36 12.328H12.896V16H0.464V0.159999H5.36V12.328ZM18.8135 16.24C17.5815 16.24 16.6055 15.92 15.8855 15.28C15.1655 14.624 14.8055 13.552 14.8055 12.064V4H19.6535V10.936C19.6535 11.544 19.7655 11.976 19.9895 12.232C20.2135 12.488 20.5415 12.616 20.9735 12.616C21.4375 12.616 21.8055 12.44 22.0775 12.088C22.3655 11.736 22.5095 11.168 22.5095 10.384V4H27.3575V16H23.0135L22.8935 13.6C22.1735 15.36 20.8135 16.24 18.8135 16.24ZM34.3209 4L36.1209 7.672L37.9689 4H43.3689L39.2649 9.976L43.4649 16H37.9449L36.0249 12.136L34.1289 16H28.6809L32.9289 9.904L28.8249 4H34.3209ZM50.2822 16.24C48.2022 16.24 46.5702 15.696 45.3862 14.608C44.2022 13.52 43.6102 11.984 43.6102 10C43.6102 8.672 43.8822 7.544 44.4262 6.616C44.9702 5.688 45.7302 4.984 46.7062 4.504C47.6822 4.008 48.8102 3.76 50.0902 3.76C51.4022 3.76 52.5142 4.008 53.4262 4.504C54.3542 4.984 55.0582 5.656 55.5382 6.52C56.0342 7.384 56.2822 8.392 56.2822 9.544C56.2822 10.136 56.2422 10.64 56.1622 11.056H48.2662C48.3782 11.776 48.6022 12.272 48.9382 12.544C49.2902 12.8 49.7542 12.928 50.3302 12.928C50.8262 12.928 51.2182 12.824 51.5062 12.616C51.8102 12.408 52.0262 12.12 52.1542 11.752L56.0422 12.904C55.8342 13.64 55.4422 14.256 54.8662 14.752C54.2902 15.248 53.6022 15.624 52.8022 15.88C52.0022 16.12 51.1622 16.24 50.2822 16.24ZM50.0902 7.048C49.5782 7.048 49.1702 7.192 48.8662 7.48C48.5782 7.768 48.3862 8.256 48.2902 8.944H51.6982C51.6342 8.32 51.4742 7.848 51.2182 7.528C50.9782 7.208 50.6022 7.048 50.0902 7.048Z"
-                                fill="currentColor" />
-                        </svg>
-                    </div>
-                    <p class="text-sm leading-none text-gray-800 mt-4 dark:text-white">Copyright © 2021 Review</p>
                     <p class="text-sm leading-none text-gray-800 mt-4 dark:text-white">
                         <a href="index.html" class="font-bold text-xl">
                             <strong class="text-yellow-400">RE</strong>VIEW
                         </a>
                     </p>
+                    <p class="text-sm leading-none text-gray-800 mt-4 dark:text-white">Copyright © 2021 Review</p>
                     <div class="flex items-center gap-x-4 mt-12">
                         <button aria-label="instagram"
                             class="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 opacity-50 w-8 h-8 flex-shrink-0 bg-gray-800 cursor-pointer hover:bg-gray-700 rounded-full flex items-center justify-center">

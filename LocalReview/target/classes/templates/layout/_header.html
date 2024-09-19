@@ -1,0 +1,263 @@
+<div class="containe work-sans leading-normal text-base tracking-normal">
+    <!--Nav-->
+    <div class="fixed top-0 left-0 w-full shadow z-40">
+        <nav id="header" class="w-full z-30 top-0 py-2 bg-white shadow">
+            <div class="container mx-auto flex items-center justify-between px-2 relative">
+                <!-- Tiêu đề mobile -->
+                <div class="md:hidden flex items-center">
+                    <a th:href="@{/index}" class="font-bold text-xl">
+                        <strong class="text-yellow-400">RE</strong>VIEW
+                    </a>
+                </div>
+
+                <!-- Tiêu đề laptop -->
+                <div class="hidden md:flex md:items-center md:w-auto">
+                    <a class="flex items-center tracking-wide no-underline hover:no-underline font-bold text-xl"
+                        th:href="@{/index}">
+                        <strong class="text-yellow-400">RE</strong>VIEW
+                    </a>
+                </div>
+
+                <!-- Thanh tìm kiếm -->
+                <div class="flex-grow mx-2 flex items-center justify-center relative">
+                    <!-- Form tìm kiếm -->
+                    <form id="searchForm" action="/store/search" method="GET"
+                        class="relative flex items-center w-full max-w-2xl">
+                        <!-- Ô nhập từ khóa tìm kiếm -->
+                        <input id="searchInput" name="query" type="text" placeholder="Tìm kiếm..."
+                            class="w-full py-3 pl-4 pr-10 text-sm bg-white border border-gray-300 
+                            rounded-full shadow-sm dark:bg-neutral-800 dark:border-neutral-600 
+                            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent 
+                            transition duration-300 ease-in-out"
+                            required autocomplete="off">
+                        <!-- Nút tìm kiếm -->
+                        <button type="submit" id="searchButton" class="absolute right-0 mr-2 text-blue-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </button>
+                    </form>
+
+                    <!-- Lịch sử tìm kiếm trên desktop -->
+                    <div id="searchHistory"
+                        class="absolute inset-x-0 mt-2 max-w-2xl p-8 mx-auto bg-white md:rounded-lg shadow-lg hidden">
+                        <button id="closeSearchHistory"
+                            class="absolute left-0 top-0 bg-gray-200 md:hidden">
+                            <i class="bi bi-x text-3xl text-gray-600"></i>
+                        </button>
+                        <ul id="searchHistoryList" class="divide-y divide-gray-200"></ul>
+                    </div>
+                </div>
+
+
+                <!-- Js tìm kiém -->
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        const searchInput = document.getElementById('searchInput');
+                        const searchButton = document.getElementById('searchButton');
+                        const searchHistory = document.getElementById('searchHistory');
+                        const searchHistoryList = document.getElementById('searchHistoryList');
+                        const searchForm = document.getElementById('searchForm');
+                        const closeSearchHistoryButton = document.getElementById('closeSearchHistory');
+
+                        let searchTerms = JSON.parse(localStorage.getItem('searchHistory')) || [];
+
+                        function toggleSearchHistory() {
+                            searchHistory.classList.toggle('hidden');
+                            updateSearchHistory();
+                        }
+
+                        searchInput.addEventListener('focus', toggleSearchHistory);
+
+                        function handleSearch(event) {
+                            const term = searchInput.value.trim();
+                            if (term !== '') {
+                                searchTerms = [term, ...searchTerms.filter(item => item !== term)].slice(0, 5);
+                                localStorage.setItem('searchHistory', JSON.stringify(searchTerms));
+                                updateSearchHistory();
+                                searchForm.submit();
+                                searchHistory.classList.add('hidden');
+                            }
+                            event.preventDefault();
+                        }
+
+                        searchButton.addEventListener('click', handleSearch);
+
+                        searchInput.addEventListener('keydown', function (event) {
+                            if (event.key === 'Enter') {
+                                handleSearch(event);
+                            }
+                        });
+
+                        function updateSearchHistory() {
+                            searchHistoryList.innerHTML = '';
+                            if (searchTerms.length > 0) {
+                                searchTerms.forEach((term, index) => {
+                                    const li = document.createElement('li');
+                                    li.classList.add('flex', 'justify-between', 'items-center', 'border-b', 'py-2');
+
+                                    const icon = document.createElement('i');
+                                    icon.classList.add('bi', 'bi-clock-history', 'text-xl', 'mr-2');
+
+                                    const termSpan = document.createElement('span');
+                                    termSpan.textContent = term;
+                                    termSpan.classList.add('flex-grow', 'cursor-pointer');
+                                    termSpan.addEventListener('click', function () {
+                                        searchInput.value = term;
+                                        searchHistory.classList.add('hidden');
+                                        searchForm.submit();
+                                    });
+
+                                    const deleteButton = document.createElement('button');
+                                    deleteButton.innerHTML = '<i class="bi bi-x-lg text-xl"></i>';
+                                    deleteButton.classList.add('text-red-500', 'hover:text-red-700');
+                                    deleteButton.addEventListener('click', function (event) {
+                                        event.stopPropagation();
+                                        searchTerms.splice(index, 1);
+                                        localStorage.setItem('searchHistory', JSON.stringify(searchTerms));
+                                        updateSearchHistory();
+                                    });
+
+                                    li.appendChild(icon);
+                                    li.appendChild(termSpan);
+                                    li.appendChild(deleteButton);
+                                    searchHistoryList.appendChild(li);
+                                });
+                                searchHistory.classList.remove('hidden');
+                            } else {
+                                searchHistory.classList.add('hidden');
+                            }
+                        }
+
+                        function clickOutsideHandler(event) {
+                            if (!searchHistory.contains(event.target) && event.target !== searchInput) {
+                                searchHistory.classList.add('hidden');
+                            }
+                        }
+
+                        document.addEventListener('click', clickOutsideHandler);
+
+                        updateSearchHistory();
+                        searchHistory.classList.add('hidden');
+
+                        // Xử lý sự kiện nhấn nút "X"
+                        closeSearchHistoryButton.addEventListener('click', function () {
+                            searchHistory.classList.add('hidden');
+                        });
+                    });
+
+                </script>
+
+                <!-- Icon người dùng -->
+                <div class="relative inline-block text-left md:mr-4">
+                    <!-- Icon bell -->
+                    <div class="flex space-x-4 md:space-x-8 items-center">
+                        <a href="#" class="relative hover:text-blue-500">
+                            <!-- Số 100 nằm trên icon, nhỏ hơn và không che chuông -->
+                            <span
+                                class="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-red-500 text-white text-xs font-semibold rounded-full px-0.5 py-0.5">
+                                100
+                            </span>
+
+                            <!-- Icon bell -->
+                            <i class="bi bi-bell text-2xl"></i>
+                        </a>
+                        <!-- menu -->
+                        <div class="flex flex-col items-center mr-0">
+                            <i class="bi bi-list text-gray-600 text-4xl md:text-4xl cursor-pointer"
+                                id="toggle-menu-btn"></i>
+                            <i class="bi bi-x text-gray-600 text-4xl md:text-4xl cursor-pointer hidden"
+                                id="close-menu-btn"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <h1 th:if="${#request.remoteUser}" class="absolute left-0 top-0 text-xs text-transparent bg-gradient-to-r from-pink-400 to-violet-300
+           font-medium text-gray-800 text-left w-28 md:w-auto truncate">
+    Hi, <span th:text="${currentUser.name}">User</span>!
+</h1>
+
+
+    </div>
+
+    <!-- menucon -->
+    <div class="relative ">
+        <!-- Menu ẩn/hiện -->
+        <div id="side-menu"
+            class="fixed top-0 mt-12 right-0 h-full w-2/3 md:w-1/2 max-w-md bg-gray-800 p-4 shadow-lg z-30 transform translate-x-full transition-transform duration-300">
+            <ul class="mt-2 space-y-2 p-2 gap-4">
+                <li>
+                    <th:block th:if="${#request.remoteUser}" class="py-1" role="none">
+                        <a th:href="@{/profile/{userId}(userId=${currentUser.userId})}"
+                            class="block px-2 py-4 text-lg md:text-xl text-white hover:text-gray-200">
+                            <i class="bi bi-person"></i> Tài khoản
+                        </a>
+
+                        <a th:href="@{/feed}"
+                            class="block px-2 py-4 text-lg md:text-xl text-white hover:text-gray-200">
+                            <i class="bi bi-cursor"></i> Feed
+                        </a>
+
+                        <a th:href="@{/register-store}"
+                            class="block px-2 py-4 text-lg md:text-xl text-white hover:text-gray-200" role="menuitem"
+                            tabindex="-1" id="menu-item-2"><i class="bi bi-house-add"></i>
+                            Đăng ký cửa hàng
+                        </a>
+                        <!--  -->
+                        <!-- Đăng xuất -->
+                        <a th:href="@{/logout}"
+                            class="block px-2 py-4 text-lg md:text-xl text-white hover:text-gray-200" role="menuitem"
+                            tabindex="-1" id="menu-item-2"><i class="bi bi-box-arrow-right"></i>
+                            Đăng xuất
+                        </a>
+                    </th:block>
+                    <!--  -->
+                    <th:block th:unless="${#request.remoteUser}">
+                        <a th:href="@{/login}"
+                            class="block px-2 py-4 text-lg md:text-xl text-white hover:text-gray-200" role="menuitem"
+                            tabindex="-1" id="menu-item-0"><i class="bi bi-box-arrow-in-right"></i>
+                            Đăng
+                            nhập</a>
+                        <a th:href="@{/register}"
+                            class="block px-2 py-4 text-lg md:text-xl text-white hover:text-gray-200" role="menuitem"
+                            tabindex="-1" id="menu-item-1"><i class="bi bi-person-fill-add"></i>
+                            Đăng ký</a>
+                    </th:block>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        const toggleMenuBtn = document.getElementById('toggle-menu-btn');
+        const closeMenuBtn = document.getElementById('close-menu-btn');
+        const sideMenu = document.getElementById('side-menu');
+        let isSideMenuOpen = false;  // Trạng thái của menu
+
+        // Hàm toggle menu và biểu tượng
+        const toggleSideMenu = () => {
+            if (isSideMenuOpen) {
+                sideMenu.classList.remove('translate-x-0');
+                sideMenu.classList.add('translate-x-full');
+                toggleMenuBtn.classList.remove('bi-x');
+                toggleMenuBtn.classList.add('bi-list');
+                isSideMenuOpen = false;
+            } else {
+                sideMenu.classList.remove('translate-x-full');
+                sideMenu.classList.add('translate-x-0');
+                toggleMenuBtn.classList.remove('bi-list');
+                toggleMenuBtn.classList.add('bi-x');
+                isSideMenuOpen = true;
+            }
+        };
+
+        // Sự kiện click cho nút mở menu
+        toggleMenuBtn.addEventListener('click', toggleSideMenu);
+
+        // Sự kiện click cho dấu X để đóng menu
+        closeMenuBtn.addEventListener('click', toggleSideMenu);
+
+    </script>
+</div>

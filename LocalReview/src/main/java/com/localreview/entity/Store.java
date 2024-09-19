@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,8 +13,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Entity
 @Table(name = "Stores")
@@ -31,9 +34,17 @@ public class Store {
     @Column(name = "store_name", nullable = false)
     private String storeName;
 
-    @ManyToOne(fetch = FetchType.LAZY)  // Định nghĩa mối quan hệ nhiều-một
-    @JoinColumn(name = "store_categories", nullable = false) // Cột khóa ngoại
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "store_categories", nullable = false)
     private Categories storeCategories;
+
+    // Cascade REMOVE để tự động xóa các thực đơn liên quan khi xóa cửa hàng
+    @OneToMany(mappedBy = "store", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<StoreMenu> storeMenus;
+
+    // Cascade REMOVE để tự động xóa các ảnh liên quan khi xóa cửa hàng
+    @OneToMany(mappedBy = "store", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<Photo> photos;
 
     @Column(name = "address_city", nullable = false)
     private String addressCity;

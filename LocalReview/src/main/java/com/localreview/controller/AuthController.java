@@ -76,13 +76,14 @@ public class AuthController {
                                 @RequestParam(value = "logout", required = false) String logout,
                                 RedirectAttributes redirectAttributes) {
         if (error != null) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Invalid username or password.");
+            redirectAttributes.addFlashAttribute("error", "Sai email hoặc mật khẩu.");
         }
         if (logout != null) {
-            redirectAttributes.addFlashAttribute("message", "Logged out successfully.");
+            redirectAttributes.addFlashAttribute("success", "Đăng xuất thành công."); // Chỉnh sửa thông báo cho hợp lý
         }
-        return "login";
+        return "login";  // Thêm redirect để thông báo hiển thị đúng
     }
+
     
     @GetMapping("/login/oauth2/success")
     public String handleOAuth2Success(@AuthenticationPrincipal OAuth2User oAuth2User) {

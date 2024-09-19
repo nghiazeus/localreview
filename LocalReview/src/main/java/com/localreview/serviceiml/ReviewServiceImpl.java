@@ -67,8 +67,8 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public List<Review> getReviewsByStore(String storeId) {
-        // Logic để lấy danh sách review theo storeId
-        return reviewRepository.findByStore_StoreId(storeId);
+        
+        return reviewRepository.findReviewsWithPhotosByStoreId(storeId);
     }
     
     

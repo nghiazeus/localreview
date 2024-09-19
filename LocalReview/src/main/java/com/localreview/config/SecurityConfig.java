@@ -47,11 +47,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
             .csrf().disable() // Vô hiệu hóa CSRF protection nếu cần thiết.
             .authorizeRequests()
-            .antMatchers("/index", "/login", "/register", "/css/**", "/js/**", "/images/**", "/profile/**").permitAll()
+            .antMatchers("/index", "/login", "/register", "/store/**", "/css/**", "/js/**", "/images/**", "/profile/**").permitAll()
                 .antMatchers("/user", "/register-store").hasAnyAuthority("user", "store_owner")
                 .antMatchers("/admin/**").hasRole("admin")
                 .antMatchers("/api/reviews").hasAuthority("store_owner")
-                .anyRequest().authenticated() // Yêu cầu xác thực cho tất cả các yêu cầu khác.
+                .anyRequest().authenticated(); // Yêu cầu xác thực cho tất cả các yêu cầu khác.
+            
+            http.rememberMe()
+            .tokenValiditySeconds(86400) // 86400 giây = 1 ngày
             .and()
             .formLogin()
                 .loginPage("/login") // Xác định trang đăng nhập tùy chỉnh.

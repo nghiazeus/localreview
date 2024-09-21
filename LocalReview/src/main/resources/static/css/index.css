@@ -155,101 +155,22 @@ body {
 
 /* CSS tùy chỉnh cho lịch sử tìm kiếm */
 /* Điều chỉnh cho desktop */
-@media (min-width : 768px) {
-	#searchHistory {
-		position: absolute;
-		/* Đặt phần tử ở vị trí tuyệt đối */
-		top: calc(87%);
-		/* Đặt phần tử ngay dưới thanh tìm kiếm với khoảng cách 8px */
-		left: 50%;
-		/* Đặt phần tử vào giữa ngang của container */
-		transform: translateX(-50%);
-		/* Dịch chuyển phần tử về bên trái để căn giữa chính xác */
-		max-width: 100%;
-		/* Chiều rộng tối đa */
-		background: white;
-		/* Màu nền */
-		border: 1px solid #e5e7eb;
-		/* Đường viền */
-		border-radius: 0.5rem;
-		/* Bo góc */
-		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-		/* Đổ bóng */
-		z-index: 40;
-		/* Đặt chỉ số z để phần tử không bị che khuất */
-	}
+@media (min-width: 768px) {
+    #searchHistory {
+        position: absolute;
+        top: calc(100% + 8px); /* Đặt phần tử ngay dưới thanh tìm kiếm với khoảng cách 8px */
+        left: 50%; /* Đặt phần tử ở giữa ngang của container */
+        transform: translateX(-50%); /* Dịch chuyển phần tử về bên trái để căn giữa chính xác */
+        width: 100%; /* Chiều rộng bằng với container của thanh tìm kiếm */
+        max-width: 600px; /* Đặt chiều rộng tối đa để kiểm soát trên màn hình lớn */       
+        background: white; /* Màu nền */
+        border: 1px solid #e5e7eb; /* Đường viền */
+        border-radius: 0.5rem; /* Bo góc */
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Đổ bóng */
+        z-index: 40; /* Đặt chỉ số z để phần tử không bị che khuất */
+    }
 }
 
-/* Điều chỉnh cho mobile */
-@media (max-width : 767px) {
-	#searchHistory {
-		position: absolute;
-		/* Đặt phần tử ở vị trí tuyệt đối */
-		top: calc(90%);
-		/* Đặt phần tử ngay dưới thanh tìm kiếm với khoảng cách 90% từ trên xuống */
-		left: 50%;
-		/* Đặt phần tử cách cạnh trái 50% chiều rộng của viewport */
-		transform: translateX(-50%);
-		/* Dịch chuyển phần tử về bên trái 50% chiều rộng của chính nó để căn giữa */
-		width: 385px;
-		max-width: none;
-		/* Bỏ giới hạn chiều rộng tối đa */
-		background: white;
-		/* Bo góc */
-		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-		/* Đổ bóng */
-		z-index: 40;
-		/* Đặt chỉ số z để phần tử không bị che khuất */
-	}
-}
-
-/* Thêm vào tập tin CSS hoặc trong phần style của HTML */
-#searchHistory {
-	max-height: 300px;
-	/* Kích thước tối đa của lịch sử tìm kiếm */
-	overflow-y: auto;
-	/* Cho phép cuộn dọc */
-	z-index: 1000;
-	/* Đảm bảo lịch sử tìm kiếm nằm trên các phần tử khác */
-}
-
-#searchHistory ul {
-	list-style: none;
-	padding: 0;
-	margin: 0;
-}
-
-#searchHistory li {
-	padding: 10px;
-	display: flex;
-	align-items: center;
-	border-bottom: 1px solid #e5e7eb;
-	/* Đường phân cách giữa các mục */
-}
-
-#searchHistory li:hover {
-	background-color: #f3f4f6;
-	/* Màu nền khi di chuột qua */
-}
-
-#searchHistory li span {
-	flex-grow: 1;
-}
-
-#searchHistory li button {
-	background: none;
-	border: none;
-	color: black;
-	/* Màu đỏ cho nút xóa */
-	cursor: pointer;
-	font-size: 16px;
-	margin-left: 10px;
-}
-
-#searchHistory li button:hover {
-	color: black;
-	/* Màu đỏ đậm khi di chuột qua */
-}
 
 .work-sans {
 	font-family: 'Work Sans', sans-serif;

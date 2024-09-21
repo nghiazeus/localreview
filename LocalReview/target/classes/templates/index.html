@@ -20,7 +20,7 @@
     <script src="/js/loaddata.js" defer></script>
 </head>
 
-<body class="bg-gray-100">
+<body>
     <!-- Loading -->
     <div th:replace="/layout/_loading.html"></div>
     <!-- Màn hình chào mừng -->
@@ -59,23 +59,23 @@
     </script>
 
 
-    <!-- Header -->
+<!--     Header
     <div class="relative w-full bg-gray-100 md:hidden">
-        <!-- Carousel Section -->
+        Carousel Section
         <div id="carousel" class="carousel w-full h-36 bg-gray-800 overflow-hidden relative">
-            <!-- Carousel Items -->
+            Carousel Items
             <div class="carousel-items flex transition-transform duration-500 ease-in-out" style="width: 300%;">
-                <!-- Carousel Slide 1 -->
+                Carousel Slide 1
                 <div class="carousel-item w-full h-full" style="flex: 0 0 100%;">
                     <img src="https://i.pinimg.com/564x/23/cd/37/23cd3706b0cd612e94babd18c6304266.jpg" alt="Slide 1"
                         class="w-full h-screen object-cover">
                 </div>
-                <!-- Carousel Slide 2 -->
+                Carousel Slide 2
                 <div class="carousel-item w-full h-full" style="flex: 0 0 100%;">
                     <img src="https://i.pinimg.com/564x/67/dc/ae/67dcae6c683c2e69ce656bf8d02b348b.jpg" alt="Slide 2"
                         class="w-full h-screen object-cover">
                 </div>
-                <!-- Carousel Slide 3 -->
+                Carousel Slide 3
                 <div class="carousel-item w-full h-full" style="flex: 0 0 100%;">
                     <img src="https://i.pinimg.com/564x/b9/b3/df/b9b3dfb6e5afbe1b0c2de51fba05e2d2.jpg" alt="Slide 3"
                         class="w-full h-screen object-cover">
@@ -83,20 +83,20 @@
             </div>
         </div>
 
-        <!-- QR Code Card Section -->
+        QR Code Card Section
         <div class="relative w-11/12 md:w-3/5 lg:w-2/5 mx-auto -mt-10 bg-gray-20 bg-opacity-25 rounded-lg shadow-lg p-4 z-10">
             <div class="text-center grid grid-cols-3 gap-4">
-                <!-- QR Code Button -->
+                QR Code Button
                 <button
                     class="bg-blue-400 text-white font-semibold p-2 rounded-lg shadow hover:bg-blue-600 transition duration-300 flex items-center justify-center">
                     <i class="bi bi-qr-code-scan text-xl"></i>
                 </button>
-                <!-- Points Button -->
+                Points Button
                 <button
                     class="bg-purple-400 text-white font-semibold p-2 rounded-lg shadow hover:bg-purple-600 transition duration-300 flex items-center justify-center">
                     <i class="bi bi-coin text-xl"></i>
                 </button>
-                <!-- Another Button -->
+                Another Button
                 <button
                     class="bg-pink-400 text-white font-semibold p-2 rounded-lg shadow hover:bg-red-600 transition duration-300 flex items-center justify-center">
                     <i class="bi bi-heart text-xl"></i>
@@ -105,7 +105,7 @@
         </div>
 
     </div>
-    <!-- JavaScript -->
+    JavaScript
     <script>
         // JavaScript for Carousel
         const carouselItems = document.querySelector('.carousel-items');
@@ -120,7 +120,7 @@
         // Set interval for auto sliding every 2 seconds
         setInterval(moveToNextSlide, 10000);
     </script>
-
+ -->
 
     <!-- Header -->
     <div th:replace="/layout/_header.html"></div>
@@ -128,9 +128,9 @@
     <div class="mt-2 md:mt-6"></div>
     <!-- Store -->
     <main class="my-8"></main>
-        <div class="mx-auto px-2 md:px-0">
-            <div class="h-52 md:h-80 rounded-md md:rounded-none overflow-hidden bg-cover bg-center object-fill"
-                style="background-image: url('https://i.pinimg.com/564x/ab/67/b2/ab67b2895134f378f534cb4f3b60985a.jpg')">
+        <div class="mx-auto md:px-0">
+            <div class="h-52 md:h-sreen overflow-hidden bg-cover bg-center object-fill"
+                style="background-image: url('https://i.pinimg.com/736x/df/4a/54/df4a548dea5fd1c457432b709389c983.jpg')">
                 <div class="bg-gray-900 bg-opacity-50 flex items-center h-full ">
                     <div class="px-10 max-w-xl">
                         <h2 class="text-2xl text-white font-semibold">Cửa hàng</h2>
@@ -156,9 +156,10 @@
             <div th:replace="/layout/_storeone.html"></div>
         </div>
 
+        <div class="hidden md:block">
         <!-- Previous button -->
         <button id="prevBtn"
-            class="absolute top-2/3 transform -translate-y-1/2 left-2 bg-white text-2xl text-black rounded-full p-2 focus:outline-none hidden">
+            class="absolute top-2/3 transform -translate-y-1/2 left-2 bg-white text-2xl text-black rounded-full p-2 focus:outline-none">
             &#10094;
         </button>
 
@@ -167,6 +168,7 @@
             class="absolute top-2/3 transform -translate-y-1/2 right-2 bg-white text-2xl text-black rounded-full p-2 focus:outline-none">
             &#10095;
         </button>
+        </div>
     </div>
 
     <script>

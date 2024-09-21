@@ -333,25 +333,65 @@ public class StoreOfUserController {
 	}
 
 	@PostMapping("/food/add")
-	public String addFood(@RequestParam("storeId") String storeId, @RequestParam("foodName") String foodName,
-			@RequestParam("price") BigDecimal price, Model model) {
+	public String addFood(@RequestParam("storeId") String storeId,
+	                      @RequestParam("foodName") String foodName,
+	                      @RequestParam("price") BigDecimal price,
+	                      @RequestParam("food_images") MultipartFile[] foodImages, 
+	                      Model model) {
 
-		Optional<Store> storeOptional = storeRepository.findById(storeId);
-		if (!storeOptional.isPresent()) {
-			model.addAttribute("error", "Cửa hàng không tồn tại");
-			return "error";
-		}
+	    Optional<Store> storeOptional = storeRepository.findById(storeId);
+	    if (!storeOptional.isPresent()) {
+	        model.addAttribute("error", "Cửa hàng không tồn tại");
+	        return "error";
+	    }
 
-		Store store = storeOptional.get();
-		StoreFood newFood = new StoreFood();
-		newFood.setStore(store); // Thiết lập Store cho StoreFood
-		newFood.setFoodName(foodName);
-		newFood.setPrice(price);
+	    Store store = storeOptional.get();
+	    StoreFood newFood = new StoreFood();
+	    newFood.setStore(store);
+	    newFood.setFoodName(foodName);
+	    newFood.setPrice(price);
 
-		storeFoodService.save(newFood);
+	    storeFoodService.save(newFood);
+	    
+	    if (foodImages != null && foodImages.length > 0) {
+	        for (MultipartFile image : foodImages) {
+	            if (!image.isEmpty()) {
+	                Path tempFilePath = null;
 
-		return "redirect:/stores/food?storeId=" + storeId;
+	                try {
+	                    // Lưu tạm thời file ảnh
+	                    tempFilePath = saveFile(image);
+
+	                    // Tải lên Imgur và lấy URL ảnh
+	                    String imageUrl = storeFoodService.uploadImageToImgur(tempFilePath.toString());
+
+	                    // Tạo đối tượng Photo và liên kết với món ăn
+	                    Photo photo = new Photo();
+	                    photo.setPhotoUrl(imageUrl);
+	                    photo.setFoodId(newFood.getFoodId()); // Gán foodId từ món ăn vừa tạo
+
+	                    storeFoodService.savePhoto(photo);
+	                } catch (IOException e) {
+	                    e.printStackTrace();
+	                    return "redirect:/register-store?error=upload_failed";
+	                } finally {
+	                    // Xóa file tạm thời
+	                    if (tempFilePath != null && Files.exists(tempFilePath)) {
+	                        try {
+	                            Files.delete(tempFilePath);
+	                        } catch (IOException e) {
+	                            e.printStackTrace();
+	                        }
+	                    }
+	                }
+	            }
+	        }
+	    }
+
+	    return "redirect:/stores/food?storeId=" + storeId;
 	}
+
+
 
 	@GetMapping("/food/edit")
 	public String showEditFoodForm(@RequestParam("foodId") String foodId, Model model) {
@@ -419,11 +459,13 @@ public class StoreOfUserController {
 
 		return "stores/drink";
 	}
+	
 
 	@PostMapping("/drink/add")
 	public String addDrink(@RequestParam("storeId") String storeId,
 	                       @RequestParam("drinkName") String drinkName,
 	                       @RequestParam("price") BigDecimal price,
+	                       @RequestParam("drink_images") MultipartFile[] drinkImages, 
 	                       Model model) {
 
 	    Optional<Store> storeOptional = storeRepository.findById(storeId);
@@ -439,6 +481,41 @@ public class StoreOfUserController {
 	    newDrink.setPrice(price);
 
 	    storeDrinkService.save(newDrink);
+	    
+	    if (drinkImages != null && drinkImages.length > 0) {
+	        for (MultipartFile image : drinkImages) {
+	            if (!image.isEmpty()) {
+	                Path tempFilePath = null;
+
+	                try {
+	                    // Lưu tạm thời file ảnh
+	                    tempFilePath = saveFile(image);
+
+	                    // Tải lên Imgur và lấy URL ảnh
+	                    String imageUrl = storeDrinkService.uploadImageToImgur(tempFilePath.toString());
+
+	                    // Tạo đối tượng Photo và liên kết với thức uống
+	                    Photo photo = new Photo();
+	                    photo.setPhotoUrl(imageUrl);
+	                    photo.setDrinkId(newDrink.getDrinkId()); // Gán drinkId từ thức uống vừa tạo
+
+	                    storeFoodService.savePhoto(photo);
+	                } catch (IOException e) {
+	                    e.printStackTrace();
+	                    return "redirect:/register-store?error=upload_failed";
+	                } finally {
+	                    // Xóa file tạm thời
+	                    if (tempFilePath != null && Files.exists(tempFilePath)) {
+	                        try {
+	                            Files.delete(tempFilePath);
+	                        } catch (IOException e) {
+	                            e.printStackTrace();
+	                        }
+	                    }
+	                }
+	            }
+	        }
+	    }
 
 	    return "redirect:/stores/drink?storeId=" + storeId;
 	}

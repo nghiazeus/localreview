@@ -44,14 +44,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-            .csrf().disable() // Vô hiệu hóa CSRF protection nếu cần thiết.
-            .authorizeRequests()
-            .antMatchers("/index", "/login", "/register", "/store/**", "/css/**", "/js/**", "/images/**", "/profile/**").permitAll()
-                .antMatchers("/user", "/register-store").hasAnyAuthority("user", "store_owner")
-                .antMatchers("/admin/**").hasRole("admin")
-                .antMatchers("/api/reviews").hasAuthority("store_owner")
-                .anyRequest().authenticated(); // Yêu cầu xác thực cho tất cả các yêu cầu khác.
+    	http
+        .csrf().disable() // Vô hiệu hóa CSRF protection nếu cần thiết.
+        .authorizeRequests()
+        // Các đường dẫn không cần xác thực, ai cũng có thể truy cập
+				/*
+				 * .antMatchers("/index", "/qrcode", "/login", "/register", "/store/**",
+				 * "/css/**", "/js/**", "/images/**", "/profile/**").permitAll()
+				 */
+        
+        // Các đường dẫn yêu cầu xác thực cho người dùng với vai trò cụ thể
+        .antMatchers("/user", "/register-store").hasAnyAuthority("user", "store_owner")
+        .antMatchers("/admin/**").hasRole("admin")
+        .antMatchers("/api/reviews").hasAuthority("store_owner")
+
+        // Tất cả các yêu cầu khác không có trong danh sách trên đều không cần đăng nhập
+        .anyRequest().permitAll(); // Không cần xác thực cho các yêu cầu khác
             
             http.rememberMe()
             .tokenValiditySeconds(86400) // 86400 giây = 1 ngày

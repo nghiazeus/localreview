@@ -57,10 +57,10 @@ public class PhotoServiceImpl implements PhotoService {
         return photoRepository.findByReviewId(reviewId);
     }
 
-    @Override
-    public List<Photo> getPhotosByStoreId(String storeId) {
-        return photoRepository.findByStoreId(storeId);
-    }
+//    @Override
+//    public List<Photo> getPhotosByStoreId(String storeId) {
+//        return photoRepository.findByStoreId(storeId);
+//    }
 
     @Override
     public String uploadImageToImgur(String imagePath) {

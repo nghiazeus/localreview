@@ -48,6 +48,9 @@ public class Photo {
     @Column(name = "food_review_id", length = 36)
     private String foodReviewId;
 
+    @Column(name = "photo_type", nullable = false, length = 255)
+    private String photoType;
+    
     @Column(name = "photo_url", nullable = false, length = 255)
     private String photoUrl;
 

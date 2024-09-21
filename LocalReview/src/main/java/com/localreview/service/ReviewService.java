@@ -2,6 +2,7 @@ package com.localreview.service;
 
 import java.util.List;
 
+import com.localreview.DTO.ReviewWithPhotosDTO;
 import com.localreview.entity.Photo;
 import com.localreview.entity.Review;
 import com.localreview.entity.Store;
@@ -19,4 +20,8 @@ public interface ReviewService {
     User getUserByEmail(String email);
     
     Store getStoreById(String storeId); // Thêm phương thức để lấy Store
+    
+    List<ReviewWithPhotosDTO> getReviewsWithPhotosByStoreId(String storeId);
+    
+    
 }

@@ -14,10 +14,11 @@ public interface PhotoRepository extends JpaRepository<Photo, String> {
 	
 	List<Photo> findByReviewId(String reviewId);
 	
-	List<Photo> findByStoreId(String storeId);
+	 List<Photo> findByStoreIdAndPhotoType(String storeId, String photoType);
 	
 	/*
 	 * @Query("SELECT r FROM Review r WHERE r.store.storeId = :storeId")
 	 * List<Review> findAllByStoreId(@Param("storeId") String storeId);
 	 */
+	
 }

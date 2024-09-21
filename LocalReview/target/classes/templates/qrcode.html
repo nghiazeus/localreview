@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Quét Mã QR</title>
+  <link rel="stylesheet" href="https://unpkg.com/tailwindcss@latest/dist/tailwind.min.css" />
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <script src="./node_modules/html5-qrcode/html5-qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.4/html5-qrcode.min.js" 
+  integrity="sha512-k/KAe4Yff9EUdYI5/IAHlwUswqeipP+Cp5qnrsUjTPCgl51La2/JhyyjNciztD7mWNKLSXci48m7cctATKfLlQ==" 
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <style>
+    main {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+
+    #reader {
+      width: 600px;
+      margin-bottom: 20px;
+    }
+
+    #result {
+      text-align: center;
+      font-size: 1.5rem;
+    }
+
+    #result h2 {
+      color: #4CAF50;
+      margin-bottom: 10px;
+    }
+
+    #result a {
+      color: #2196F3;
+      text-decoration: none;
+    }
+
+    #result a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-700">
+  <main>
+    <div id="reader"></div>
+    <div id="result"></div>
+  </main>
+
+  <script>
+    const scanner = new Html5QrcodeScanner('reader', { 
+        qrbox: {
+            width: 250,
+            height: 250,
+        }, 
+        fps: 20, 
+    });
+
+    scanner.render(success, error);
+
+    function success(result) {
+        document.getElementById('result').innerHTML = `
+        <h2>Mã QR của bạn!</h2>
+        <p><a href="${result}" target="_blank">${result}</a></p>
+        `;
+        scanner.clear();
+        document.getElementById('reader').remove();
+    }
+
+    function error(err) {
+        console.error(err);
+    }
+  </script>
+</body>
+
+</html>

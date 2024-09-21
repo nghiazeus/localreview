@@ -32,7 +32,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-
 @Service
 public class PhotoServiceImpl implements PhotoService {
 
@@ -46,22 +45,33 @@ public class PhotoServiceImpl implements PhotoService {
 	private String IMGUR_CLIENT_ID;
 
 	private static final String IMGUR_UPLOAD_URL = "https://api.imgur.com/3/upload";
+    private static final String TEMP_DIR = System.getProperty("java.io.tmpdir");
 
     @Override
     public Photo savePhoto(Photo photo) {
-        // Logic để lưu ảnh
         return photoRepository.save(photo);
     }
 
     @Override
     public List<Photo> getPhotosByReviewId(String reviewId) {
-        // Logic để lấy danh sách ảnh liên kết với review
         return photoRepository.findByReviewId(reviewId);
     }
 
     @Override
+    public List<Photo> getPhotosByStoreId(String storeId) {
+        return photoRepository.findByStoreId(storeId);
+    }
+
+    @Override
     public String uploadImageToImgur(String imagePath) {
+        if (imagePath == null || imagePath.isEmpty()) {
+            throw new IllegalArgumentException("Image path cannot be null or empty");
+        }
+
         File file = new File(imagePath);
+        if (!file.exists()) {
+            throw new IllegalArgumentException("File does not exist: " + imagePath);
+        }
 
         try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
             HttpPost uploadFile = new HttpPost(IMGUR_UPLOAD_URL);
@@ -69,40 +79,34 @@ public class PhotoServiceImpl implements PhotoService {
 
             MultipartEntityBuilder builder = MultipartEntityBuilder.create();
             builder.addBinaryBody("image", file, ContentType.DEFAULT_BINARY, file.getName());
-
             uploadFile.setEntity(builder.build());
 
             try (CloseableHttpResponse response = httpClient.execute(uploadFile)) {
                 String responseString = EntityUtils.toString(response.getEntity());
                 JSONObject jsonObject = new JSONObject(responseString);
-                return jsonObject.getJSONObject("data").getString("link");
+
+                if (jsonObject.getBoolean("success")) {
+                    return jsonObject.getJSONObject("data").getString("link");
+                } else {
+                    throw new RuntimeException("Failed to upload image: " + responseString);
+                }
             }
         } catch (IOException e) {
-            e.printStackTrace();
             throw new RuntimeException("Error uploading to Imgur", e);
         }
     }
 
-    private static final String TEMP_DIR = System.getProperty("java.io.tmpdir");
-
     @Override
     public Path saveFile(MultipartFile file) throws IOException {
-        // Tạo tên file tạm thời với định dạng ngày giờ
-        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+        if (file == null || file.isEmpty()) {
+            throw new IllegalArgumentException("File cannot be null or empty");
+        }
+
+        String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
         Path tempFilePath = Paths.get(TEMP_DIR, fileName);
 
-        // Lưu file tạm thời vào hệ thống
         Files.copy(file.getInputStream(), tempFilePath, StandardCopyOption.REPLACE_EXISTING);
-
         return tempFilePath;
     }
-
-	@Override
-	public List<Photo> getPhotosByStoreId(String storeId) {
-		return photoRepository.findByStoreId(storeId);
-	}
-
-
-
-
 }
+

@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
+import com.localreview.entity.Photo;
 import com.localreview.entity.Store;
 import com.localreview.entity.StoreDrink;
 
@@ -18,5 +19,9 @@ public interface StoreDrinkService {
 	void save(StoreDrink newDrink);
 
 	Optional<StoreDrink> findById(String drinkId);
+	
+	String uploadImageToImgur(String imagePath);
+
+	Photo savePhoto(Photo photo);
 
 }

@@ -71,7 +71,7 @@
                             <div class="carousel-slide">
                                 <!-- Duyệt qua các ảnh từ cơ sở dữ liệu -->
                                 <div class="carousel-item" th:each="photo : ${storePhotos}">
-                                    <img th:src="@{${photo.photoUrl}}" alt="Slide"
+                                    <img th:src="${photo.photoUrl}" alt="Slide"
                                         class="rounded-lg object-fill w-full h-full">
                                 </div>
                             </div>
@@ -559,8 +559,8 @@
                                     <h3 class="text-lg font-semibold" th:text="${review.user.name}"></h3>
                                     <p class="text-sm text-gray-600" th:text="${review.rating}"></p>
                                     <p class="text-sm text-gray-600" th:text="${review.comment}"></p>
-                                    <div class="review-images" th:if="${review.photos.size() > 0}">
-                                        <img th:each="photo : ${review.photos}" th:src="${photo.photoUrl}" class="w-10 h-0"/>
+                                    <div class="review-images" th:each="photoUrl : ${reviewPhotosMap[review.reviewId]}">
+                                       <img th:src="${photoUrl}" class="w-20 h-20 object-cover rounded-lg" alt="Review Image">
                                     </div>
                                 </div>
                             </div>

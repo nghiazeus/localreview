@@ -99,7 +99,7 @@ public class PhotoServiceImpl implements PhotoService {
 
 	@Override
 	public List<Photo> getPhotosByStoreId(String storeId) {
-		return photoRepository.findByStoreId(storeId);
+		return photoRepository.findByStoreIdAndPhotoType(storeId, "store");
 	}
 
 

@@ -57,10 +57,10 @@ public class PhotoServiceImpl implements PhotoService {
         return photoRepository.findByReviewId(reviewId);
     }
 
-    @Override
-    public List<Photo> getPhotosByStoreId(String storeId) {
-        return photoRepository.findByStoreId(storeId);
-    }
+//    @Override
+//    public List<Photo> getPhotosByStoreId(String storeId) {
+//        return photoRepository.findByStoreId(storeId);
+//    }
 
     @Override
     public String uploadImageToImgur(String imagePath) {
@@ -108,5 +108,15 @@ public class PhotoServiceImpl implements PhotoService {
         Files.copy(file.getInputStream(), tempFilePath, StandardCopyOption.REPLACE_EXISTING);
         return tempFilePath;
     }
+
+	@Override
+	public List<Photo> getPhotosByStoreId(String storeId) {
+		return photoRepository.findByStoreIdAndPhotoType(storeId, "store");
+	}
+
+
+
+
+
 }
 

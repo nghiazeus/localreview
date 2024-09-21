@@ -93,6 +93,7 @@ public class ReviewController {
                         photo.setPhotoUrl(imageUrl);
                         photo.setReviewId(savedReview.getReviewId()); // Gán reviewId của review đã lưu
                         photo.setStoreId(storeId); // Gán storeId nếu cần thiết
+                        photo.setPhotoType("review"); // Gán loại ảnh là review
 
                         reviewService.savePhoto(photo);
                     } catch (IOException e) {

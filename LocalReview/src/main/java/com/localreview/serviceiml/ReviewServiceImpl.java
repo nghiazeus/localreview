@@ -3,6 +3,7 @@ package com.localreview.serviceiml;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.localreview.DTO.ReviewWithPhotosDTO;
 import com.localreview.entity.Photo;
 import com.localreview.entity.Review;
 import com.localreview.entity.Store;
@@ -99,5 +101,30 @@ public class ReviewServiceImpl implements ReviewService {
             e.printStackTrace();
             throw new RuntimeException("Error uploading to Imgur", e);
         }
+    }
+
+	@Override
+    public List<ReviewWithPhotosDTO> getReviewsWithPhotosByStoreId(String storeId) {
+        // Lấy danh sách các đánh giá của cửa hàng từ repository
+        List<Review> reviews = reviewRepository.findByStore_StoreId(storeId);
+
+        // Tạo DTO từ các đánh giá và ảnh
+        return reviews.stream().map(review -> {
+            // Lấy các ảnh tương ứng với review_id
+            List<String> photoUrls = photoRepository.findByReviewId(review.getReviewId())
+                    .stream().map(Photo::getPhotoUrl)
+                    .collect(Collectors.toList());
+
+            // Tạo DTO
+            return new ReviewWithPhotosDTO(
+                    review.getReviewId(),
+                    review.getUser().getUserId(),
+                    review.getUser().getName(),
+                    review.getComment(),
+                    review.getRating(),
+                    review.getReviewDate().toString(),
+                    photoUrls
+            );
+        }).collect(Collectors.toList());
     }
 }

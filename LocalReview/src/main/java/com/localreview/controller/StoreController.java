@@ -195,6 +195,7 @@ public class StoreController {
 							Photo photo = new Photo();
 							photo.setPhotoUrl(imageUrl);
 							photo.setStoreId(savedStore.getStoreId()); // Gán storeId cho ảnh
+							photo.setPhotoType("store"); // Gán loại ảnh là review
 
 							storeService.savePhoto(photo);
 						} catch (IOException e) {
@@ -247,56 +248,61 @@ public class StoreController {
 //	----------------------------------
 
 	@GetMapping("/store/detail/{storeId}")
-	public String showStoreDetail(@PathVariable("storeId") String storeId, Model model) {
-		try {
-			Store store = storeService.findStoreById(storeId);
-			if (store != null) {
-				model.addAttribute("store", store);
+    public String showStoreDetail(@PathVariable("storeId") String storeId, Model model) {
+        try {
+            // Lấy thông tin cửa hàng theo storeId
+            Store store = storeService.findStoreById(storeId);
+            if (store != null) {
+                // Thêm thông tin cửa hàng vào model
+                model.addAttribute("store", store);
 
-				List<StoreMenu> storeMenuList = storeMenuService.findByStore_StoreId(storeId);
-				List<StoreFood> storeFoodList = storeFoodService.findByStore_StoreId(storeId);
-				List<StoreDrink> storeDrinkList = storeDrinkService.findByStore_StoreId(storeId);
-				List<Photo> storePhotos = photoService.getPhotosByStoreId(storeId); 
-				List<Review> reviews = reviewService.getReviewsByStore(storeId);
+                // Lấy danh sách menu, đồ ăn, đồ uống và ảnh của cửa hàng
+                List<StoreMenu> storeMenuList = storeMenuService.findByStore_StoreId(storeId);
+                List<StoreFood> storeFoodList = storeFoodService.findByStore_StoreId(storeId);
+                List<StoreDrink> storeDrinkList = storeDrinkService.findByStore_StoreId(storeId);
+                List<Photo> storePhotos = photoService.getPhotosByStoreId(storeId);
+                List<Review> reviews = reviewService.getReviewsByStore(storeId);
 
-				for (StoreFood food : storeFoodList) {
-					food.getFormattedPrice();
-				}
+                // Format giá cho danh sách đồ ăn
+                for (StoreFood food : storeFoodList) {
+                    food.getFormattedPrice();
+                }
 
-				Map<String, List<Photo>> reviewPhotosMap = reviews.stream().collect(Collectors
-						.toMap(Review::getReviewId, review -> photoService.getPhotosByReviewId(review.getReviewId())));
+                // Tạo map chứa danh sách ảnh theo từng review
+                Map<String, List<String>> reviewPhotosMap = reviews.stream()
+                    .collect(Collectors.toMap(Review::getReviewId, 
+                    review -> photoService.getPhotosByReviewId(review.getReviewId())
+                                           .stream().map(Photo::getPhotoUrl)
+                                           .collect(Collectors.toList())));
 
-//				for (Review review : reviews) {
-//					List<Photo> photos = photoService.getPhotosByReviewId(review.getReviewId());
-//					review.setPhotos(photos);
-//				}
+                // Thêm danh sách menu, đồ ăn, đồ uống, và ảnh vào model
+                model.addAttribute("menulist", storeMenuList);
+                model.addAttribute("foodlist", storeFoodList);
+                model.addAttribute("drinklist", storeDrinkList);
+                model.addAttribute("storePhotos", storePhotos);
+                model.addAttribute("reviews", reviews);
+                model.addAttribute("reviewPhotosMap", reviewPhotosMap);
 
-				model.addAttribute("menulist", storeMenuList);
-				model.addAttribute("foodlist", storeFoodList);
-				model.addAttribute("drinklist", storeDrinkList);
-				model.addAttribute("storePhotos", storePhotos);
-				model.addAttribute("reviews", reviews);
-				model.addAttribute("reviewPhotosMap", reviewPhotosMap);
+                // Tạo breadcrumb cho đường dẫn hiện tại
+                List<Breadcrumb> breadcrumbs = new ArrayList<>();
+                breadcrumbs.add(new Breadcrumb("Trang chủ", "/index"));
+                breadcrumbs.add(new Breadcrumb("Cửa hàng", "/store"));
+                breadcrumbs.add(new Breadcrumb(store.getStoreName(), "/store/detail/" + store.getStoreId()));
+                model.addAttribute("breadcrumbs", breadcrumbs);
 
-				// Thêm thông tin breadcrumb
-				List<Breadcrumb> breadcrumbs = new ArrayList<>();
-				breadcrumbs.add(new Breadcrumb("Trang chủ", "/index"));
-				breadcrumbs.add(new Breadcrumb("Cửa hàng", "/store"));
-				breadcrumbs.add(new Breadcrumb(store.getStoreName(), "/store/detail/" + store.getStoreId()));
-				model.addAttribute("breadcrumbs", breadcrumbs);
-
-				return "stores/store-detail";
-			} else {
-				model.addAttribute("error", "Cửa hàng không tồn tại.");
-				return "error";
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			model.addAttribute("error", "Đã xảy ra lỗi khi lấy thông tin cửa hàng.");
-			return "error";
-		}
-	}
-
+                // Trả về trang chi tiết cửa hàng
+                return "stores/store-detail";
+            } else {
+                // Nếu cửa hàng không tồn tại, trả về trang lỗi
+                model.addAttribute("error", "Cửa hàng không tồn tại.");
+                return "error";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            model.addAttribute("error", "Đã xảy ra lỗi khi lấy thông tin cửa hàng.");
+            return "error";
+        }
+    }
 //	-----------------------------------------------
 
 	@GetMapping("/store/category")

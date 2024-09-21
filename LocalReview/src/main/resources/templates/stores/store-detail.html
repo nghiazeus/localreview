@@ -397,7 +397,7 @@
                     <div th:each="food : ${foodlist}"
                         class="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-md w-64 flex-shrink-0">
                         <img th:src="${#lists.isEmpty(food.photos) ? 'https://via.placeholder.com/400x300.png?text=No+Image' : food.photos[0].photoUrl}"
-                            class="w-full h-48 md:h-56 object-cover" alt="Ảnh của món ăn">
+                            class="w-full h-60 object-cover" alt="Ảnh của món ăn">
                         <div class="p-4">
                             <h3 class="font-bold text-lg mb-2" th:text="${food.foodName}">Tên Món Ăn</h3>
                             <p class="flex items-baseline text-red-500 mb-2">
@@ -444,7 +444,7 @@
                     <div th:each="drink : ${drinklist}"
                         class="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-md w-64 flex-shrink-0">
                         <img th:src="${#lists.isEmpty(drink.photos) ? 'https://via.placeholder.com/400x300.png?text=No+Image' : drink.photos[0].photoUrl}"
-                            class="w-full h-48 md:h-56 object-cover" alt="Ảnh của đồ uống">
+                            class="w-full h-60 object-cover" alt="Ảnh của đồ uống">
                         <div class="p-4">
                             <h3 class="font-bold text-lg mb-2" th:text="${drink.drinkName}">Tên Đồ Uống</h3>
                             <p class="flex items-baseline text-red-500 mb-2">

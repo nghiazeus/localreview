@@ -35,6 +35,11 @@ public class IndexController {
 	public String index(Model model) {
 	    return "index"; 
 	}
+	
+	@GetMapping("/qrcode")
+	public String home(Model model) {
+	    return "qrcode"; 
+	}
 
 }
 

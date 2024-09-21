@@ -58,7 +58,8 @@
             <div class="mt-4 bg-white rounded-lg shadow-lg flex-1 md:w-60">
                 <h2 class="text-xl font-semibold bg-gradient-to-r from-indigo-600 text-center rounded-t-lg py-4
                           to-blue-600 text-white">Thêm đồ uống</h2>
-                <form th:action="@{/stores/drink/add}" method="post" class="space-y-4 p-4">
+                <form th:action="@{/stores/drink/add}" enctype="multipart/form-data" method="post"
+                    class="space-y-4 p-4">
                     <input type="hidden" name="storeId" th:value="${storeId}">
 
                     <div>
@@ -73,6 +74,15 @@
                         <input
                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                             type="number" id="price" name="price" required placeholder="100000...">
+                    </div>
+
+                    <!-- Thêm trường upload ảnh -->
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-1" for="drink_images">Chọn ảnh thức
+                            uống</label>
+                        <input
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                            type="file" id="drink_images" name="drink_images" multiple accept="image/*">
                     </div>
 
                     <div class="text-right">
@@ -91,6 +101,7 @@
                     <thead>
                         <tr
                             class="bg-gradient-to-r from-indigo-600 to-blue-600 text-white text-left text-sm sm:text-base">
+                            <th class="py-4 px-6 font-semibold whitespace-nowrap">Ảnh đồ uống</th>
                             <th class="py-4 px-6 font-semibold whitespace-nowrap">Tên đồ uống</th>
                             <th class="py-4 px-6 font-semibold whitespace-nowrap">Giá</th>
                             <th class="py-4 px-6 font-semibold text-center whitespace-nowrap">Hành động</th>
@@ -100,8 +111,16 @@
                         <!-- Lặp qua danh sách thực đơn từ controller -->
                         <tr th:each="drink : ${drinklist}"
                             class="border-b border-gray-200 hover:bg-gray-50 transition duration-200">
-                            <td class="py-3 px-6 text-sm sm:text-base" th:text="${drink.drinkName}"></td>
-                            <td class="py-3 px-6 text-sm sm:text-base" th:text="${drink.formattedPrice}"></td>
+                            <td class="py-3 px-6 whitespace-nowrap">
+                                <div class="flex space-x-2">
+                                    <img th:each="photo : ${drink.photos}" 
+                                         th:src="${photo.photoUrl}" 
+                                         alt="Ảnh thức uống" 
+                                         class="w-10 h-10 md:w-14 md:h-14 object-cover rounded-lg">
+                                </div>
+                            </td>                                                      
+                            <td class="py-3 px-6 text-sm sm:text-base whitespace-nowrap" th:text="${drink.drinkName}"></td>
+                            <td class="py-3 px-6 text-sm sm:text-base whitespace-nowrap" th:text="${drink.formattedPrice}"></td>
                             <td class="py-3 px-6 text-sm sm:text-base flex justify-center space-x-2">
                                 <!-- Nút cập nhật -->
                                 <a th:href="@{/stores/drink/edit(drinkId=${drink.drinkId})}"

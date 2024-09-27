@@ -1,0 +1,126 @@
+<header class="bg-surface-primary border-bottom pt-6">
+    <div class="container-fluid">
+        <div class="mb-npx">
+            <div class="row align-items-center">
+                <div class="col-sm-6 col-12 mb-4 mb-sm-0">
+                    <!-- Title -->
+                    <h1 class="h2 mb-0 ls-tight text-primary" target="_blank" th:text="${#request.remoteUser}"></h1>
+                    <p class="text-info">Cập nhật sản phẩm</p>
+                    </br>
+                </div>
+                <!-- Actions -->
+            </div>
+            <!-- Nav -->
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <div class="card mt-5">
+        <div class="card-header">
+            <h3 class="text-center">Sửa Sản Phẩm</h3>
+        </div>
+        <div class="card-body">
+            <form th:object="${sanPham}" th:action="@{/admin/update/{masanpham}(masanpham=${sanPham.masanpham})}"
+                method="post" class="row g-3">
+
+                <div class="mb-3 col-md-4">
+                    <label for="tensanpham" class="form-label">Tên Sản Phẩm:</label>
+                    <input type="text" id="tensanpham" name="tensanpham" th:field="*{tensanpham}" class="form-control"
+                        required>
+                </div>
+
+                <div class="mb-3 col-md-4">
+                    <label for="dongia" class="form-label">Đơn Giá:</label>
+                    <input type="text" id="dongia" name="dongia" th:field="*{dongia}" class="form-control" required>
+                </div>
+
+                <div class="mb-3 col-md-4">
+                    <label for="soluongtrongkho" class="form-label">Số Lượng Trong Kho:</label>
+                    <input type="text" id="soluongtrongkho" name="soluongtrongkho" th:field="*{soluongtrongkho}"
+                        class="form-control" required>
+                </div>
+
+                <div class="mb-3 col-md-6">
+                    <label for="mota" class="form-label">Mô Tả:</label>
+                    <textarea id="mota" name="mota" th:field="*{mota}" rows="4" class="form-control"
+                        required>
+                    </textarea>
+                   <br>
+                    <!-- Danhmuc-->
+                    <label for="madanhmuc" class="form-label">Danh Mục:</label>
+                    <select id="madanhmuc" name="madanhmuc" th:field="*{madanhmuc}" class="form-select" required>
+                        <option th:each="danhmuc : ${danhmuc}" th:value="${danhmuc.madanhmuc}"
+                            th:text="${danhmuc.tendanhmuc}"></option>
+                    </select>
+               
+                    <!-- Thuonghieu -->
+                    <label for="mathuonghieu" class="form-label">Thương Hiệu:</label>
+                    <select id="mathuonghieu" name="mathuonghieu" th:field="*{mathuonghieu}" class="form-select"
+                        required>
+                        <option th:each="thuonghieu : ${thuonghieu}" th:value="${thuonghieu.mathuonghieu}"
+                            th:text="${thuonghieu.tenthuonghieu}"></option>
+                    </select>
+                </div>
+                <div class="mb-3 col-md-6">
+                    <label for="photomedia" class="form-label">Ảnh:</label>
+                
+                    <!-- Trường input để hiển thị tên tệp ảnh -->
+                    <input type="text" id="filename" name="filename" class="form-control" readonly
+                        th:value="${sanPham.photomedia != null ? sanPham.photomedia : ''}">
+                
+                    <!-- Trường input để chọn tệp ảnh mới -->
+                    <div class="custom-file mb-3">
+                        <input type="file" class="custom-file-input" id="photomedia" name="photomedia"
+                            th:field="*{photomedia}" onchange="updateImagePreview()">
+                        <label class="custom-file-label" for="photomedia">Chọn tệp</label>
+                    </div>
+                
+                    <!-- Container để chứa thẻ img hiện tại và img mới -->
+                    <div class="card">
+                        <div class="card-body">
+                            <!-- Thẻ img hiện tại -->
+                            <img id="currentImage" th:src="'/image/' + ${sanPham.photomedia}" width="140" height="140" alt="Ảnh" class="img-thumbnail">
+                            <!-- Thẻ img mới (ẩn ban đầu) -->
+                            <img id="previewImage" alt="Ảnh"  width="140" height="140" class="img-thumbnail" style="display: none;">
+                        </div>
+                    </div>
+                
+                    <!-- Script để cập nhật tên tệp và hiển thị hình ảnh nhỏ -->
+                    <script>
+                        function updateImagePreview() {
+                            var currentImage = document.getElementById('currentImage');
+                            var previewImage = document.getElementById('previewImage');
+                            var filenameField = document.getElementById('filename');
+                
+                            // Hiển thị hình ảnh mới
+                            previewImage.style.display = 'block';
+                            var reader = new FileReader();
+                            reader.onload = function (event) {
+                                previewImage.src = event.target.result;
+                            };
+                            reader.readAsDataURL(document.getElementById('photomedia').files[0]);
+                
+                            // Ẩn hình ảnh hiện tại
+                            currentImage.style.display = 'none';
+                
+                            // Cập nhật giá trị của trường input
+                            filenameField.value = document.getElementById('photomedia').files[0].name;
+                        }
+                    </script>
+                </div>                
+
+                <div class="mb-3 col-12">
+                    <button type="submit" class="btn btn-primary" onclick="editproduct()">Cập Nhật</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function editproduct() {
+        alert("Cập nhật sản phẩm thành công!!")
+    }
+</script>

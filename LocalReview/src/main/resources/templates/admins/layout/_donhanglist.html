@@ -1,0 +1,137 @@
+<header class="bg-surface-primary border-bottom pt-6">
+	<div class="container-fluid">
+		<div class="mb-npx">
+			<div class="row align-items-center">
+				<div class="col-sm-6 col-12 mb-4 mb-sm-0">
+					<!-- Title -->
+					<h1 class="h2 mb-0 ls-tight text-primary" target="_blank"
+						th:text="${#request.remoteUser}"></h1>
+					<p class="text-info">Quản lý đơn hàng</p>
+					</br>
+				</div>
+				<!-- Actions -->
+				<div class="col-sm-6 col-12 text-sm-end">
+					<div class="mx-n1">
+						<a th:href="@{/admin/export-don-hangs-pdf}" class="btn d-inline-flex btn-sm btn-danger mx-1">
+							<span class=" pe-2">
+								<i class="bi bi-box-arrow-right"></i>
+							</span>
+							<span>Xuất file PDF</span>
+						</a>
+						<a th:href="@{/admin/export-don-hangs-excel}" class="btn d-inline-flex btn-sm btn-success mx-1">
+							<span class=" pe-2">
+								<i class="bi bi-box-arrow-right"></i>
+							</span>
+							<span>Xuất file Excel</span>
+		</a>
+					</div>
+				</div>
+			</div>
+			<!-- Nav -->
+		</div>
+	</div>
+</header>
+
+<main class="py-6 bg-surface-secondary">
+	<div class="container-fluid">
+		<!-- Card stats -->
+		<div class="card shadow border-0 mb-7">
+			<div class="card-header">
+				<h5 class="mb-0">Đơn hàng</h5>
+			</div>
+			<div class="table-responsive">
+				<table class="table table-nowrap">
+					<thead class="thead-light">
+						<tr>
+							<th scope="col">Mã đơn hàng</th>
+							<th scope="col">Người dùng</th>
+							<th scope="col">Ngày đặt hàng</th>
+							<th scope="col">Trang thái đơn hàng</th>
+							<th scope="col">Phương thức thanh toán</th>
+							<th scope="col">Địa chỉ</th>
+							<th scope="col">Điều chỉnh trang thái</th>
+							<th scope="col">Trang chi tiết</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="item:${donhang}">
+							<td th:text="${item.madonhang}"></td>
+							<td th:text="${item.nguoidung.hovaten}"></td>
+							<td
+								th:utext="${#dates.format(item.ngaydat, 'dd-MM-yyyy | HH:mm:ss')}"></td>
+							<td th:text="${item.trangthai}" class="text-info"></td>
+							<td th:text="${item.phuongthucthanhtoan}"></td>
+							<td th:text="${item.diachi}"></td>
+							<td><a th:href="@{|/admin/trangthai?id=${item.madonhang}|}"
+								class="btn btn-warning btn-sm" data-bs-toggle="modal"
+								th:attr="data-bs-target='#exampleModal-' + ${item.madonhang}">
+									Điều Chỉnh Trạng Thái </a>
+								<div class="modal fade"
+									th:id="'exampleModal-' + ${item.madonhang}" tabindex="-1"
+									aria-labelledby="exampleModalLabel" aria-hidden="true">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title" id="exampleModalLabel">Thay Đổi
+													Trạng Thái Đơn Hàng</h5>
+												<button type="button" class="btn-close"
+													data-bs-dismiss="modal" aria-label="Close"></button>
+											</div>
+											<div class="modal-body">
+												<form th:action="@{|/admin/update?id=${item.madonhang}|}"
+													method="post">
+													<select name="trangthai" class="form-select"
+														aria-label="Default select example">
+
+														<option
+															th:selected="${item.trangthai == 'Đang chờ xác nhận' }"
+															th:disabled="${item.trangthai == 'Đang chờ xác nhận'}"
+															value="Đang chờ xác nhận">Đang Chờ Xác nhận</option>
+														<option
+															th:selected="${item.trangthai == 'Đang soạn hàng'}"
+															th:disabled="${item.trangthai == 'Đang soạn hàng'}"
+															value="Đang soạn hàng">Đang Soạn Hàng</option>
+														<option th:selected="${item.trangthai == 'Ðang Giao'}"
+															th:disabled="${item.trangthai == 'Ðang Giao'}"
+															value="Ðang Giao">Đang Giao</option>
+														<option
+															th:selected="${item.trangthai == 'Giao Thanh Cong'}"
+															th:disabled="${item.trangthai == 'Giao Thanh Cong'}"
+															value="Giao Thanh Cong">Giao Thành Công</option>
+														<option th:selected="${item.trangthai == 'Đã Hủy'}"
+															th:disabled="${item.trangthai == 'Đã Hủy'}"
+															value="Đã Hủy">Đã Hủy</option>
+													</select>
+											</div>
+						<div class="modal-footer">
+												<button type="button" class="btn btn-secondary"
+													data-bs-dismiss="modal">Đóng</button>
+												<button type="submit" class="btn btn-primary">Thay
+													Đổi</button>
+											</div>
+											</form>
+										</div>
+									</div>
+								</div></td>
+							<td><a th:href="@{|/order/detail/${item.madonhang}|}"
+								type="button" class="text-danger-hover"> Chi tiết đon hàng </a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="card-footer border-0 py-5">
+				<div class="pagination">
+					<li th:if="${currentPage>1}"><a
+						th:href="@{'?pageNo='+${currentPage-1}}">&laquo; </a></li>
+					<li th:each="i:${#numbers.sequence(1,totalPage)}"
+						th:classappend="${currentPage== i ? 'active' :''}"><a
+						th:href="@{${keyword!= null && keyword!= '' ? '?keyword='+keyword+'&':'?'}+'pageNo='+${i}}"
+						th:text="${i}">1</a></li>
+					<li th:if="${currentPage<totalPage}"><a
+						th:href="@{'?pageNo='+${currentPage+1}}"> &raquo;</a></li>
+				</div>
+			</div>
+		</div>
+	</div>
+</main>

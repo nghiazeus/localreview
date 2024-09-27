@@ -1,0 +1,101 @@
+
+<header class="bg-surface-primary border-bottom pt-6">
+	<div class="container-fluid">
+		<div class="mb-npx">
+			<div class="row align-items-center">
+				<div class="col-sm-6 col-12 mb-4 mb-sm-0">
+					<!-- Title -->
+					<h1 class="h2 mb-0 ls-tight text-primary" target="_blank"
+						th:text="${#request.remoteUser}"></h1>
+					<p class="text-info">Quản lý người dùng</p>
+					</br>
+				</div>
+				<!-- Actions -->
+			</div>
+			<!-- Nav -->
+		</div>
+	</div>
+</header>
+
+<main class="py-6 bg-surface-secondary">
+	<div class="container-fluid">
+		<!-- Card stats -->
+		<div class="search">
+			<form>
+				<label> <input type="text" placeholder="Nhập Email"
+					name="keywordemail">
+					<button class="" type="submit">Tìm Kiếm</button>
+
+				</label>
+			</form>
+		</div>
+		<div class="search">
+			<form>
+				<label> <input type="text" placeholder="Nhập số điện thoại"
+					name="keywordnumberphone">
+
+					<button class="" type="submit">Tìm Kiếm</button>
+				</label>
+			</form>
+		</div>
+		<div class="search">
+			<form>
+				<label> <input type="text" placeholder="Nhập Tên đăng nhập"
+					name="keywordtendangnhap">
+					<button class="" type="submit">Tìm Kiếm</button>
+
+				</label>
+			</form>
+		</div>
+
+	</div>
+	<div class="row g-6 mb-6">
+		<div class="card shadow border-0 mb-7">
+			<div class="card-header">
+				<h5 class="mb-0">Người dùng</h5>
+			</div>
+			<div class="table-responsive">
+				<table class="table table-nowrap">
+					<thead class="thead-light">
+						<tr>
+							<th scope="col">STT</th>
+							<th scope="col">Tên đăng nhập</th>
+							<th scope="col">Họ và tên</th>
+							<th scope="col">Số điện thoại</th>
+							<th scope="col">Địa chỉ email</th>
+							<th scope="col">Xóa</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="item, state :${items}">
+							<td scope="row" th:text="${state.index + 1}"></td>
+							<td th:text="${item.tendangnhap}"></td>
+							<td th:text="${item.hovaten}"></td>
+							<td th:text="${item.sodienthoai}"></td>
+							<td th:text="${item.email}"></td>
+							<td><a th:href="@{'admin/deleteND/'+${item.tendangnhap}}"
+								type="button"
+								class="btn btn-sm btn-square btn-neutral text-danger-hover">
+									<i class="bi bi-trash"></i>
+							</a></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="card-footer border-0 py-5">
+			<div class="pagination">
+					<li th:if="${currentPage>1}"><a
+						th:href="@{'?pageNo='+${currentPage-1}}">&laquo; </a></li>
+					<li th:each="i:${#numbers.sequence(1,totalPage)}"
+						th:classappend="${currentPage== i ? 'active' :''}"><a
+						th:href="@{${keyword!= null && keyword!= '' ? '?keyword='+keyword+'&':'?'}+'pageNo='+${i}}"
+						th:text="${i}">1</a></li>
+					<li th:if="${currentPage<totalPage}"><a
+						th:href="@{'?pageNo='+${currentPage+1}}"> &raquo;</a></li>
+				</div>
+				<span class="text-muted text-sm">Tất cả tài khoản của người
+					dùng</span>
+			</div>
+		</div>
+	</div>
+</main>

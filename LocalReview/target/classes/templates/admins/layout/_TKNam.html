@@ -1,0 +1,48 @@
+<header class="bg-surface-primary border-bottom pt-6">
+
+		<div class="mb-npx">
+			<div class="row align-items-center">
+				<div class="col-sm-6 col-12 mb-4 mb-sm-0">
+					<!-- Title -->
+					<h1 class="h2 mb-0 ls-tight text-primary" target="_blank"
+						th:text="${#request.remoteUser}"></h1>
+					<p class="text-info">Thống Kê Bán Hàng theo Năm</p>
+					</br>
+				</div>
+
+			</div>
+		</div>
+</header>
+
+<main class="py-6 bg-surface-secondary">
+	<div class="container-fluid">
+		<div class="container">
+			<table class="table">
+				<thead>
+					<tr>
+						<th scope="col">NÄm</th>
+						<th scope="col">Doanh Thu</th>
+						<th scope="col">Số Lượng</th>
+						<th scope="col">Max Price</th>
+						<th>Min Price</th>
+						<th>AVG Price</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="item :${items}">
+						<td th:text="${item[0]}"></td>
+						<td th:text="${item[1]}"></td>
+
+						<td th:text="${item[2]}"></td>
+						<td th:text="${item[3]}"></td>
+						<td th:text="${item[4]}"></td>
+						<td th:text="${item[5]}"></td>
+
+					</tr>
+				</tbody>
+			</table>
+
+		</div>
+		<div id="curve_chart" style="width: 100%; height: 500px"></div>
+	</div>
+</main>

@@ -98,7 +98,6 @@
 
                         <span th:if="${#strings.isEmpty(breadcrumb.url) or iterStat.last}"
                             class="text-gray-500 dark:text-gray-400" th:text="${breadcrumb.title}"></span>
-
                         <i th:if="${!iterStat.last}"
                             class="bi bi-chevron-compact-right text-gray-500 dark:text-gray-400"></i>
                     </li>
@@ -108,7 +107,7 @@
 
         <div class="mx-auto mt-4">
             <!-- Profile Header -->
-            <div class="bg-white shadow-md border border-slate-200 rounded-lg overflow-hidden ml-4 mr-4">
+            <div class="bg-white shadow-md border border-slate-200 rounded-lg overflow-hidden lg:ml-4 lg:mr-4">
                 <div class="relative">
                     <img class="w-full h-40 object-cover"
                         src="https://i.pinimg.com/564x/25/06/05/2506053a53717e121f504a45e1d15dd2.jpg"

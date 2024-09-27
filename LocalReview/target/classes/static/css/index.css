@@ -12,6 +12,33 @@ body {
 	/* Ngăn menu bật lên khi giữ một đối tượng */
 }
 
+#menumobile {
+    background-color: rgba(255, 255, 255, 0.5); /* Màu nền trắng với độ trong suốt 50% */
+    backdrop-filter: blur(20px); /* Làm mờ nền phía sau khi cuộn qua */
+    -webkit-backdrop-filter: blur(20px); /* Hỗ trợ cho các trình duyệt WebKit */
+    opacity: 10; /* Độ trong suốt của chính thanh điều hướng */
+    transition: background-color 0.3s ease, opacity 0.3s ease; /* Hiệu ứng chuyển khi thay đổi */
+}
+
+@media only screen and (max-width: 760px) {
+    #header {
+        background-color: rgba(255, 255, 255, 0.5); /* Màu nền trắng với độ trong suốt 50% */
+        backdrop-filter: blur(20px); /* Làm mờ nền phía sau khi cuộn qua */
+        -webkit-backdrop-filter: blur(20px); /* Hỗ trợ cho các trình duyệt WebKit */
+        opacity: 1; /* Độ trong suốt của chính thanh điều hướng */
+        transition: background-color 0.3s ease, opacity 0.3s ease; /* Hiệu ứng chuyển khi thay đổi */
+    }
+}
+
+    .modal-open {
+        overflow: hidden;
+    }
+
+    .no-scroll {
+        overflow: hidden;
+        height: 100%;
+    }
+    
 
 /* Tùy chọn CSS để tạo hiệu ứng chuyển động */
 @keyframes zoomIn {
@@ -49,79 +76,6 @@ body {
 	-webkit-text-fill-color: transparent;
 }
 
-/*----------------  */
-.modal-message {
-	display: none;
-}
-
-.work-sans {
-	font-family: 'Work Sans', sans-serif;
-}
-
-#menu-toggle:checked+#menu {
-	display: block;
-}
-
-.hover\:grow {
-	transition: all 0.3s;
-	transform: scale(1);
-}
-
-.hover\:grow:hover {
-	transform: scale(1.02);
-}
-
-.scrollable-container {
-	max-height: 20rem;
-	/* Adjust to fit 5 cards */
-	overflow-y: auto;
-}
-
-.card {
-	width: 100%;
-	background-color: #ffffff;
-	border: 1px solid #d1d5db;
-	border-radius: 0.5rem;
-	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.avatar {
-	width: 3rem;
-	height: 3rem;
-	border-radius: 9999px;
-	object-fit: cover;
-}
-
-.ml-4 {
-	margin-left: 1rem;
-}
-
-.text-lg {
-	font-size: 1.125rem;
-}
-
-.font-semibold {
-	font-weight: 600;
-}
-
-.text-sm {
-	font-size: 0.875rem;
-}
-
-.card {
-	width: 100%;
-	background-color: #ffffff;
-	border: 1px solid #d1d5db;
-	border-radius: 0.5rem;
-	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.avatar {
-	width: 3rem;
-	height: 3rem;
-	border-radius: 9999px;
-	object-fit: cover;
-}
 
 .scrollable-container {
 	overflow: auto;
@@ -178,50 +132,6 @@ body {
 
 #menu-toggle:checked+#menu {
 	display: block;
-}
-
-.hover\:grow {
-	transition: all 0.3s;
-	transform: scale(1);
-}
-
-.hover\:grow:hover {
-	transform: scale(1.02);
-}
-
-.carousel-open:checked+.carousel-item {
-	position: static;
-	opacity: 100;
-}
-
-.carousel-item {
-	-webkit-transition: opacity 0.6s ease-out;
-	transition: opacity 0.6s ease-out;
-}
-
-#carousel-1:checked~.control-1,
-#carousel-2:checked~.control-2,
-#carousel-3:checked~.control-3 {
-	display: block;
-}
-
-.carousel-indicators {
-	list-style: none;
-	margin: 0;
-	padding: 0;
-	position: absolute;
-	bottom: 2%;
-	left: 0;
-	right: 0;
-	text-align: center;
-	z-index: 10;
-}
-
-#carousel-1:checked~.control-1~.carousel-indicators li:nth-child(1) .carousel-bullet,
-#carousel-2:checked~.control-2~.carousel-indicators li:nth-child(2) .carousel-bullet,
-#carousel-3:checked~.control-3~.carousel-indicators li:nth-child(3) .carousel-bullet {
-	color: #000;
-	/*Set to match the Tailwind colour you want the active one to be */
 }
 
 input,
@@ -327,68 +237,72 @@ select {
 	/* Ẩn thanh cuộn trên Chrome, Safari */
 }
 
-/*  */
 .carousel-container {
-	position: relative;
-	width: 100%;
-	height: 100%;
-	overflow: hidden;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
 }
 
 .carousel-slide {
-	display: flex;
-	transition: transform 0.5s ease-in-out;
-	height: 100%;
-	/* Đảm bảo chiều cao của carousel-slide */
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    height: 100%; /* Chiều cao cho toàn bộ slide */
 }
 
 .carousel-item {
-	flex: 0 0 100%;
+    flex: 0 0 100%;
+    height: 100%; /* Chiều cao cho mỗi item */
 }
 
+.mirror-container {
+    height: 100%; /* Đảm bảo chiều cao container ảnh */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mirror-left, .main-image, .mirror-right {
+    height: 100%; /* Đảm bảo tất cả ảnh có chiều cao bằng nhau */
+    object-fit: cover; /* Giữ tỉ lệ ảnh và cắt những phần không phù hợp */
+}
 
 .carousel-button {
-	position: absolute;
-	top: 50%;
-	transform: translateY(-50%);
-	background-color: rgba(0, 0, 0, 0.5);
-	color: white;
-	border: none;
-	padding: 0.5rem;
-	cursor: pointer;
-	z-index: 10;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 0.5rem;
+    cursor: pointer;
+    z-index: 10;
 }
 
 .carousel-button.left {
-	left: 10px;
+    left: 10px;
 }
 
 .carousel-button.right {
-	right: 10px;
-}
-
-
-.carousel-button.left {
-	left: 0;
-}
-
-.carousel-button.right {
-	right: 0;
+    right: 10px;
 }
 
 @media (min-width: 768px) {
-	.carousel-container {
-		height: 20rem;
-		/* Chiều cao cho desktop */
-	}
+    .carousel-container {
+        height: 25rem; /* Chiều cao cho desktop */
+    }
 }
 
 @media (max-width: 767px) {
-	.carousel-container {
-		height: 16rem;
-		/* Chiều cao cho mobile */
-	}
+    .carousel-container {
+        height: 16rem; /* Chiều cao cho mobile */
+    }
 }
+
+.mirror-left, .mirror-right {
+    transform: scaleX(-1); /* Lật ngang */
+    opacity: 0.5; /* Giảm độ trong suốt cho ảnh gương */
+    filter: blur(6px); /* Tạo hiệu ứng mờ cho ảnh gương */
+}
+
 
 .loading-text {
     color: white;

@@ -33,7 +33,7 @@
     </div>
 
     <!-- Form Container -->
-    <div class="max-w-4xl mx-auto p-6 bg-white border md:rounded-lg shadow-lg md:mt-6 space-y-6">
+    <div class="max-w-4xl mx-auto p-6 bg-white border lg:rounded-lg shadow-lg md:mt-16 lg:mt-4 space-y-6">
         <!-- Hiển thị thông báo thành công hoặc lỗi nếu có -->
         <div th:if="${success}" class="p-4 bg-green-50 text-green-700 border border-green-200 rounded-md">
             <span th:text="${success}"></span>
@@ -71,7 +71,7 @@
                         <label for="store_categories" class="block text-sm font-semibold text-gray-600">Loại cửa
                             hàng</label>
                         <select id="store_categories" name="store_categories" required
-                            class="block w-full sm:max-w-xs md:max-w-md lg:max-w-lg px-4 py-2 border-2 rounded-lg border-gray-300 text-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 invalid:border-red-500 appearance-none text-lg">
+                            class="block w-full bg-gray-50 sm:max-w-xs md:max-w-md lg:max-w-lg px-4 py-2 border-2 rounded-lg border-gray-300 text-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 invalid:border-red-500 appearance-none text-lg">
                             <option value="" disabled selected>Chọn loại cửa hàng</option>
                             <th:block th:each="category : ${categories}">
                                 <option th:value="${category.categoriesId}" th:text="${category.categoriesName}">
@@ -86,7 +86,7 @@
                         <label for="address_city" class="block text-sm font-semibold text-gray-600">Tỉnh/Thành
                             phố</label>
                         <select id="address_city" name="address_city" required
-                            class="block w-full sm:max-w-xs md:max-w-md lg:max-w-lg px-4 py-2 border-2 rounded-lg border-gray-300 text-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 invalid:border-red-500 appearance-none text-lg">
+                            class="block w-full bg-gray-50 sm:max-w-xs md:max-w-md lg:max-w-lg px-4 py-2 border-2 rounded-lg border-gray-300 text-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 invalid:border-red-500 appearance-none text-lg">
                             <option value="">Chọn Tỉnh/Thành phố</option>
                         </select>
                         <div class="text-sm text-red-600 mt-1 hidden" id="addressCityFeedback">Tỉnh/Thành phố là bắt
@@ -98,7 +98,7 @@
                         <label for="address_district"
                             class="block text-sm font-semibold text-gray-600">Quận/Huyện</label>
                         <select id="address_district" name="address_district" required
-                            class="block w-full sm:max-w-xs md:max-w-md lg:max-w-lg px-4 py-2 border-2 rounded-lg border-gray-300 text-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 invalid:border-red-500 appearance-none text-lg">
+                            class="block w-full bg-gray-50 sm:max-w-xs md:max-w-md lg:max-w-lg px-4 py-2 border-2 rounded-lg border-gray-300 text-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 invalid:border-red-500 appearance-none text-lg">
                             <option value="">Chọn Quận/Huyện</option>
                         </select>
                         <div class="text-sm text-red-600 mt-1 hidden" id="addressDistrictFeedback">Quận/Huyện là bắt
@@ -109,7 +109,7 @@
                     <div>
                         <label for="address_commune" class="block text-sm font-semibold text-gray-600">Xã/Phường</label>
                         <select id="address_commune" name="address_commune" required
-                            class="block w-full sm:max-w-xs md:max-w-md lg:max-w-lg px-4 py-2 border-2 rounded-lg border-gray-300 text-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 invalid:border-red-500 appearance-none text-lg">
+                            class="block w-full bg-gray-50 sm:max-w-xs md:max-w-md lg:max-w-lg px-4 py-2 border-2 rounded-lg border-gray-300 text-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 invalid:border-red-500 appearance-none text-lg">
                             <option value="">Chọn Xã/Phường</option>
                         </select>
                         <div class="text-sm text-red-600 mt-1 hidden" id="addressCommuneFeedback">Xã/Phường là bắt buộc.

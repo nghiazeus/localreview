@@ -53,7 +53,6 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public Review saveReview(Review review) {
-        // Logic để lưu review
         return reviewRepository.save(review);
     }
     
@@ -127,4 +126,9 @@ public class ReviewServiceImpl implements ReviewService {
             );
         }).collect(Collectors.toList());
     }
+
+	@Override
+	public List<Review> getAllReviews() {
+		return reviewRepository.findAll();
+	}
 }

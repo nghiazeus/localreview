@@ -93,7 +93,10 @@ public class StoreOfUserController {
 	    }
 
 	    List<Store> stores = storeService.getStoresByOwnerId(userId);
+	    List<Photo> storePhotos = photoService.getPhotosByStoreId(storeId);
+	    
 	    model.addAttribute("stores", stores);
+	    model.addAttribute("storePhotos", storePhotos);
 
 	    List<Breadcrumb> breadcrumbs = new ArrayList<>();
 	    breadcrumbs.add(new Breadcrumb("Trang chủ", "/index"));

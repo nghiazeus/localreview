@@ -22,6 +22,8 @@ public interface ReviewService {
     Store getStoreById(String storeId); // Thêm phương thức để lấy Store
     
     List<ReviewWithPhotosDTO> getReviewsWithPhotosByStoreId(String storeId);
+
+	List<Review> getAllReviews();
     
     
 }

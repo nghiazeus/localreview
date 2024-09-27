@@ -368,7 +368,8 @@ public class StoreOfUserController {
 	                    // Tạo đối tượng Photo và liên kết với món ăn
 	                    Photo photo = new Photo();
 	                    photo.setPhotoUrl(imageUrl);
-	                    photo.setFoodId(newFood.getFoodId()); // Gán foodId từ món ăn vừa tạo
+	                    photo.setFoodId(newFood.getFoodId());
+	                    photo.setPhotoType("food");
 
 	                    storeFoodService.savePhoto(photo);
 	                } catch (IOException e) {
@@ -497,7 +498,8 @@ public class StoreOfUserController {
 	                    // Tạo đối tượng Photo và liên kết với thức uống
 	                    Photo photo = new Photo();
 	                    photo.setPhotoUrl(imageUrl);
-	                    photo.setDrinkId(newDrink.getDrinkId()); // Gán drinkId từ thức uống vừa tạo
+	                    photo.setDrinkId(newDrink.getDrinkId());
+	                    photo.setPhotoType("drink");
 
 	                    storeFoodService.savePhoto(photo);
 	                } catch (IOException e) {

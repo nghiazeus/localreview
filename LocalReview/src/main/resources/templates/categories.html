@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Store</title>
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css" />
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans:200,400&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/emoji-button@4.6.0/dist/index.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/css/loading.css">
+    <script src="/js/loading.js" defer></script>
+</head>
+
+<body class="bg-gray-50">
+    <!-- Loading -->
+    <div th:replace="/layout/_loading.html"></div>
+    <!-- Header -->
+    <div th:replace="/layout/_header.html"></div>
+
+    <div class="p-px">
+        <nav class="mb-4 ml-2 px-3 py-1 bg-white rounded-full shadow-md w-auto inline-flex">
+        <ol class="flex flex-wrap items-center space-x-2 text-gray-700 dark:text-gray-300">
+            <li th:each="breadcrumb, iterStat : ${breadcrumbs}" class="flex items-center">
+                <a th:if="${not #strings.isEmpty(breadcrumb.url) and !iterStat.last}" th:href="${breadcrumb.url}"
+                    class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+                    th:text="${breadcrumb.title}"></a>
+                <span th:if="${#strings.isEmpty(breadcrumb.url) or iterStat.last}"
+                    class="text-gray-500 dark:text-gray-400" th:text="${breadcrumb.title}"></span>
+                <i th:if="${!iterStat.last}" class="bi bi-chevron-compact-right text-gray-500 dark:text-gray-400"></i>
+            </li>
+        </ol>
+    </nav>
+    </div>
+
+    <div th:if="${#lists.isEmpty(categories)}" class="text-center flex flex-col items-center justify-center mt-20">
+        <p class="text-white text-2xl mb-4 bg-pink-500 p-2 md:rounded-full">
+            Không tìm thấy loại cửa hàng nào!
+        </p>
+
+        <img alt=""
+            src="https://img.tripi.vn/cdn-cgi/image/width=700,height=700/https://gcs.tripi.vn/public-tripi/tripi-feed/img/474113OKf/hinh-anh-gif-buon-chan_013940871.gif"
+            class="md:rounded-lg shadow-md">
+    </div>
+
+        <!-- Small cards inside the big card -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+            <a th:each="category : ${categories}" th:href="@{/store/category(categoryId=${category.categoriesId})}"
+                class="flex bg-white rounded-lg shadow-md p-4 m-2 min-w-max">
+                <div class="w-40 rounded-lg overflow-hidden">
+                    <img src="https://i.pinimg.com/564x/4e/a0/31/4ea0315ab5b65ca0997c17e7f08b324d.jpg"
+                        alt="Category Image" class="w-full h-full object-cover rounded-lg">
+                </div>
+                <div class="flex flex-col items-start ml-4">
+                    <h4 class="text-xl text-blue-500 font-semibold" th:text="${category.categoriesName}">Category
+                        Name</h4>
+                </div>
+            </a>
+        </div>
+</body>
+
+</html>

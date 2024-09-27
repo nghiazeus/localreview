@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Review</title>
+    <link rel="shortcut icon" href="https://www.freeiconspng.com/thumbs/review-icon-png/review-icon-png-1.png"
+        type="image/x-icon">
     <link rel="stylesheet" href="/css/index.css">
     <link rel="stylesheet" href="/build/css/tailwind.css">
     <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css" />
@@ -15,6 +17,9 @@
     <script src="https://cdn.jsdelivr.net/npm/emoji-button@4.6.0/dist/index.min.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@glidejs/glide@3.4.1/dist/glide.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <!-- SwiperJS JavaScript -->
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <link rel="stylesheet" href="/css/loading.css">
     <script src="/js/loading.js" defer></script>
     <script src="/js/loaddata.js" defer></script>
@@ -57,97 +62,60 @@
             }
         });
     </script>
-
-
-<!--     Header
-    <div class="relative w-full bg-gray-100 md:hidden">
-        Carousel Section
-        <div id="carousel" class="carousel w-full h-36 bg-gray-800 overflow-hidden relative">
-            Carousel Items
-            <div class="carousel-items flex transition-transform duration-500 ease-in-out" style="width: 300%;">
-                Carousel Slide 1
-                <div class="carousel-item w-full h-full" style="flex: 0 0 100%;">
-                    <img src="https://i.pinimg.com/564x/23/cd/37/23cd3706b0cd612e94babd18c6304266.jpg" alt="Slide 1"
-                        class="w-full h-screen object-cover">
-                </div>
-                Carousel Slide 2
-                <div class="carousel-item w-full h-full" style="flex: 0 0 100%;">
-                    <img src="https://i.pinimg.com/564x/67/dc/ae/67dcae6c683c2e69ce656bf8d02b348b.jpg" alt="Slide 2"
-                        class="w-full h-screen object-cover">
-                </div>
-                Carousel Slide 3
-                <div class="carousel-item w-full h-full" style="flex: 0 0 100%;">
-                    <img src="https://i.pinimg.com/564x/b9/b3/df/b9b3dfb6e5afbe1b0c2de51fba05e2d2.jpg" alt="Slide 3"
-                        class="w-full h-screen object-cover">
-                </div>
-            </div>
-        </div>
-
-        QR Code Card Section
-        <div class="relative w-11/12 md:w-3/5 lg:w-2/5 mx-auto -mt-10 bg-gray-20 bg-opacity-25 rounded-lg shadow-lg p-4 z-10">
-            <div class="text-center grid grid-cols-3 gap-4">
-                QR Code Button
-                <button
-                    class="bg-blue-400 text-white font-semibold p-2 rounded-lg shadow hover:bg-blue-600 transition duration-300 flex items-center justify-center">
-                    <i class="bi bi-qr-code-scan text-xl"></i>
-                </button>
-                Points Button
-                <button
-                    class="bg-purple-400 text-white font-semibold p-2 rounded-lg shadow hover:bg-purple-600 transition duration-300 flex items-center justify-center">
-                    <i class="bi bi-coin text-xl"></i>
-                </button>
-                Another Button
-                <button
-                    class="bg-pink-400 text-white font-semibold p-2 rounded-lg shadow hover:bg-red-600 transition duration-300 flex items-center justify-center">
-                    <i class="bi bi-heart text-xl"></i>
-                </button>
-            </div>
-        </div>
-
-    </div>
-    JavaScript
-    <script>
-        // JavaScript for Carousel
-        const carouselItems = document.querySelector('.carousel-items');
-        const totalSlides = document.querySelectorAll('.carousel-item').length;
-        let currentSlide = 0;
-
-        function moveToNextSlide() {
-            currentSlide = (currentSlide + 1) % totalSlides; // Loop back to first slide when at the end
-            carouselItems.style.transform = `translateX(-${currentSlide * 100}%)`; // Move to next slide
-        }
-
-        // Set interval for auto sliding every 2 seconds
-        setInterval(moveToNextSlide, 10000);
-    </script>
- -->
-
-    <!-- Header -->
-    <div th:replace="/layout/_header.html"></div>
-
-    <div class="mt-2 md:mt-6"></div>
-    <!-- Store -->
-    <main class="my-8"></main>
-        <div class="mx-auto md:px-0">
-            <div class="h-52 md:h-sreen overflow-hidden bg-cover bg-center object-fill"
-                style="background-image: url('https://i.pinimg.com/736x/df/4a/54/df4a548dea5fd1c457432b709389c983.jpg')">
-                <div class="bg-gray-900 bg-opacity-50 flex items-center h-full ">
-                    <div class="px-10 max-w-xl">
-                        <h2 class="text-2xl text-white font-semibold">Cửa hàng</h2>
-                        <p class="mt-2 text-gray-100">Đi đến xem những cửa hàng mà bạn có thể sẽ thích.</p>
-                        <a th:href="@{/store}"
-                            class="flex items-center mt-4 p-2 text-center w-32 bg-blue-500 text-white text-sm uppercase font-medium rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600">
-                            <span>Bắt đầu</span>
-                            <svg class="h-5 w-5 mx-2" fill="none" stroke-linecap="round" stroke-linejoin="round"
-                                stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
-                                <path d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                            </svg>
-                        </a>
+    <!-- =================================================================================== -->
+     <!-- Hero Section -->
+     <section class="relative h-screen flex flex-col justify-center items-center text-center">
+        <!-- Swiper Background -->
+        <div class="absolute inset-0 z-0">
+            <div class="swiper-container h-full">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <img src="https://i.pinimg.com/564x/33/2e/ca/332eca74ba97c3c7d887ca144ae28a29.jpg" class="w-full h-full object-cover"
+                            alt="Slide 1">
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="https://i.pinimg.com/564x/3f/d2/95/3fd29534d75c642ec7baed3949d5751e.jpg" class="w-full h-full object-cover"
+                            alt="Slide 2">
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="https://i.pinimg.com/564x/f4/55/7c/f4557c11c9a566c025217c50fbb87614.jpg" class="w-full h-full object-cover"
+                            alt="Slide 3">
                     </div>
                 </div>
             </div>
         </div>
-    </main>
+
+        <!-- Content -->
+        <div class="relative z-10 text-white">
+            <h1 class="text-3xl font-semibold mb-6">CỬA HÀNG</h1>
+            <p class="text-lg mb-10">Đi đến những cửa hàng mà bạn có thể thích.</p>
+            <a href="/store" class="bg-white text-gray-800 px-8 py-3 rounded-full shadow-md">Bắt đầu</a>
+        </div>
+
+        <!-- Overlay to darken the background -->
+        <div class="absolute inset-0 bg-black opacity-50 z-5"></div>
+    </section>
+    <script>
+        var swiper = new Swiper('.swiper-container', {
+            loop: true,
+            autoplay: {
+                delay: 4000,
+                disableOnInteraction: false,
+            },
+            effect: 'fade',
+            speed: 1000,
+        });
+    </script>
+     <!-- ================================================================================== -->
+<!-- =================================================================================== -->
+   
+    <!-- ================================================================================== -->
+
+
+    <!-- Header -->
+    <div th:replace="/layout/_header.html"></div>
+
+    <div class="mt-2 md:mt-16"></div>
     <!-- Store -->
     <div class="relative w-full">
         <!-- Image container with horizontal scroll -->
@@ -157,17 +125,17 @@
         </div>
 
         <div class="hidden md:block">
-        <!-- Previous button -->
-        <button id="prevBtn"
-            class="absolute top-2/3 transform -translate-y-1/2 left-2 bg-white text-2xl text-black rounded-full p-2 focus:outline-none">
-            &#10094;
-        </button>
+            <!-- Previous button -->
+            <button id="prevBtn"
+                class="absolute top-2/3 transform -translate-y-1/2 left-2 bg-white text-2xl text-black rounded-full p-2 focus:outline-none">
+                &#10094;
+            </button>
 
-        <!-- Next button -->
-        <button id="nextBtn"
-            class="absolute top-2/3 transform -translate-y-1/2 right-2 bg-white text-2xl text-black rounded-full p-2 focus:outline-none">
-            &#10095;
-        </button>
+            <!-- Next button -->
+            <button id="nextBtn"
+                class="absolute top-2/3 transform -translate-y-1/2 right-2 bg-white text-2xl text-black rounded-full p-2 focus:outline-none">
+                &#10095;
+            </button>
         </div>
     </div>
 
@@ -197,7 +165,7 @@
         // Kiểm tra nút ngay từ lúc tải trang
         checkScrollButtons();
     </script>
-
+    
     <!-- Categories -->
     <div class="relative p-4 gap-2">
         <h2 class="text-xl font-semibold text-gray-800 mb-2 top-0 ml-2">LOẠI CỬA HÀNG</h2>

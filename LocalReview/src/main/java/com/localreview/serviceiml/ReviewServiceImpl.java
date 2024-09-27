@@ -127,4 +127,9 @@ public class ReviewServiceImpl implements ReviewService {
             );
         }).collect(Collectors.toList());
     }
+
+	@Override
+	public List<Review> getAllReviews() {
+		return reviewRepository.findAll();
+	}
 }

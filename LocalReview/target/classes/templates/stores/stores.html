@@ -15,26 +15,25 @@
 	<script src="/js/loading.js" defer></script>
 </head>
 
-<body class="bg-gray-100">
+<body class="bg-gray-50">
 	<!-- Loading -->
 	<div th:replace="/layout/_loading.html"></div>
 	<!-- Header -->
 	<div th:replace="/layout/_header.html"></div>
 
-	<div class="bg-white p-px shadow-sm">
-		<nav class="mb-4 ml-4 relative mt-20">
-			<ol class="flex flex-wrap items-center space-x-2 text-gray-700 dark:text-gray-300">
-				<li th:each="breadcrumb, iterStat : ${breadcrumbs}" class="flex items-center"><a
-						th:if="${not #strings.isEmpty(breadcrumb.url) and !iterStat.last}" th:href="${breadcrumb.url}"
-						class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
-						th:text="${breadcrumb.title}"></a> <span
-						th:if="${#strings.isEmpty(breadcrumb.url) or iterStat.last}"
-						class="text-gray-500 dark:text-gray-400" th:text="${breadcrumb.title}"></span> <i
-						th:if="${!iterStat.last}"
-						class="bi bi-chevron-compact-right text-gray-500 dark:text-gray-400"></i>
-				</li>
-			</ol>
-		</nav>
+	<div class="p-px">
+		<nav class="mb-4 ml-2 px-3 py-1 bg-white rounded-full shadow-md w-auto inline-flex">
+        <ol class="flex flex-wrap items-center space-x-2 text-gray-700 dark:text-gray-300">
+            <li th:each="breadcrumb, iterStat : ${breadcrumbs}" class="flex items-center">
+                <a th:if="${not #strings.isEmpty(breadcrumb.url) and !iterStat.last}" th:href="${breadcrumb.url}"
+                    class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+                    th:text="${breadcrumb.title}"></a>
+                <span th:if="${#strings.isEmpty(breadcrumb.url) or iterStat.last}"
+                    class="text-gray-500 dark:text-gray-400" th:text="${breadcrumb.title}"></span>
+                <i th:if="${!iterStat.last}" class="bi bi-chevron-compact-right text-gray-500 dark:text-gray-400"></i>
+            </li>
+        </ol>
+    </nav>
 	</div>
 
 	<div th:if="${#lists.isEmpty(stores)}" class="text-center flex flex-col items-center justify-center mt-20">

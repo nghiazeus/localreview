@@ -111,8 +111,9 @@ public class StoreController {
 
 		List<Breadcrumb> breadcrumbs = new ArrayList<>();
 		breadcrumbs.add(new Breadcrumb("Trang chủ", "/index"));
-		breadcrumbs.add(new Breadcrumb("Cửa hàng", "/stores"));
-		breadcrumbs.add(new Breadcrumb("Tìm kiếm =  " + query, "/stores/search?query=" + query));
+		breadcrumbs.add(new Breadcrumb("Cửa hàng", "/store"));
+		breadcrumbs.add(new Breadcrumb("Tìm kiếm", "/store/search?query=" + query));
+		breadcrumbs.add(new Breadcrumb("" + query, "/store/search?query= " + query));
 		model.addAttribute("breadcrumbs", breadcrumbs);
 
 		return "stores/stores";
@@ -319,7 +320,7 @@ public class StoreController {
 		List<Breadcrumb> breadcrumbs = new ArrayList<>();
 		breadcrumbs.add(new Breadcrumb("Trang chủ", "/index"));
 		breadcrumbs.add(new Breadcrumb("Cửa hàng", "/store"));
-		breadcrumbs.add(new Breadcrumb("Danh mục", "/stores/category?categoryId=" + categoryId));
+		breadcrumbs.add(new Breadcrumb("Danh mục", "/categories"));
 		breadcrumbs.add(new Breadcrumb(categoryName, "/stores/category?categoryId=" + categoryId));
 		model.addAttribute("breadcrumbs", breadcrumbs);
 

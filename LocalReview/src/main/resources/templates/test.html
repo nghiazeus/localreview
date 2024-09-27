@@ -1,99 +1,88 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <style>
-       
-       
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Store</title>
+    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css" />
+    <!-- SwiperJS CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+
+    <!-- SwiperJS JavaScript -->
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
 </head>
 
 <body>
-    <div class="row">
-        <div class="card">
-            <div class="wide media"><img src="https://placehold.it/350x150" alt=""></div>
-            <div class="text">1</div>
-        </div>
-        <div class="card">
-            <div class="avatar title"><img src="https://placehold.it/100/100" alt="">
-                <h1>Title 2</h1>
-                <h2>Subtitle</h2>
+    
+    <a id="openModalFilter" class="flex flex-col cursor-pointer items-center text-gray-600 hover:text-black">
+        <i class="bi bi-funnel text-2xl"></i>
+        <span class="text-xs">Lọc</span>
+    </a>
+
+    <div id="modalfilter"
+    class="fixed inset-0 flex items-center justify-center bg-white bg-opacity-90 shadow-lg border border-pink-200 shadow-lg rounded-3xl transform scale-0 transition-transform duration-500 ease-in-out">
+    <button id="closeModalFilter" class="absolute top-4 right-4 text-gray-600 text-2xl font-bold">&times;</button>
+    <div class="p-6">
+        <h2 class="text-xl font-semibold text-gray-800">Bộ lọc review</h2>
+        <!-- Sort by Views -->
+        <div class="mb-4 mt-4">
+            <label class="block text-gray-800 font-medium mb-2 text-lg text-left">Lọc theo lượt xem:</label>
+            <div class="relative">
+                <select
+                    class="w-full bg-gray-100 rounded-xl p-4 pr-10 shadow-md text-gray-700 text-lg focus:outline-none appearance-none">
+                    <option>Mặc định</option>
+                    <option>Nhiều lượt xem nhất</option>
+                    <option>Ít lượt xem nhất</option>
+                </select>
+                <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none">
+                    <i class="bi bi-chevron-down text-xl"></i>
+                </span>
             </div>
-            <div class="wide media"><img src="https://placehold.it/350x150" alt=""></div>
-            <div class="text">lorem ipsum dolor sit amet</div>
-            <div class="actions"><a class="flat button">Action 1</a><a class="flat button">Action 2</a></div>
         </div>
-        <div class="card">
-            <div class="wide media"><img src="https://placehold.it/350x150" alt=""></div>
-            <div class="title">
-                <h1>3</h1>
-                <h2>Subtitle here</h2>
+
+        <!-- Sort by Rating -->
+        <div class="mb-6">
+            <label class="block text-gray-800 font-medium mb-2 text-lg text-left">Lọc theo đánh giá:</label>
+            <div class="relative">
+                <select
+                    class="w-full bg-gray-100 rounded-xl p-4 pr-10 shadow-md text-gray-700 text-lg focus:outline-none appearance-none">
+                    <option>Mặc định</option>
+                    <option>Cao nhất</option>
+                    <option>Thấp nhất</option>
+                </select>
+                <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none">
+                    <i class="bi bi-chevron-down text-xl"></i>
+                </span>
             </div>
-            <div class="actions"><a class="button flat">Action 1</a><a class="button flat">Action 2</a></div>
         </div>
-        <div class="card">
-            <div class="wide media"><img src="https://placehold.it/350x150" alt=""></div>
-            <div class="title">
-                <h1>4</h1>
-                <h2>Subtitle here</h2>
-            </div>
-            <div class="actions"><a class="button flat">Action 1</a><a class="button flat">Action 2</a></div>
-            <div class="text"> I'm a thing. But, like most politicians, he promised more than he could deliver. You
-                won't have time for sleeping, soldier, not with all the bed making you'll be doing. </div>
-        </div>
-        <div class="card">
-            <div class="title">
-                <h1>5</h1>
-                <h2>Subtitle here</h2>
-            </div>
-            <div class="actions"><a class="button flat">Action 1</a><a class="button flat">Action 2</a></div>
-            <div class="text"> I'm a thing. But, like most politicians, he promised more than he could deliver. You
-                won't have time for sleeping, soldier, not with all the bed making you'll be doing. </div>
-        </div>
-        <div class="card">
-            <div class="wide media"><img src="https://placehold.it/350x150" alt=""></div>
-            <div class="text">6</div>
-        </div>
-        <div class="card">
-            <div class="avatar title"><img src="https://placehold.it/100/100" alt="">
-                <h1>7</h1>
-                <h2>Subtitle</h2>
-            </div>
-            <div class="wide media"><img src="https://placehold.it/350x150" alt=""></div>
-            <div class="text">lorem ipsum dolor sit amet</div>
-            <div class="actions"><a class="flat button">Action 1</a><a class="flat button">Action 2</a></div>
-        </div>
-        <div class="card">
-            <div class="wide media"><img src="https://placehold.it/350x150" alt=""></div>
-            <div class="title">
-                <h1>8</h1>
-                <h2>Subtitle here</h2>
-            </div>
-            <div class="actions"><a class="button flat">Action 1</a><a class="button flat">Action 2</a></div>
-        </div>
-        <div class="card">
-            <div class="wide media"><img src="https://placehold.it/350x150" alt=""></div>
-            <div class="title">
-                <h1>9</h1>
-                <h2>Subtitle here</h2>
-            </div>
-            <div class="actions"><a class="button flat">Action 1</a><a class="button flat">Action 2</a></div>
-            <div class="text"> I'm a thing. But, like most politicians, he promised more than he could deliver. You
-                won't have time for sleeping, soldier, not with all the bed making you'll be doing. </div>
-        </div>
-        <div class="card">
-            <div class="title">
-                <h1>10</h1>
-                <h2>Subtitle here</h2>
-            </div>
-            <div class="actions"><a class="button flat">Action 1</a><a class="button flat">Action 2</a></div>
-            <div class="text"> I'm a thing. But, like most politicians, he promised more than he could deliver. You
-                won't have time for sleeping, soldier, not with all the bed making you'll be doing. </div>
-        </div>
+
+        <!-- Apply Filters Button -->
+        <button
+            class="w-full bg-pink-400 text-white font-semibold py-4 rounded-xl shadow-lg transition duration-300 text-lg">
+            Áp dụng bộ lọc
+        </button>
     </div>
+</div>
+
+<script>
+    const modal = document.getElementById('modalfilter');
+    const openModal = document.getElementById('openModalFilter');
+    const closeModal = document.getElementById('closeModalFilter');
+
+    // When button is clicked, show the modal by scaling it up
+    openModal.addEventListener('click', () => {
+        modal.classList.toggle('scale-0');
+    });
+
+    // Close modal on "X" button click
+    closeModal.addEventListener('click', () => {
+        modal.classList.add('scale-0');
+    });
+</script>
+
+
 </body>
 
 </html>

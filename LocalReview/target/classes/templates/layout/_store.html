@@ -1,42 +1,303 @@
-<div class="rounded-lg mt-8 p-2 duration-300">
-    <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2">
-        <!-- Store Card -->
-        <div th:each="store : ${stores}" class="h-full w-full flex-shrink-0 md:p-2">
-            <a th:href="@{/store/detail/{id}(id=${store.storeId})}" class="block h-full 
-            bg-gradient-to-r from-pink-50 via-gray-50 to-purple-50 shadow-md
-             rounded-lg overflow-hidden">
+<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+<style>
+    .grid-item {
+        box-sizing: border-box;
+        width: calc(50% - 0.5rem);
+    }
+
+    @media (min-width: 640px) {
+        .grid-item {
+            width: calc(50% - 0.5rem);
+        }
+    }
+
+    .modal-open {
+        overflow: hidden;
+    }
+
+    .no-scroll {
+        overflow: hidden;
+        height: 100%;
+    }
+</style>
+
+<!-- ===========================================Mobile============================================ -->
+
+<div class="mx-auto mt-2 ml-2 md:hidden pb-16">
+    <div class="grid" id="grid" style="display: flex; flex-wrap: wrap; justify-content: flex-start;">
+        <div th:each="store : ${stores}"
+            class="grid-item mb-4 break-inside bg-white shadow-lg rounded-xl overflow-hidden">
+            <a th:href="@{/store/detail/{id}(id=${store.storeId})}"
+                class="block transform transition hover:scale-105 duration-300">
                 <!-- Image -->
-                <img class="w-full h-40 md:h-60 object-fill"
-             th:src="${#lists.isEmpty(store.photos) ? 'https://via.placeholder.com/400x300.png?text=No+Image' : store.photos[0].photoUrl}"
-             alt="Store Image">
+                <img class="w-full h-auto object-cover rounded-t-xl"
+                    th:src="${#lists.isEmpty(store.photos) ? 'https://via.placeholder.com/400x300.png?text=No+Image' : store.photos[0].photoUrl}"
+                    th:if="${store.photos[0].photoType == 'store'}" alt="Store Image">
+
                 <!-- Information Container -->
-                <div class="p-2 flex flex-col space-y-2">
-                    <!-- Store Name -->
-                    <div class="font-semibold text-base text-gray-900 dark:text-gray-100 text-sm">
-                        <i class="bi bi-shop mr-1 text-lg text-purple-500"></i>
+                <div class="p-4">
+                    <div class="font-semibold text-gray-900">
                         <span th:text="${store.storeName}">Store Name</span>
                     </div>
-
-                    <!-- Address -->
-                    <div class="flex items-center text-gray-700 dark:text-gray-300 text-sm">
-                        <i class="bi bi-geo-alt text-red-500 text-lg mr-1"></i>
+                    <div class="flex items-center text-gray-600 text-sm mt-2">
+                        <i class="bi bi-geo-alt text-red-500 mr-2"></i>
                         <span th:text="${store.addressCity}">Address</span>
                     </div>
-
-                    <!-- Category -->
-                    <div class="text-gray-700 dark:text-gray-300 text-sm">
-                        <i class="bi bi-tag text-blue-500 text-lg mr-1"></i>
+                    <div class="flex items-center text-gray-600 text-sm mt-1">
+                        <i class="bi bi-tag text-blue-500 mr-2"></i>
                         <span th:text="${store.storeCategories.categoriesName}">Category</span>
                     </div>
-
-                    <!-- Rating -->
-                    <div class="flex items-center text-gray-900 dark:text-gray-100 text-sm">
-                        <i class="bi bi-star-fill text-yellow-500 text-lg mr-1"></i>
-                        <span>4.5</span> <!-- Assuming store.rating is available -->
+                    <div class="flex items-center text-sm mt-3">
+                        <div class="flex items-center text-gray-900">
+                            <i class="bi bi-star-fill text-yellow-500 mr-1"></i>
+                            <span>4.5</span>
+                        </div>
+                        <div class="ml-auto flex items-center text-gray-900">
+                            <i class="bi bi-eye mr-1"></i>
+                            <span class="text-sm">999</span>
+                        </div>
                     </div>
                 </div>
             </a>
+
+            <!-- Button -->
+            <div class="px-4 py-3 bg-gray-50 flex justify-center">
+                <button th:data-store-id="${store.storeId}"
+                    class="open-review bg-gray-200 text-black px-5 py-2 rounded-full text-sm font-medium transition duration-200">
+                    Xem đánh giá
+                </button>
+            </div>
         </div>
-        <!-- End of Store Card -->
     </div>
 </div>
+
+<!-- Panel Review mobile -->
+<div th:each="store : ${stores}">
+    <div th:id="'review-panel-' + ${store.storeId}"
+        class="review-panel fixed z-50 top-0 right-0 w-full h-full bg-white shadow-lg transform translate-x-full transition-transform duration-300 ease-in-out">
+        <div class="px-4 py-3 flex justify-between items-center">
+            <button class="close-review text-gray-800 font-bold text-3xl bi bi-chevron-left"></button>
+            <h2 class="text-lg font-bold text-center text-white bg-blue-500 rounded-full px-2">
+                <strong>[[${store.storeName}]]</strong>
+            </h2>
+            <h2 class="text-lg font-semibold">Đánh giá</h2>
+        </div>
+        <div class="overflow-y-auto max-h-auto pb-16">
+            <div class="space-y-2 bg-gray-300">
+                <div th:if="${#lists.isEmpty(store.reviews)}" class="text-center mt-4">
+                    <p>Không có đánh giá nào cho cửa hàng này.</p>
+                </div>
+                <div th:each="review : ${store.reviews}" class="max-w-3xl bg-white mx-auto overflow-hidden">
+                    <div class="flex p-6">
+                        <img class="w-14 h-14 rounded-full"
+                             src="https://i.pinimg.com/736x/0c/19/0b/0c190bbefc773d57bc8b721f8f140109.jpg" alt="Avatar">
+                        <div class="ml-6 flex-grow">
+                            <h2 class="text-xl font-semibold" th:text="${review.user.name}">Tên Người Dùng</h2>
+                            <div class="flex items-center mt-1">
+                                <span class="text-yellow-500 text-sm">
+                                    <span th:text="${'⭐️'.repeat(review.rating)}">⭐️</span>
+                                </span>
+                            </div>
+                            <p class="text-gray-700 text-lg mt-4" th:text="${review.comment}">Nội dung đánh giá của người dùng.</p>
+                            <p class="text-gray-600 italic mt-2 text-sm">—
+                                <span class="font-semibold" th:text="${review.relativeReviewDate}">25/09/2024</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex overflow-x-auto max-x-80 p-4 gap-4" th:each="photo : ${review.photos}">
+                        <img class="w-auto h-20 rounded-lg" th:src="${photo.photoUrl}" alt="Hình ảnh đánh giá">
+                    </div>
+                </div>                
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener('click', (event) => {
+        const target = event.target;
+
+        // Mở bảng review
+        if (target.classList.contains('open-review')) {
+            const storeId = target.getAttribute('data-store-id');
+            const panel = document.getElementById(`review-panel-${storeId}`);
+
+            if (panel) {
+                panel.classList.remove('translate-x-full');
+                document.body.classList.add('no-scroll'); // Ngăn cuộn
+            } else {
+                console.log('No panel found for storeId:', storeId);
+            }
+        }
+
+        // Đóng bảng review
+        if (target.classList.contains('close-review')) {
+            const panel = target.closest('.review-panel');
+            if (panel) {
+                panel.classList.add('translate-x-full');
+                document.body.classList.remove('no-scroll'); // Cho phép cuộn lại
+            }
+        }
+    });
+
+</script>
+
+
+<!-- ===========================================Destop============================================ -->
+<div class="rounded-lg p-2 duration-300 hidden md:block">
+    <div class="grid grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
+        <div th:each="store : ${stores}" class="bg-white p-4 rounded-lg shadow-lg h-full w-full flex-shrink-0">
+            <!-- Product Image -->
+            <a th:href="@{/store/detail/{id}(id=${store.storeId})}">
+                <img th:src="${#lists.isEmpty(store.photos) ? 'https://via.placeholder.com/400x300.png?text=No+Image' : store.photos[0].photoUrl}"
+                    th:if="${store.photos[0].photoType == 'store'}" alt="Store Image"
+                    class="w-full h-64 object-cover rounded-md mb-6 transform transition-transform duration-300 ease-in-out hover:scale-105">
+
+                <!-- Product Title -->
+                <h2 th:text="${store.storeName}" class="text-2xl font-semibold text-gray-900 mb-2">Name</h2>
+                <!-- Features -->
+                <ul class="text-gray-600 mb-6 space-y-2">
+                    <li class="flex items-center">
+                        <i class="bi bi-geo-alt text-red-500 text-xl mr-2"></i>
+                        <span th:text="${store.addressCity}">Address</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="bi bi-tag text-blue-500 text-xl mr-2"></i>
+                        <span th:text="${store.storeCategories.categoriesName}">Category</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="bi bi-star-fill text-yellow-500 text-xl mr-2"></i>
+                        <span>4.5</span>
+                    </li>
+                </ul>
+            </a>
+
+            <!-- Price and Button -->
+            <div class="flex justify-between items-center">
+                <div class="flex justify-between items-center gap-2">
+                    <i class="bi bi-eye text-xl text-purple-500"></i>
+                    <span class="text-lg font-bold text-gray-900">999</span>
+                </div>
+                <button th:data-store-desktop-id="${store.storeId}"
+                    class="open-reviewdestop bg-blue-500 text-white px-6 py-2 rounded-full">
+                    Xem đánh giá
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Panel Review (Modal) desktop-->
+<div th:each="store : ${stores}">
+    <div th:id="'review-modal-' + ${store.storeId}"
+        class="review-modal fixed z-50 top-0 left-0 w-full h-full bg-black bg-opacity-50 hidden flex items-center justify-center transition-opacity duration-300 ease-in-out">
+        <div
+            class="bg-white rounded-lg shadow-lg p-6 w-full max-w-2xl mx-auto transform scale-0 transition-transform duration-300 ease-in-out modal-content">
+            <div class="flex justify-between items-center border-b pb-3 mb-4">
+                <h2 class="text-lg font-bold">ĐÁNH GIÁ</h2>
+                <h2 class="text-lg font-bold text-center text-white bg-blue-500 rounded-full px-2">
+                    <strong th:text="${store.storeName}">Tên Cửa Hàng</strong>
+                </h2>
+                <button class="close-review text-gray-800 text-3xl bi bi-x-circle-fill"></button>
+            </div>
+            <div class="p-4 overflow-y-auto max-h-96 space-y-4">
+                <!-- Hiển thị các đánh giá -->
+                <div th:if="${#lists.isEmpty(store.reviews)}">
+                    <p>Không có đánh giá nào cho cửa hàng này.</p>
+                </div>
+                <div th:each="review : ${store.reviews}">
+                    <div class="max-w-3xl mx-auto bg-white border rounded-lg shadow-md overflow-hidden">
+                        <div class="flex p-6">
+                            <img class="w-16 h-16 rounded-full"
+                                src="https://i.pinimg.com/736x/a1/b2/b4/a1b2b463bac40bf00a6046dac5109efe.jpg"
+                                alt="Avatar">
+                            <div class="ml-6 flex-grow">
+                                <div class="flex justify-between items-center pb-3">
+                                    <h2 class="text-xl font-semibold" th:text="${review.user.name}">Tên Người Dùng</h2>
+                                    <p class="text-gray-600 italic mt-2 text-sm">—
+                                        <span class="font-semibold"
+                                            th:text="${review.relativeReviewDate}">25/09/2024</span>
+                                    </p>
+
+                                </div>
+                                <div class="flex items-center mt-1">
+                                    <span class="text-yellow-500">
+                                        <span th:text="${'⭐️'.repeat(review.rating)}">⭐️</span>
+                                        <!--  <span th:text="${'#'.repeat(5 - review.rating)}">&#9734;</span> -->
+                                    </span>
+                                </div>
+                                <p class="text-gray-700 text-lg mt-4" th:text="${review.comment}">Nội dung đánh giá của
+                                    người dùng.</p>
+                            </div>
+                        </div>
+                        <div class="flex overflow-x-auto max-x-80 p-4 gap-4" th:each="photo : ${review.photos}">
+                            <img class="w-auto h-20 rounded-lg" th:src="${photo.photoUrl}" alt="Hình ảnh đánh giá">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    document.addEventListener('click', (event) => {
+        const target = event.target;
+
+        // Mở bảng review
+        if (target.classList.contains('open-reviewdestop')) {
+            const storeId = target.getAttribute('data-store-desktop-id');
+            const modal = document.getElementById(`review-modal-${storeId}`);
+
+            if (modal) {
+                modal.classList.remove('hidden');
+                document.body.classList.add('modal-open');  // Thêm lớp quản lý overflow
+                setTimeout(() => {
+                    modal.querySelector('.modal-content').classList.remove('scale-0');
+                }, 10);
+            }
+        }
+
+        // Đóng bảng review
+        if (target.classList.contains('close-review') || target.classList.contains('review-modal')) {
+            const modal = target.closest('.review-modal') || target;
+            if (modal) {
+                modal.querySelector('.modal-content').classList.add('scale-0');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                    document.body.classList.remove('modal-open');  // Gỡ bỏ lớp khi đóng modal
+                }, 300);
+            }
+        }
+    });
+
+    // Đóng modal khi nhấn phím "Esc"
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            const openModal = document.querySelector('.review-modal:not(.hidden)');
+            if (openModal) {
+                openModal.querySelector('.modal-content').classList.add('scale-0');
+                setTimeout(() => {
+                    openModal.classList.add('hidden');
+                    document.body.classList.remove('modal-open');
+                }, 300);
+            }
+        }
+    });
+
+
+</script>
+
+<!-- ===========================================Destop============================================ -->
+
+<script>
+    var elem = document.querySelector('#grid');
+    var msnry = new Masonry(elem, {
+        itemSelector: '.grid-item',
+        columnWidth: '.grid-item',
+        gutter: 10 // Khoảng cách giữa các phần tử
+    });
+</script>

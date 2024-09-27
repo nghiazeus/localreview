@@ -8,20 +8,29 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.localreview.entity.Categories;
+import com.localreview.entity.Photo;
+import com.localreview.entity.Review;
 import com.localreview.entity.Store;
 import com.localreview.entity.StoreFood;
 import com.localreview.entity.User;
 import com.localreview.repository.CategoriesRepository;
 import com.localreview.repository.StoreRepository;
+import com.localreview.service.PhotoService;
+import com.localreview.service.ReviewService;
 import com.localreview.service.StoreFoodService;
 import com.localreview.service.StoreService;
 import com.localreview.service.UserService;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class GlobalControllerAdvice {
@@ -40,6 +49,14 @@ public class GlobalControllerAdvice {
     
     @Autowired
     private StoreFoodService storeFoodService;
+    
+    private final ReviewService reviewService;
+    private final PhotoService photoService;
+
+    public GlobalControllerAdvice(ReviewService reviewService, PhotoService photoService) {
+        this.reviewService = reviewService;
+        this.photoService = photoService;
+    }
 
     @ModelAttribute
     public void addGlobalAttributes(Model model) {
@@ -70,6 +87,28 @@ public class GlobalControllerAdvice {
         model.addAttribute("stores", randomStores);
         model.addAttribute("categories", listscategori);
     }
-   
     
+    
+//    private void addReviews(@PathVariable("storeId") String storeId, Model model) {
+//        try {
+//            List<Review> reviews = reviewService.getReviewsByStore(storeId);
+//            Map<String, List<String>> reviewPhotosMap = new HashMap<>();
+//
+//            if (reviews != null && !reviews.isEmpty()) {
+//                reviewPhotosMap = reviews.stream()
+//                    .collect(Collectors.toMap(Review::getReviewId,
+//                        review -> photoService.getPhotosByReviewId(review.getReviewId())
+//                            .stream().map(Photo::getPhotoUrl)
+//                            .collect(Collectors.toList())));
+//                model.addAttribute("reviews", reviews); // Thêm vào model với tên "reviews"
+//                model.addAttribute("reviewPhotosMap", reviewPhotosMap);
+//            } else {
+//                model.addAttribute("reviews", Collections.emptyList()); // Đảm bảo bạn thêm danh sách rỗng nếu không có đánh giá
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            model.addAttribute("error", "Đã xảy ra lỗi khi lấy thông tin đánh giá.");
+//        }
+//    }
+
 }

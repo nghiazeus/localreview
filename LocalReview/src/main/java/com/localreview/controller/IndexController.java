@@ -1,5 +1,6 @@
 package com.localreview.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.localreview.entity.Breadcrumb;
 import com.localreview.entity.Categories;
 import com.localreview.entity.Store;
 import com.localreview.entity.User;
@@ -27,19 +29,34 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-
 @Controller
 public class IndexController {
 
 	@GetMapping("/index")
 	public String index(Model model) {
-	    return "index"; 
+		return "index";
 	}
-	
+
 	@GetMapping("/qrcode")
 	public String home(Model model) {
-	    return "qrcode"; 
+		return "qrcode";
+	}
+
+	@GetMapping("/categories")
+	public String categories(Model model) {
+
+		List<Breadcrumb> breadcrumbs = new ArrayList<>();
+		breadcrumbs.add(new Breadcrumb("Trang chủ", "/index"));
+		breadcrumbs.add(new Breadcrumb("Loại cửa hàng", "/categories"));
+		
+		model.addAttribute("breadcrumbs", breadcrumbs);
+
+		return "categories";
+	}
+
+	@GetMapping("/test")
+	public String test(Model model) {
+		return "test";
 	}
 
 }
-

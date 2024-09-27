@@ -104,7 +104,7 @@
             </div>
             <!-- Hiển thị danh sách thực đơn -->
             <div
-                class="mt-4 bg-white shadow-lg rounded-lg overflow-x-auto h-auto overflow-y-auto flex-1 min-w-[calc(100%-16px)] md:flex-7">
+                class="mt-4 bg-white shadow-lg rounded-lg overflow-x-auto h-96 flex-1 min-w-[calc(100%-16px)] md:flex-7">
                 <table class="min-w-full bg-white">
                     <thead>
                         <tr
@@ -118,7 +118,7 @@
                     <tbody>
                         <!-- Lặp qua danh sách thực đơn từ controller -->
                         <tr th:each="menu : ${menulist}"
-                            class="border-b border-gray-200 hover:bg-gray-50 transition duration-200">
+                            class="border-b border-gray-200 hover:bg-gray-50 overflow-y-auto transition duration-200">
                             <td class="py-3 px-6 text-sm sm:text-base" style="vertical-align: top;">
                                 <pre th:text="${menu.foodFirst}"></pre>
                             </td>

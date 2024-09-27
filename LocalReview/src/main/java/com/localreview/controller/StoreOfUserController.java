@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -83,22 +84,26 @@ public class StoreOfUserController {
 	@Autowired
 	private PhotoService photoService;
 
-	@GetMapping("/{userId}")
-	public String getUserStores(@PathVariable("userId") String userId, @RequestParam(required = false) String storeId,
-	                            Model model) {
-	    User currentUser = userRepository.findById(userId).orElse(null);
+	@GetMapping("/my-stores") // Đường dẫn không cần userId
+	public String getUserStores(@RequestParam(required = false) String storeId, Model model) {
+	    // Lấy thông tin người dùng đang đăng nhập
+	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	    String email = ((UserDetails) authentication.getPrincipal()).getUsername(); // Hoặc cách lấy email phù hợp với lớp User của bạn
+
+	    // Tìm người dùng theo email
+	    User currentUser = userRepository.findByEmail(email);
 	    if (currentUser == null) {
 	        model.addAttribute("error", "Không tìm thấy người dùng");
 	        return "error";
 	    }
 
-	    List<Store> stores = storeService.getStoresByOwnerId(userId);
+	    List<Store> stores = storeService.getStoresByOwnerId(currentUser.getUserId());
 	    model.addAttribute("stores", stores);
 
 	    List<Breadcrumb> breadcrumbs = new ArrayList<>();
 	    breadcrumbs.add(new Breadcrumb("Trang chủ", "/index"));
-	    breadcrumbs.add(new Breadcrumb("Tài khoản", "/profile/" + userId));
-	    breadcrumbs.add(new Breadcrumb("Cửa hàng của tôi", "/stores/" + userId)); // Sửa đường dẫn breadcrumb
+	    breadcrumbs.add(new Breadcrumb("Tài khoản", "/profile/" + currentUser.getUserId()));
+	    breadcrumbs.add(new Breadcrumb("Cửa hàng của tôi", "/stores")); // Cập nhật đường dẫn breadcrumb
 	    model.addAttribute("breadcrumbs", breadcrumbs);
 
 	    return "stores/user_stores";

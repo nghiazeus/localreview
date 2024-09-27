@@ -1,7 +1,7 @@
 package com.localreview.entityEnum;
 
 public enum UserRole {
-	ADMIN,
+	admin,
     user,
     GUEST,
     store_owner  // Add this if it's a valid

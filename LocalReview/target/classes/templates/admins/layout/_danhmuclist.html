@@ -1,0 +1,133 @@
+<header class="bg-surface-primary border-bottom pt-6">
+	<div class="container-fluid">
+		<div class="mb-npx">
+			<div class="row align-items-center">
+				<div class="col-sm-6 col-12 mb-4 mb-sm-0">
+					<!-- Title -->
+					<h1 class="h2 mb-0 ls-tight text-primary" target="_blank"
+						th:text="${#request.remoteUser}"></h1>
+					<p class="text-info">Quản lý danh mục</p>
+					</br>
+				</div>
+				<!-- Actions -->
+				<div class="col-sm-6 col-12 text-sm-end">
+					<div class="mx-n1">
+						<a href="#" class="btn d-inline-flex btn-sm btn-primary mx-1">
+							<span onclick="openForm()" class=" pe-2"> <i
+								class="bi bi-plus"></i>
+						</span> <span>Thêm</span>
+						</a>
+					</div>
+				</div>
+			</div>
+			<!-- Nav -->
+		</div>
+	</div>
+</header>
+
+
+
+
+<div id="invoiceForm" style="display: none;">
+	<h2>Thông tin danh mục</h2>
+
+	<form id="form" th:object="${danhmucsanpham}" method="post"
+		th:action="@{/admin/createDM}">
+		<label>Mã danh mục:</label> <input type="text" id="invoiceNumber"
+			name="MaChiTietDonHang" th:field="*{madanhmuc}" required><br>
+		<br> <label>Tên danh mục:</label> <input type="text"
+			id="customerName" name="MaDonHang" th:field="*{tendanhmuc}" required><br>
+		<br>
+
+		<button type="submit"
+			class="btn btn-outline-primary">Thêm danh mục</button>
+		<button type="button" >Đóng</button>
+	</form>
+</div>
+<div id="editForm"
+	th:style="${isEditFormVisible ? 'display:block' : 'display: none;'}"
+	th:if="isEditFormVisible">
+	<h2>Sửa danh mục</h2>
+	<form id="form" th:object="${danhmucsanpham}" method="post"
+		th:action="@{/admin/updateDM}">
+		<label>Mã danh mục:</label> <input type="text" id="maDanhMuc" readonly
+			name="MaChiTietDonHang" th:field="*{madanhmuc}" required><br>
+		<br> <label>Tên danh mục:</label> <input type="text"
+			id="tenDanhMuc" name="MaDonHang" th:field="*{tendanhmuc}" required><br>
+		<br>
+
+		<button type="submit" class="btn btn-outline-primary">Sửa
+			danh mục</button>
+	</form>
+
+</div>
+
+
+
+<main class="py-6 bg-surface-secondary">
+	<div class="container-fluid">
+		<!-- Card stats -->
+		<div class="search" >
+	<form>
+		<label> <input  type="text" placeholder="Nhập tên danh mục"
+			name="keyword">
+			<button class="search-button" type="submit">Tìm Kiếm</button>
+
+		</label>
+	</form>
+</div>
+
+		<div th:if="${success}" class="alert alert-success">
+			<p th:text="${success}"></p>
+		</div>
+		<div th:if="${error}" class="alert alert-danger">
+			<p th:text="${error}"></p>
+		</div>
+
+
+		<div class="card shadow border-0 mb-7">
+			<div class="card-header">
+				<h5 class="mb-0">Danh mục</h5>
+			</div>
+			<div class="table-responsive">
+				<table class="table table-nowrap">
+					<thead class="thead-light">
+						<tr>
+							<th scope="col">STT</th>
+							<th scope="col">Mã danh mục</th>
+							<th scope="col">Tên danh mục</th>
+							<th scope="col">Chỉnh sửa</th>
+							<th scope="col">Xóa</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="item, state :${items}">
+							<td scope="row" th:text="${state.index + 1}"></td>
+							<td th:text="${item.madanhmuc}"></td>
+							<td th:text="${item.tendanhmuc}"></td>
+							<td><a th:href="@{'admin/editDM/'+${item.madanhmuc}}">Edit</a>
+							</td>
+							<td><a onclick="removecategories()" th:href="@{'admin/deleteDM/'+${item.madanhmuc}}"
+								type="button"
+								class="btn btn-sm btn-square btn-neutral text-danger-hover">
+									<i class="bi bi-trash"></i>
+							</a></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="card-footer border-0 py-5">
+				<div class="pagination">
+					<li th:if="${currentPage>1}"><a
+						th:href="@{'?pageNo='+${currentPage-1}}">&laquo; </a></li>
+					<li th:each="i:${#numbers.sequence(1,totalPage)}"
+						th:classappend="${currentPage== i ? 'active' :''}"><a
+						th:href="@{${keyword!= null && keyword!= '' ? '?keyword='+keyword+'&':'?'}+'pageNo='+${i}}"
+						th:text="${i}">1</a></li>
+					<li th:if="${currentPage<totalPage}"><a
+						th:href="@{'?pageNo='+${currentPage+1}}"> &raquo;</a></li>
+				</div>
+			</div>
+		</div>
+	</div>
+</main>

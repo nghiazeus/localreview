@@ -1,0 +1,239 @@
+<header class="bg-surface-primary border-bottom pt-6">
+	<div class="container-fluid">
+		<div class="mb-npx">
+			<div class="row align-items-center">
+				<div class="col-sm-6 col-12 mb-4 mb-sm-0">
+					<!-- Title -->
+					<h1 class="h2 mb-0 ls-tight text-primary" target="_blank" th:text="${#request.remoteUser}"></h1>
+					<p class="text-info">Quản lý sản phẩm</p>
+					</br>
+				</div>
+				<!-- Actions -->
+				<div class="col-sm-6 col-12 text-sm-end">
+					<div class="mx-n1">
+						<a th:href="@{/admin/export-don-hangs-pdf}" class="btn d-inline-flex btn-sm btn-danger mx-1">
+							<span class=" pe-2">
+								<i class="bi bi-box-arrow-right"></i>
+							</span>
+							<span>Xuất file PDF</span>
+						</a>
+						<a th:href="@{/admin/export-san-pham-excel}" class="btn d-inline-flex btn-sm btn-success mx-1">
+							<span class=" pe-2">
+								<i class="bi bi-box-arrow-right"></i>
+							</span>
+							<span>Xuất file Excel</span>
+						</a>
+						<a data-toggle="modal" data-target="#exampleModal1"
+							class="btn d-inline-flex btn-sm btn-primary mx-1 text-light">
+							<span class=" pe-2"> <i class="bi bi-plus"></i>
+							</span> <span>Tạo sản phẩm</span>
+						</a>
+					</div>
+				</div>
+			</div>
+			<!-- Nav -->
+		</div>
+	</div>
+	<!-- Button trigger modal -->
+	<!-- Modal -->
+	<div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Thêm sản phẩm</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<!--  -->
+					<form method="post" th:action="@{/admin/createSP}" id="productForm">
+						<div class="form-row">
+							<div class="form-group col-md-6">
+								<label for="name">Tên sản phẩm</label>
+								<input type="name" name="tensanpham" class="form-control" id="name" required>
+								<div class="valid-feedback">
+									Dữ liệu hợp lệ!
+								</div>
+								<div class="invalid-feedback">
+									Vui lòng nhập tên sản phẩm.
+								</div>
+							</div>
+							<div class="form-group col-md-3">
+								<label>Giá</label>
+								<input type="text" name="dongia" class="form-control" required>
+								<div class="valid-feedback">
+									Dữ liệu hợp lệ!
+								</div>
+								<div class="invalid-feedback">
+									Vui lòng nhập giá hợp lệ.
+								</div>
+							</div>
+							<div class="form-group col-md-3">
+								<label>Số lượng trong kho</label>
+								<input type="text" name="soluongtrongkho" class="form-control" required>
+								<div class="valid-feedback">
+									Dữ liệu hợp lệ!
+								</div>
+								<div class="invalid-feedback">
+									Vui lòng nhập số lượng hợp lệ.
+								</div>
+</div>
+						</div>
+
+						<div class="form-group">
+							<label>Mô tả sản phẩm</label>
+							<input type="text" name="mota" class="form-control" required>
+							<div class="valid-feedback">
+								Dữ liệu hợp lệ!
+							</div>
+							<div class="invalid-feedback">
+								Vui lòng nhập mô tả sản phẩm.
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="form-group col-md-6">
+								<label for="photomedia" class="form-label">Chọn ảnh:</label>
+								<input type="file" id="photomedia" name="photomedia" class="form-control"
+									accept="image/*" required>
+								<small id="filename" class="form-text text-muted">Chưa có tệp được chọn.</small>
+							</div>
+							<div class="card">
+								<div class="card-body">
+									<img id="previewImage" src="#" alt="Ảnh nhỏ" class="img-thumbnail"
+										style="max-width: 100%; max-height: 100px; display: none;">
+								</div>
+							</div>
+							<!-- Script để hiển thị tên tệp và hình ảnh nhỏ -->
+							<script>
+								document.getElementById('photomedia').addEventListener('change', function (e) {
+									var fileName = e.target.files[0].name;
+									document.getElementById('filename').innerText = 'Tên tệp: ' + fileName;
+
+									// Hiển thị hình ảnh nhỏ
+									var previewImage = document.getElementById('previewImage');
+									previewImage.style.display = 'block';
+									var reader = new FileReader();
+									reader.onload = function (event) {
+										previewImage.src = event.target.result;
+									};
+									reader.readAsDataURL(e.target.files[0]);
+								});
+							</script>
+						</div>
+
+						<hr>
+						<div class="form-row">
+							<div class="form-group col-md-4">
+								<label for="inputState">Danh mục</label>
+								<select id="inputState" name="madanhmuc" class="form-text" required>
+									<option value="" selected disabled>Chọn danh mục</option>
+									<option th:each="danhmuc : ${danhmuc}" th:value="${danhmuc.madanhmuc}" th:text="${danhmuc.tendanhmuc}"></option>
+								</select>
+								<div class="invalid-feedback">
+									Vui lòng chọn danh mục.
+								</div>
+							</div>
+							<div class="form-group col-md-4">
+								<label for="inputZip">Thương hiệu</label>
+								<select id="inputZip" name="mathuonghieu" class="form-text" required>
+									<option value="" selected disabled>Chọn thương hiệu</option>
+									<option th:each="thuonghieu : ${thuonghieu}" th:value="${thuonghieu.mathuonghieu}" th:text="${thuonghieu.tenthuonghieu}"></option>
+								</select>
+								<div class="invalid-feedback">
+									Vui lòng chọn thương hiệu.
+								</div>
+							</div>
+						</div>						
+						<div class="modal-footer">
+							<button type="submit" class="btn btn-primary" onclick="addProduct()">Thêm</button>
+						</div>
+					</form>
+					<script>
+						function addProduct() {
+							var form = document.getElementById('productForm');
+// Kiểm tra xem biểu mẫu có hợp lệ không
+							if (form.checkValidity()) {
+								// Hiển thị thông báo thành công
+								alert('Thêm sản phẩm thành công!');
+							}
+					
+							// Đảm bảo biểu mẫu được kiểm tra lỗi và ngăn chặn sự kiện mặc định
+							form.classList.add('was-validated');
+						}
+					</script>
+					<!--  -->
+				</div>
+			</div>
+		</div>
+	</div>
+</header>
+
+<main class="py-6 bg-surface-secondary">
+	<div class="container-fluid">
+		<!-- Card stats -->
+		<div class="card shadow border-0 mb-7">
+			<div class="card-header">
+				<h5 class="mb-0">Sản phẩm</h5>
+			</div>
+			<div class="table-responsive">
+				<table class="table table-nowrap">
+					<thead class="thead-light">
+						<tr>
+							<th scope="col" hidden>Mã SP</th>
+							<th scope="col">STT</th>
+							<th scope="col">Hình ảnh</th>
+							<th scope="col">Danh mục</th>
+							<th scope="col">Thương hiệu</th>
+							<th scope="col">Tên sản phẩm</th>
+							<th scope="col">Giá</th>
+							<th scope="col">Trong kho</th>
+							<th scope="col">Đã bán</th>
+							<th scope="col">Mô tả sản phẩm</th>
+							<th>Chỉnh sửa</th>
+							<th>Xóa</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="item, state :${items}">
+							<td th:text="${item.masanpham}" hidden></td>
+							<td th:text="${state.index + 1}"></td>
+							<td>
+								<img th:src="'/image/' + ${item.photomedia}" alt="Ảnh" width="40" height="40">
+							</td>
+							<td th:text="${item.danhMucSanPham.tendanhmuc}"></td>
+							<td th:text="${item.thuongHieuSanPham.tenthuonghieu}"></td>
+							<td th:text="${item.tensanpham}"></td>
+							<td th:text="${item.dongia}"></td>
+							<td th:text="${item.soluongtrongkho}"></td>
+							<td th:text="${item.daban}"></td>
+							<td th:text="${item.mota}"></td>
+							<td><a th:href="@{/admin/update/{masanpham}(masanpham=${item.masanpham})}"
+									class="btn d-inline-flex btn-sm btn-neutral border-base mx-1">
+									<span class="pe-2"> <i class="bi bi-pencil"></i>
+									</span> <span>Edit</span>
+								</a></td>
+							<td><a th:href="@{'deleteSP/'+${item.masanpham}}" type="button" onclick="removeproduct()"
+									class="btn btn-sm btn-square btn-neutral text-danger-hover">
+									<i class="bi bi-trash"></i>
+								</a></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="card-footer border-0 py-5">
+				<div class="pagination">
+					<li th:if="${currentPage>1}"><a
+						th:href="@{'?pageNo='+${currentPage-1}}">&laquo; </a></li>
+					<li th:each="i:${#numbers.sequence(1,totalPage)}"
+						th:classappend="${currentPage== i ? 'active' :''}"><a
+						th:href="@{${keyword!= null && keyword!= '' ? '?keyword='+keyword+'&':'?'}+'pageNo='+${i}}"
+						th:text="${i}">1</a></li>
+					<li th:if="${currentPage<totalPage}"><a
+						th:href="@{'?pageNo='+${currentPage+1}}">&raquo;</a></li>
+				</div>
+			</div>
+		</div>
+		</div>
+	</div>
+</main>

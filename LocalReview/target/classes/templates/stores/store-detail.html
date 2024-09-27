@@ -535,8 +535,8 @@
         <strong class="text-2xl ml-8 text-black">Bình luận</strong>
         <section class="article mt-10 flex flex-col md:flex-row">
             <div class="md:w-7/12 w-full scrollable-container py-6 px-8">
-                <div th:each="review : ${reviews}" class="space-y-4 py-1">
-                    <!-- Card 1 -->
+                 <div th:each="review : ${reviews}" class="space-y-4 py-1">
+                    <!--  -->
                     <div class="max-w-3xl mx-auto bg-white border rounded-lg shadow-md overflow-hidden">
                         <div class="flex p-6 border-b">
                             <img class="w-16 h-16 rounded-full"
@@ -553,7 +553,7 @@
                                 <div class="flex items-center mt-1">
                                     <span class="text-yellow-500">
                                         <span th:text="${'⭐️'.repeat(review.rating)}">⭐️</span>
-                                        <!--  <span th:text="${'#'.repeat(5 - review.rating)}">&#9734;</span> -->
+                                         <span th:text="${'#'.repeat(5 - review.rating)}">&#9734;</span>
                                     </span>
                                     <span class="ml-2 text-gray-600" th:text="('(' + ${review.rating} + ')')"> (0)
                                     </span>
@@ -562,11 +562,13 @@
                                     người dùng.</p>
                             </div>
                         </div>
-                        <div class="flex overflow-x-auto max-x-80 p-4 gap-4" th:each="photo : ${review.photos}">
-                        <img class="w-auto h-20 rounded-lg" th:src="${photo.photoUrl}" alt="Hình ảnh đánh giá">
+                        <div class="flex overflow-x-auto max-x-80 p-4 gap-4" th:each="review : ${reviews}">
+                            <div th:each="photo : ${reviewPhotosMap[review.reviewId]}">
+                                <img class="w-auto h-20 rounded-lg" th:src="${photo}" alt="Hình ảnh đánh giá">
+                            </div>
+                        </div>
                     </div>
-                    </div>
-                </div>
+                </div> 
             </div>
 
             <!-- Cột bên phải chứa quảng cáo (3 phần) -->

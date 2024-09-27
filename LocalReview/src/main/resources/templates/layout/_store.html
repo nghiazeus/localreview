@@ -10,15 +10,6 @@
             width: calc(50% - 0.5rem);
         }
     }
-
-    .modal-open {
-        overflow: hidden;
-    }
-
-    .no-scroll {
-        overflow: hidden;
-        height: 100%;
-    }
 </style>
 
 <!-- ===========================================Mobile============================================ -->
@@ -82,7 +73,7 @@
             </h2>
             <h2 class="text-lg font-semibold">Đánh giá</h2>
         </div>
-        <div class="overflow-y-auto max-h-auto pb-16">
+        <div class="overflow-y-auto pb-16">
             <div class="space-y-2 bg-gray-300">
                 <div th:if="${#lists.isEmpty(store.reviews)}" class="text-center mt-4">
                     <p>Không có đánh giá nào cho cửa hàng này.</p>
@@ -90,7 +81,7 @@
                 <div th:each="review : ${store.reviews}" class="max-w-3xl bg-white mx-auto overflow-hidden">
                     <div class="flex p-6">
                         <img class="w-14 h-14 rounded-full"
-                             src="https://i.pinimg.com/736x/0c/19/0b/0c190bbefc773d57bc8b721f8f140109.jpg" alt="Avatar">
+                            src="https://i.pinimg.com/736x/0c/19/0b/0c190bbefc773d57bc8b721f8f140109.jpg" alt="Avatar">
                         <div class="ml-6 flex-grow">
                             <h2 class="text-xl font-semibold" th:text="${review.user.name}">Tên Người Dùng</h2>
                             <div class="flex items-center mt-1">
@@ -98,16 +89,19 @@
                                     <span th:text="${'⭐️'.repeat(review.rating)}">⭐️</span>
                                 </span>
                             </div>
-                            <p class="text-gray-700 text-lg mt-4" th:text="${review.comment}">Nội dung đánh giá của người dùng.</p>
+                            <p class="text-gray-700 text-lg mt-4" th:text="${review.comment}">Nội dung đánh giá của
+                                người dùng.</p>
                             <p class="text-gray-600 italic mt-2 text-sm">—
                                 <span class="font-semibold" th:text="${review.relativeReviewDate}">25/09/2024</span>
                             </p>
                         </div>
                     </div>
-                    <div class="flex overflow-x-auto max-x-80 p-4 gap-4" th:each="photo : ${review.photos}">
-                        <img class="w-auto h-20 rounded-lg" th:src="${photo.photoUrl}" alt="Hình ảnh đánh giá">
+                    <div class="flex overflow-x-auto max-x-auto p-4 gap-4">
+                        <div th:each="photo : ${review.photos}">
+                            <img class="w-auto h-20 rounded-lg" th:src="${photo.photoUrl}" alt="Hình ảnh đánh giá">
+                        </div>
                     </div>
-                </div>                
+                </div>
             </div>
         </div>
     </div>
@@ -231,8 +225,10 @@
                                     người dùng.</p>
                             </div>
                         </div>
-                        <div class="flex overflow-x-auto max-x-80 p-4 gap-4" th:each="photo : ${review.photos}">
-                            <img class="w-auto h-20 rounded-lg" th:src="${photo.photoUrl}" alt="Hình ảnh đánh giá">
+                        <div class="flex overflow-x-auto max-x-auto p-4 gap-4">
+                            <div th:each="photo : ${review.photos}">
+                                <img class="w-auto h-20 rounded-lg" th:src="${photo.photoUrl}" alt="Hình ảnh đánh giá">
+                            </div>
                         </div>
                     </div>
                 </div>

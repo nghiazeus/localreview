@@ -53,7 +53,6 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public Review saveReview(Review review) {
-        // Logic để lưu review
         return reviewRepository.save(review);
     }
     

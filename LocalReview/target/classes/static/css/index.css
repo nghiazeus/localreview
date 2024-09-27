@@ -30,6 +30,15 @@ body {
     }
 }
 
+    .modal-open {
+        overflow: hidden;
+    }
+
+    .no-scroll {
+        overflow: hidden;
+        height: 100%;
+    }
+    
 
 /* Tùy chọn CSS để tạo hiệu ứng chuyển động */
 @keyframes zoomIn {

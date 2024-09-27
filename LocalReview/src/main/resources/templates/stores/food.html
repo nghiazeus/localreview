@@ -57,40 +57,110 @@
 
             <!-- Form thêm thực đơn -->
             <div class="mt-4 bg-white rounded-lg shadow-lg flex-1 md:w-60">
-                <h2 class="text-xl font-semibold bg-gradient-to-r from-indigo-600 text-center to-blue-600 text-white rounded-t-lg py-4">Thêm món vào thực đơn</h2>
+                <h2
+                    class="text-xl font-semibold bg-gradient-to-r from-indigo-600 text-center to-blue-600 text-white rounded-t-lg py-4">
+                    Thêm món vào thực đơn</h2>
                 <form th:action="@{/stores/food/add}" method="post" enctype="multipart/form-data" class="space-y-4 p-4">
                     <input type="hidden" name="storeId" th:value="${storeId}"> <!-- Sử dụng type="hidden" -->
-                
+
                     <div>
-                        <label class="block text-gray-700 font-medium mb-1" for="foodName">Tên món ăn</label>
+                        <label class="block text-gray-700 font-medium mb-1" for="foodName">Tên món ăn:</label>
                         <input
                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                             type="text" id="foodName" name="foodName" required placeholder="Thịt, Cá, Hải sản...">
                     </div>
-                
+
                     <div>
-                        <label class="block text-gray-700 font-medium mb-1" for="price">Giá</label>
+                        <label class="block text-gray-700 font-medium mb-1" for="price">Giá:</label>
                         <input
                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
-                            type="number" id="price" name="price" required placeholder="100000...">
+                            type="text" id="price" name="price" required placeholder="100000...">
+                        <p id="priceInWords" class="mt-2 inline-block text-white bg-blue-600 rounded-full px-4"></p>
                     </div>
-                
                     <!-- Thêm trường upload ảnh -->
                     <div>
-                        <label class="block text-gray-700 font-medium mb-1" for="food_images">Chọn ảnh món ăn</label>
+                        <label class="block text-gray-700 font-medium mb-1" for="food_images">Chọn ảnh món ăn:</label>
                         <input
                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                             type="file" id="food_images" name="food_images" multiple>
                         <!-- Sử dụng multiple để cho phép chọn nhiều ảnh -->
                     </div>
-                
+
                     <div class="text-right">
                         <button type="submit"
                             class="ring-4 ring-indigo-300 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg transition duration-300">
                             Thêm món ăn
                         </button>
                     </div>
-                </form>                
+                </form>
+                <script>
+                    const priceInput = document.getElementById('price');
+                    const priceInWords = document.getElementById('priceInWords');
+
+                    priceInput.addEventListener('input', function (e) {
+                        // Lấy giá trị nhập vào
+                        let value = e.target.value;
+
+                        // Xóa tất cả ký tự không phải số
+                        value = value.replace(/\D/g, '');
+
+                        // Định dạng lại số thành chuỗi có dấu phân cách hàng nghìn
+                        let formattedValue = new Intl.NumberFormat().format(value);
+
+                        // Gán lại giá trị đã định dạng vào ô input
+                        e.target.value = formattedValue;
+
+                        // Chuyển đổi số thành chữ
+                        priceInWords.textContent = convertNumberToWords(value) + ' đồng';
+                    });
+
+                    function convertNumberToWords(number) {
+                        const units = ['', 'nghìn', 'triệu', 'tỷ'];
+                        const ones = ['không', 'một', 'hai', 'ba', 'bốn', 'năm', 'sáu', 'bảy', 'tám', 'chín'];
+
+                        if (number === '') return '';
+
+                        let wordArray = [];
+                        let unitIndex = 0;
+
+                        while (number.length > 0) {
+                            let chunk = number.slice(-3);
+                            number = number.slice(0, -3);
+
+                            let chunkWords = convertChunkToWords(chunk);
+                            if (chunkWords !== '') {
+                                wordArray.unshift(chunkWords + ' ' + units[unitIndex]);
+                            }
+                            unitIndex++;
+                        }
+
+                        return wordArray.join(' ').trim();
+                    }
+
+                    function convertChunkToWords(chunk) {
+                        const ones = ['không', 'một', 'hai', 'ba', 'bốn', 'năm', 'sáu', 'bảy', 'tám', 'chín'];
+                        const tens = ['', '', 'hai mươi', 'ba mươi', 'bốn mươi', 'năm mươi', 'sáu mươi', 'bảy mươi', 'tám mươi', 'chín mươi'];
+
+                        let hundredDigit = Math.floor(chunk / 100);
+                        let tenDigit = Math.floor((chunk % 100) / 10);
+                        let oneDigit = chunk % 10;
+
+                        let words = '';
+
+                        if (hundredDigit) words += ones[hundredDigit] + ' trăm ';
+                        if (tenDigit >= 2) {
+                            words += tens[tenDigit] + ' ';
+                            if (oneDigit) words += ones[oneDigit];
+                        } else if (tenDigit === 1) {
+                            words += 'mười ';
+                            if (oneDigit) words += ones[oneDigit];
+                        } else if (oneDigit) {
+                            words += ones[oneDigit];
+                        }
+
+                        return words.trim();
+                    }
+                </script>
             </div>
             <!-- Danh sách thực đơn -->
             <div
@@ -111,14 +181,14 @@
                             class="border-b border-gray-200 hover:bg-gray-50 transition duration-200">
                             <td class="py-3 px-6">
                                 <div class="flex space-x-2 whitespace-nowrap">
-                                    <img th:each="photo : ${food.photos}" 
-                                         th:src="${photo.photoUrl}" 
-                                         alt="Ảnh món ăn" 
-                                         class="w-10 h-10 md:w-14 md:h-14 object-cover rounded-lg">
+                                    <img th:each="photo : ${food.photos}" th:src="${photo.photoUrl}" alt="Ảnh món ăn"
+                                        class="w-10 h-10 md:w-14 md:h-14 object-cover rounded-lg">
                                 </div>
-                            </td>                            
-                            <td class="py-3 px-6 text-sm sm:text-base whitespace-nowrap" th:text="${food.foodName}"></td>
-                            <td class="py-3 px-6 text-sm sm:text-base whitespace-nowrap" th:text="${food.formattedPrice}"></td>
+                            </td>
+                            <td class="py-3 px-6 text-sm sm:text-base whitespace-nowrap" th:text="${food.foodName}">
+                            </td>
+                            <td class="py-3 px-6 text-sm sm:text-base whitespace-nowrap"
+                                th:text="${food.formattedPrice}"></td>
                             <td class="py-3 px-6 text-sm sm:text-base flex justify-center space-x-2">
                                 <!-- Nút cập nhật -->
                                 <a th:href="@{/stores/food/edit(foodId=${food.foodId})}"

@@ -1,0 +1,128 @@
+<header class="bg-surface-primary border-bottom pt-6">
+	<div class="container-fluid">
+		<div class="mb-npx">
+			<div class="row align-items-center">
+				<div class="col-sm-6 col-12 mb-4 mb-sm-0">
+					<!-- Title -->
+					<h1 class="h2 mb-0 ls-tight text-primary" target="_blank" th:text="${#request.remoteUser}"></h1>
+					<p class="text-info">Quản lý thương hiệu</p>
+					</br>
+				</div>
+				<!-- Actions -->
+				<div class="col-sm-6 col-12 text-sm-end">
+					<div class="mx-n1">
+						<a data-toggle="modal" data-target="#exampleModalthuonghieu"
+							class="btn d-inline-flex btn-sm btn-primary mx-1 text-light">
+							<span class=" pe-2"> <i class="bi bi-plus"></i>
+							</span> <span>Tạo thương hiệu</span>
+						</a>
+					</div>
+				</div>
+			</div>
+			<!-- Nav -->
+		</div>
+	</div>
+	<!-- Button trigger modal -->
+	<!-- Modal -->
+	<div class="modal fade" id="exampleModalthuonghieu" tabindex="-1" aria-labelledby="exampleModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Thêm thương hiệu</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<!--  -->
+					<form method="post" th:action="@{/admin/themthuonghieu}" id="brandForm">
+						<div class="form-row">
+							<div class="form-group col-md-3">
+								<label for="mathuonghieu">Mã thương hiệu</label>
+								<input type="text" name="mathuonghieu" class="form-control" id="mathuonghieu" required>
+								<div class="invalid-feedback">
+									Vui lòng nhập mã thương hiệu.
+								</div>
+							</div>
+							<div class="form-group col-md-6">
+								<label for="tenthuonghieu">Tên thương hiệu</label>
+								<input type="text" name="tenthuonghieu" class="form-control" required>
+								<div class="invalid-feedback">
+									Vui lòng nhập tên thương hiệu.
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="submit" class="btn btn-primary" onclick="addBrand()">Thêm</button>
+						</div>
+					</form>
+					
+					<script>
+						function addBrand() {
+							var form = document.getElementById('brandForm');
+					
+							if (form.checkValidity()) {
+								// Hiển thị thông báo thành công hoặc thực hiện các bước thêm thương hiệu
+								alert('Thêm thương hiệu thành công!');
+							}
+					
+							form.classList.add('was-validated');
+						}
+					</script>
+					
+					<!--  -->
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+</header>
+
+<main class="py-6 bg-surface-secondary">
+	<div class="container-fluid">
+		<!-- Card stats -->
+		<div class="card shadow border-0 mb-7">
+			<div class="card-header">
+				<h5 class="mb-0">Thương hiệu</h5>
+			</div>
+			<div class="table-responsive">
+				<table class="table table-nowrap">
+					<thead class="thead-light">
+						<tr>
+							<th scope="col">STT</th>
+							<th scope="col">Mã Thương hiệu</th>
+							<th scope="col">Thương hiệu</th>
+							<th>Chỉnh sửa</th>
+							<th>Xóa</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="item, state :${items}">
+							<td th:text="${state.index + 1}"></td>
+							<td th:text="${item.mathuonghieu}"></td>
+							<td th:text="${item.tenthuonghieu}"></td>
+							<td><a th:href="@{/admin/editthuonghieu/{mathuonghieu}(mathuonghieu=${item.mathuonghieu})}"
+								class="btn d-inline-flex btn-sm btn-neutral border-base mx-1">
+								<span class="pe-2"> <i class="bi bi-pencil"></i></span>
+								<span>Edit</span>
+							 </a>
+							 
+							</td>
+							<td><a th:href="@{'deletethuonghieu/'+${item.mathuonghieu}}" type="button"
+									onclick="removeproduct()"
+									class="btn btn-sm btn-square btn-neutral text-danger-hover">
+									<i class="bi bi-trash"></i>
+								</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="card-footer border-0 py-5">
+				<span class="text-muted text-sm">Tất cả thương hiệu</span>
+			</div>
+		</div>
+	</div>
+</main>

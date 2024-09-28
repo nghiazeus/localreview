@@ -1,0 +1,141 @@
+<nav class="navbar show navbar-vertical h-lg-screen navbar-expand-lg px-0 py-3 navbar-light bg-white border-bottom border-bottom-lg-0 border-end-lg" id="navbarVertical">
+    <div class="container-fluid">
+        <!-- Toggler -->
+        <button class="navbar-toggler ms-n2" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse" aria-controls="sidebarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <!-- Brand -->
+        <a class="navbar-brand py-lg-2 mb-lg-5 px-lg-6 me-0 h5 text-danger" th:href="@{/home/index}">ReviewSystem
+        </a>
+        <!-- User menu (mobile) -->
+        <div class="navbar-user d-lg-none">
+            <!-- Dropdown -->
+            <div class="dropdown">
+                <!-- Toggle -->
+                <a href="#" id="sidebarAvatar" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <div class="avatar-parent-child">
+                        <img alt="Image Placeholder" src="https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=256&h=256&q=80" class="avatar avatar- rounded-circle">
+                        <span class="avatar-child avatar-badge bg-success"></span>
+                    </div>
+                </a>
+                <!-- Menu -->
+                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="sidebarAvatar">
+                    <a href="#" class="dropdown-item">Profile</a>
+                    <a href="#" class="dropdown-item">Settings</a>
+                    <a href="#" class="dropdown-item">Billing</a>
+                    <hr class="dropdown-divider">
+                    <a href="#" class="dropdown-item">Logout</a>
+                </div>
+            </div>
+        </div>
+        <!-- Collapse -->
+        <div class="collapse navbar-collapse" id="sidebarCollapse">
+            <!-- Navigation -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/admin/admins}">
+                        <i class="bi bi-house"></i> Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/admin/blacklist}">
+                        <i class="bi bi-bar-chart"></i> Backlist
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/admin/quanlydonhang}">
+                        <i class="bi bi-chat"></i> Quản lý đơn hàng
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/admin/quanlydanhmuc}">
+                        <i class="bi bi-bookmarks"></i> Quản lý danh mục
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/admin/quanlythuonghieu}">
+                        <i class="bi bi-bookmarks"></i> Quản lý thương hiệu
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/admin/quanlynguoidung}">
+                        <i class="bi bi-people"></i> Quản lý người dùng
+                    </a>
+                </li>
+                                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/admin/voucher/list}">
+                        <i class="bi bi-people"></i> Quản lý Voucher
+                    </a>
+                </li>
+                 </li>
+                                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/admin/quanlyvnpay}">
+                        <i class="bi bi-people"></i> Quản lý VNPAY
+                    </a>
+                </li>
+            </ul>
+            <!-- Divider -->
+            <hr class="navbar-divider my-5 opacity-20">
+            <!-- Navigation -->
+            <ul class="navbar-nav mb-md-4">
+                <li>
+                    <div class="nav-link text-xs font-semibold text-uppercase text-muted ls-wide" href="#">
+                        Thống kê
+                        <span class="badge bg-soft-primary text-primary rounded-pill d-inline-flex align-items-center ms-4">13</span>
+                    </div>
+                </li>
+                <li>
+                    <a class="nav-link" href="/home/thongketonkho">
+                        <i class="bi bi-bookmarks"></i> Tồn Kho
+                    </a>
+                </li>
+           
+                <li>
+                    <a class="nav-link" href="/home/thongke">
+                        <i class="bi bi-bookmarks"></i> Mặt Hàng Bán Chạy
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link" href="/home/thongke/doanhthuNguoiDung">
+                        <i class="bi bi-bookmarks"></i> Người dùng mua hàng
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link" href="/home/thongkedoanhthuNguoiDungmonth">
+                        <i class="bi bi-bookmarks"></i> Người dùng mua hàng theo tháng
+                    </a>
+                </li>
+                 <li>
+                    <a class="nav-link" href="/home/thongkedoanhthuNguoiDungquanter">
+                        <i class="bi bi-bookmarks"></i> Người dùng mua hàng theo quý
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link" href="/home/thongkedoanhthuNguoiDungyear">
+                        <i class="bi bi-bookmarks"></i> Người dùng mua hàng theo năm
+                    </a>
+                </li>
+                 <li>
+                    <a class="nav-link" href="/home/thongkedoanhthutop">
+                        <i class="bi bi-bookmarks"></i> Người dùng mua hàng nhiều nhất
+                    </a>
+                </li>
+            </ul>
+            <!-- Push content down -->
+            <div class="mt-auto"></div>
+            <!-- User (md) -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/authorize/index1.html">
+                        <i class="bi bi-person-square"></i> Phân Quyền
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">
+                        <i class="bi bi-box-arrow-left"></i> Logout
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

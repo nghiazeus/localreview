@@ -1,0 +1,47 @@
+<header class="bg-surface-primary border-bottom pt-6">
+    <div class="container-fluid">
+        <div class="mb-npx">
+            <div class="row align-items-center">
+                <div class="col-sm-6 col-12 mb-4 mb-sm-0">
+                    <!-- Title -->
+                    <h1 class="h2 mb-0 ls-tight text-primary" target="_blank" th:text="${#request.remoteUser}"></h1>
+                    <p class="text-info">Thống Kê Tồn Kho</p>
+                    </br>
+                </div>
+ 
+        </div>
+    </div>
+
+</header>
+
+<main class="py-6 bg-surface-secondary">
+ <div class="container-fluid">
+<div class="container">
+		
+		<table class="table">
+			<thead>
+				<tr>
+					<th scope="col">Mặt Hàng </th>
+					<th scope="col">Giá</th>
+					<th scope="col">Tổng mặt hàng</th>
+					<th scope="col">Xuất Hàng </th>
+					<th scope="col">Tồn hàng </th>
+					
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="item :${items}">
+					<td th:text="${item[0]}"></td>
+					<td th:text="${item[1]}"></td>
+					<td th:text="${item[2]}"></td>
+					<td th:text="${item[3]}"></td>
+					<td th:text="${item[4]}"></td>
+
+				</tr>
+			</tbody>
+		</table>
+
+	</div>
+	
+	 </div>
+	 </main>

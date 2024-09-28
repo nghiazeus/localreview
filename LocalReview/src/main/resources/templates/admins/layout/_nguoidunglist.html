@@ -1,0 +1,145 @@
+<main class="py-6 bg-surface-secondary">
+	<div class="container-fluid">
+		<!-- Card stats -->
+		<div class="row g-6 mb-6">
+			<div class="col-xl-3 col-sm-6 col-12">
+				<div class="card shadow border-0">
+					<div class="card-body">
+						<div class="row">
+							<div class="col">
+								<span class="h6 font-semibold text-muted text-sm d-block mb-2">Doanh Thu Tháng</span>
+								<table class="table">
+									<thead>
+										<tr>
+											<th scope="col">Tháng </th>
+											<th scope="col">Doanh Thu </th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="item :${items1}">
+											<td th:text="${item[0]}"></td>
+											<td th:text="${item[1]}"></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-xl-3 col-sm-6 col-12">
+				<div class="card shadow border-0">
+					<div class="card-body">
+						<div class="row">
+							<div class="col">
+								<span class="h6 font-semibold text-muted text-sm d-block mb-2">Tài Khoản</span>
+								<h1 th:text="${items2}"></h1>
+							</div>
+							<div class="col-auto">
+								<div class="icon icon-shape bg-primary text-white text-lg rounded-circle">
+									<i class="bi bi-people"></i>
+								</div>
+							</div>
+						</div>
+						<div class="mt-2 mb-0 text-sm">
+							<span class="badge badge-pill bg-soft-success text-success me-2">
+								<i class="bi bi-arrow-up me-1"></i>
+							</span>
+							<span class="text-nowrap text-xs text-muted">Hiện Tại</span>
+							<br>
+							<br>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-xl-3 col-sm-6 col-12">
+				<div class="card shadow border-0">
+					<div class="card-body">
+						<div class="row">
+							<div class="col">
+								<span class="h6 font-semibold text-muted text-sm d-block mb-2">Tổng Đơn hàng</span>
+								<table class="table">
+									<thead>
+										<tr>
+											<th scope="col">Tháng </th>
+											<th scope="col">Tổng Đơn hàng</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="item :${items3}">
+											<td th:text="${item[0]}"></td>
+											<td th:text="${item[1]}"></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<div class="col-xl-3 col-sm-6 col-12">
+				<div class="card shadow border-0">
+					<div class="card-body">
+						<div class="row">
+							<div class="col">
+								<span class="h6 font-semibold text-muted text-sm d-block mb-2">Voucher</span>
+								<span class="h3 font-bold mb-0"><h1 th:text="${items4}"></h1></span>
+							</div>
+							<div class="col-auto">
+								<div class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+									<i class="bi bi-minecart-loaded"></i>
+								</div>
+							</div>
+						</div>
+						<div class="mt-2 mb-0 text-sm">
+							<span class="badge badge-pill bg-soft-success text-success me-2">
+								<i class="bi bi-arrow-up me-1"></i>
+							</span>
+							<span class="text-nowrap text-xs text-muted">Hiện Tại</span>
+							<br>
+							<br>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="card shadow border-0 mb-7">
+			<div class="card-header">
+				<h5 class="mb-0">Người dùng</h5>
+			</div>
+			<div class="table-responsive">
+				<table class="table table-nowrap">
+					<thead class="thead-light">
+						<tr>
+							<th scope="col">STT</th>
+							<th>Tài khoản</th>
+							<th scope="col">Người dùng</th>
+							<th scope="col">Họ và tên</th>
+							<th scope="col">Số điện thoại</th>
+							<th scope="col">Địa chỉ email</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="item, state :${items}">
+							<td scope="row" th:text="${state.index + 1}"></td>
+							<td>
+								<a href="#" type="button" class="text-danger-hover">
+									<i class="bi bi-person-circle text-dark"></i></i>
+								</a>
+							</td>
+							<td th:text="${item.tendangnhap}"></td>
+							<td th:text="${item.hovaten}"></td>
+							<td th:text="${item.sodienthoai}"></td>
+							<td th:text="${item.email}"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="card-footer border-0 py-5">
+				<span class="text-muted text-sm">Tất cả người dùng</span>
+			</div>
+		</div>
+	</div>
+	<!---->
+</main>

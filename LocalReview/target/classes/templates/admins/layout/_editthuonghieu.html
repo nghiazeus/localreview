@@ -1,0 +1,47 @@
+<header class="bg-surface-primary border-bottom pt-6">
+	<div class="container-fluid">
+		<div class="mb-npx">
+			<div class="row align-items-center">
+				<div class="col-sm-6 col-12 mb-4 mb-sm-0">
+					<!-- Title -->
+					<h1 class="h2 mb-0 ls-tight text-primary" target="_blank" th:text="${#request.remoteUser}"></h1>
+					<p class="text-info">Cập nhật thương hiệu</p>
+					</br>
+				</div>
+				<!-- Actions -->
+			</div>
+			<!-- Nav -->
+		</div>
+	</div>
+	<!-- Button trigger modal -->
+	<!-- Modal -->
+</header>
+
+<div class="container">
+    <div class="card mt-5">
+        <div class="card-header">
+            <h3 class="text-center">Sửa Thương Hiệu</h3>
+        </div>
+        <div class="card-body">
+            <form th:object="${thuonghieusanpham}" method="post" th:action="@{/admin/updateTH}" th:method="post">
+                <div class="form-group">
+                    <label for="mathuonghieu">Mã danh mục:</label>
+                    <input type="text" class="form-control" id="mathuonghieu" name="mathuonghieu" th:value="${thuonghieusanpham.mathuonghieu}">
+                </div>
+                <div class="form-group">
+                    <label for="tenthuonghieu">Tên danh mục:</label>
+                    <input type="text" class="form-control" id="tenthuonghieu" name="tenthuonghieu" th:value="${thuonghieusanpham.tenthuonghieu}">
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary" onclick="editthuonghieu()">Lưu thay đổi</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function editthuonghieu() {
+        alert("Cập nhật thương hiệu thành công!!")
+    }
+</script>

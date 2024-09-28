@@ -27,6 +27,10 @@ public class ReviewReports {
     private Review review;
 
     @ManyToOne
+    @JoinColumn(name = "reported_user_id", nullable = false)
+    private User reported_user_id;
+    
+    @ManyToOne
     @JoinColumn(name = "reported_by", nullable = false)
     private User reportedBy;
 

@@ -27,6 +27,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
     private UserDetailsService userDetailsService;
 	
+	
 	@Autowired
     private CustomOAuth2UserService customOAuth2UserService;
     
@@ -44,54 +45,47 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-    	http
-        .csrf().disable() // Vô hiệu hóa CSRF protection nếu cần thiết.
-        .authorizeRequests()
-        // Các đường dẫn không cần xác thực, ai cũng có thể truy cập
-				/*
-				 * .antMatchers("/index", "/qrcode", "/login", "/register", "/store/**",
-				 * "/css/**", "/js/**", "/images/**", "/profile/**").permitAll()
-				 */
-        
-        // Các đường dẫn yêu cầu xác thực cho người dùng với vai trò cụ thể
-        .antMatchers("/user", "/register-store").hasAnyAuthority("user", "store_owner")
-        .antMatchers("/admin/**").hasRole("admin")
-        .antMatchers("/api/reviews").hasAuthority("store_owner")
-
-        // Tất cả các yêu cầu khác không có trong danh sách trên đều không cần đăng nhập
-        .anyRequest().permitAll(); // Không cần xác thực cho các yêu cầu khác
-            
-            http.rememberMe()
-            .tokenValiditySeconds(86400) // 86400 giây = 1 ngày
+        http
+            .csrf().disable() // Vô hiệu hóa CSRF protection nếu cần thiết.
+            .authorizeRequests()
+                .antMatchers("/user", "/register-store").hasAnyAuthority("user", "store_owner")
+                .antMatchers("/api/reviews").hasAuthority("store_owner")
+                .antMatchers("/admin/dashboard").hasAuthority("admin") // Chỉ cho phép admin truy cập
+                .antMatchers("/admin/**").hasAuthority("admin") // Chỉ cho phép admin truy cập vào tất cả các đường dẫn bắt đầu bằng /admin/
+                .anyRequest().permitAll() // Cho phép tất cả các yêu cầu khác
             .and()
             .formLogin()
-                .loginPage("/login") // Xác định trang đăng nhập tùy chỉnh.
-                .defaultSuccessUrl("/index", true) // Chuyển hướng đến trang chính sau khi đăng nhập thành công.
-                .failureUrl("/login?error=true") // URL chuyển hướng khi đăng nhập thất bại.
-                .permitAll() // Cho phép tất cả người dùng truy cập trang đăng nhập.
+                .loginPage("/login") // Trang đăng nhập cho người dùng
+                .successHandler(new CustomAuthenticationSuccessHandler()) // Sử dụng CustomAuthenticationSuccessHandler
+                .failureUrl("/login?error=true") // Khi đăng nhập thất bại
+                .permitAll()
             .and()
-	            .oauth2Login()  // Bổ sung cấu hình cho OAuth2
-	            .loginPage("/login")
-	            .defaultSuccessUrl("/login/oauth2/success", true)
-	            .failureUrl("/login?error=true")
-	            .userInfoEndpoint()
-	            .userService(customOAuth2UserService) // Sử dụng CustomOAuth2UserService để xử lý thông tin người dùng từ Google
-	            .and()
-	        .and()
+            .oauth2Login()  // Bổ sung cấu hình cho OAuth2
+            .loginPage("/login")
+            .defaultSuccessUrl("/login/oauth2/success", true)
+            .failureUrl("/login?error=true")
+            .userInfoEndpoint()
+            .userService(customOAuth2UserService) // Sử dụng CustomOAuth2UserService để xử lý thông tin người dùng từ Google
+            .and()
+            .and()
             .logout()
-                .logoutUrl("/logout") // URL để gửi yêu cầu đăng xuất.
-                .logoutSuccessUrl("/login?logout=true") // URL chuyển hướng sau khi đăng xuất thành công.
-                .permitAll() // Cho phép tất cả người dùng thực hiện đăng xuất.
+                .logoutUrl("/logout") // URL để đăng xuất
+                .logoutSuccessUrl("/login?logout=true") // Chuyển hướng sau khi đăng xuất thành công
+                .permitAll()
+            .and()
+            .rememberMe()
+                .tokenValiditySeconds(86400) // 86400 giây = 1 ngày
             .and()
             .sessionManagement()
-            .sessionFixation().newSession() // Tạo một session mới sau khi đăng nhập
-            .sessionCreationPolicy(SessionCreationPolicy.ALWAYS) // Luôn tạo một session mới
-            .invalidSessionUrl("/login?invalidSession=true") // URL chuyển hướng khi session không hợp lệ
-            .maximumSessions(1) // Giới hạn số lượng session cho mỗi người dùng
-            .sessionRegistry(sessionRegistry()) // Cung cấp SessionRegistry
-            .maxSessionsPreventsLogin(false) // Cho phép đăng nhập mới ngay cả khi đã đạt giới hạn session
-            .expiredUrl("/login?expired=true"); // URL chuyển hướng khi session hết hạn
+                .sessionFixation().newSession() // Tạo session mới sau khi đăng nhập
+                .sessionCreationPolicy(SessionCreationPolicy.ALWAYS) // Luôn tạo session mới
+                .invalidSessionUrl("/login?invalidSession=true") // URL chuyển hướng khi session không hợp lệ
+                .maximumSessions(1) // Giới hạn số session
+                .sessionRegistry(sessionRegistry()) // Sử dụng SessionRegistry
+                .expiredUrl("/login?expired=true"); // URL khi session hết hạn
     }
+
+
 
 
 

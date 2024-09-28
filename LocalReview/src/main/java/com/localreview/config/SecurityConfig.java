@@ -60,6 +60,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .failureUrl("/login?error=true") // Khi đăng nhập thất bại
                 .permitAll()
             .and()
+            .oauth2Login()  // Bổ sung cấu hình cho OAuth2
+            .loginPage("/login")
+            .defaultSuccessUrl("/login/oauth2/success", true)
+            .failureUrl("/login?error=true")
+            .userInfoEndpoint()
+            .userService(customOAuth2UserService) // Sử dụng CustomOAuth2UserService để xử lý thông tin người dùng từ Google
+            .and()
+            .and()
             .logout()
                 .logoutUrl("/logout") // URL để đăng xuất
                 .logoutSuccessUrl("/login?logout=true") // Chuyển hướng sau khi đăng xuất thành công

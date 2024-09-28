@@ -402,9 +402,8 @@
         </a>
         <!-- Profile Icon -->
         <th:block th:if="${#request.remoteUser}">
-            <a th:href="@{/profile/{userId}(userId=${currentUser.userId})}"
-                class="menu-item flex flex-col items-center text-gray-600 hover:text-black"
-                data-active-path="/profile/${currentUser.userId}">
+            <a th:href="@{/profile/user}"
+                class="menu-item flex flex-col items-center text-gray-600 hover:text-black">
                 <i class="bi bi-person text-2xl"></i>
                 <span class="text-xs">Tài khoản</span>
             </a>

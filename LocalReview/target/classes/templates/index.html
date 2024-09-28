@@ -32,7 +32,7 @@
     <!--  <div id="welcome-screen" class="fixed inset-0 bg-white flex items-center justify-center z-50">
         <h1 class="text-4xl font-bold zoom-in gradient-text">Welcome To Review</h1>
     </div> -->
-
+    
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const welcomeScreen = document.getElementById('welcome-screen');
@@ -46,7 +46,7 @@
             // Kiểm tra nếu không có hoặc đã hết hạn
             if (!welcomeScreenData || (new Date().getTime() - welcomeScreenData.timestamp) > expirationTime) {
                 // Nếu chưa xem hoặc đã hết hạn, hiển thị màn hình chào mừng
-                setTimeout(function () {
+                setTimeout(function () {b=
                     welcomeScreen.classList.add('fade-out');
                     setTimeout(function () {
                         welcomeScreen.style.display = 'none';

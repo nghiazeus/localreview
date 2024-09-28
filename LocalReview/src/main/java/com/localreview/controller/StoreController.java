@@ -232,7 +232,7 @@ public class StoreController {
 			// Thêm thông báo và chuyển hướng
 			redirectAttributes.addFlashAttribute("message", "Đăng ký thành công với mã QR: " + qrCodeScans.getQrId());
 			redirectAttributes.addFlashAttribute("success", "Đăng ký cửa hàng thành công!");
-			return "redirect:/profile/" + currentUser.getUserId();
+			return "redirect:/profile/user";
 
 		} catch (Exception e) {
 			e.printStackTrace();

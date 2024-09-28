@@ -1,88 +1,58 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Store</title>
-    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css" />
-    <!-- SwiperJS CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tuyết Rơi</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: white; /* Nền trắng */
+        }
 
-    <!-- SwiperJS JavaScript -->
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            color: #00f; /* Màu sắc bông tuyết (có thể thay đổi) */
+            font-size: 1em;
+            pointer-events: none;
+            opacity: 0.8;
+        }
+    </style>
 </head>
-
 <body>
-    
-    <a id="openModalFilter" class="flex flex-col cursor-pointer items-center text-gray-600 hover:text-black">
-        <i class="bi bi-funnel text-2xl"></i>
-        <span class="text-xs">Lọc</span>
-    </a>
+    <script>
+        const snowflakeCount = 100;
 
-    <div id="modalfilter"
-    class="fixed inset-0 flex items-center justify-center bg-white bg-opacity-90 shadow-lg border border-pink-200 shadow-lg rounded-3xl transform scale-0 transition-transform duration-500 ease-in-out">
-    <button id="closeModalFilter" class="absolute top-4 right-4 text-gray-600 text-2xl font-bold">&times;</button>
-    <div class="p-6">
-        <h2 class="text-xl font-semibold text-gray-800">Bộ lọc review</h2>
-        <!-- Sort by Views -->
-        <div class="mb-4 mt-4">
-            <label class="block text-gray-800 font-medium mb-2 text-lg text-left">Lọc theo lượt xem:</label>
-            <div class="relative">
-                <select
-                    class="w-full bg-gray-100 rounded-xl p-4 pr-10 shadow-md text-gray-700 text-lg focus:outline-none appearance-none">
-                    <option>Mặc định</option>
-                    <option>Nhiều lượt xem nhất</option>
-                    <option>Ít lượt xem nhất</option>
-                </select>
-                <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none">
-                    <i class="bi bi-chevron-down text-xl"></i>
-                </span>
-            </div>
-        </div>
+        for (let i = 0; i < snowflakeCount; i++) {
+            const snowflake = document.createElement('div');
+            snowflake.classList.add('snowflake');
+            snowflake.textContent = '❄'; // Ký hiệu tuyết
+            snowflake.style.left = Math.random() * window.innerWidth + 'px';
+            snowflake.style.fontSize = Math.random() * 1 + 0.5 + 'em';
+            document.body.appendChild(snowflake);
 
-        <!-- Sort by Rating -->
-        <div class="mb-6">
-            <label class="block text-gray-800 font-medium mb-2 text-lg text-left">Lọc theo đánh giá:</label>
-            <div class="relative">
-                <select
-                    class="w-full bg-gray-100 rounded-xl p-4 pr-10 shadow-md text-gray-700 text-lg focus:outline-none appearance-none">
-                    <option>Mặc định</option>
-                    <option>Cao nhất</option>
-                    <option>Thấp nhất</option>
-                </select>
-                <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none">
-                    <i class="bi bi-chevron-down text-xl"></i>
-                </span>
-            </div>
-        </div>
+            animateSnowflake(snowflake);
+        }
 
-        <!-- Apply Filters Button -->
-        <button
-            class="w-full bg-pink-400 text-white font-semibold py-4 rounded-xl shadow-lg transition duration-300 text-lg">
-            Áp dụng bộ lọc
-        </button>
-    </div>
-</div>
+        function animateSnowflake(snowflake) {
+            const fallDuration = Math.random() * 6 + 4; // Thời gian rơi từ 4 đến 10 giây
+            const fallDistance = window.innerHeight + 50; // Khoảng cách rơi
 
-<script>
-    const modal = document.getElementById('modalfilter');
-    const openModal = document.getElementById('openModalFilter');
-    const closeModal = document.getElementById('closeModalFilter');
-
-    // When button is clicked, show the modal by scaling it up
-    openModal.addEventListener('click', () => {
-        modal.classList.toggle('scale-0');
-    });
-
-    // Close modal on "X" button click
-    closeModal.addEventListener('click', () => {
-        modal.classList.add('scale-0');
-    });
-</script>
-
-
+            snowflake.animate(
+                [
+                    { transform: `translateY(0)` },
+                    { transform: `translateY(${fallDistance}px)` }
+                ],
+                {
+                    duration: fallDuration * 1000,
+                    easing: 'linear',
+                    iterations: Infinity,
+                    direction: 'normal'
+                }
+            );
+        }
+    </script>
 </body>
-
 </html>

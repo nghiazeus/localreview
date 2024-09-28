@@ -9,8 +9,8 @@ body {
 	-webkit-user-select: none;
 	/* Ngăn chọn văn bản */
 	-webkit-touch-callout: none;
-	/* Ngăn menu bật lên khi giữ một đối tượng */
 }
+
 
 #menumobile {
     background-color: rgba(255, 255, 255, 0.5); /* Màu nền trắng với độ trong suốt 50% */

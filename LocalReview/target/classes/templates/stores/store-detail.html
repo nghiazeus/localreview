@@ -532,64 +532,266 @@
     <br>
     <!--  -->
     <div class="bg-gray-100 rounded-lg overflow-hidden">
-        <strong class="text-2xl ml-8 text-black">Bình luận</strong>
-        <section class="article mt-10 flex flex-col md:flex-row">
-            <div class="md:w-7/12 w-full scrollable-container py-6 px-8">
-                 <div th:each="review : ${reviews}" class="space-y-4 py-1">
-                    <!--  -->
-                    <div class="max-w-3xl mx-auto bg-white border rounded-lg shadow-md overflow-hidden">
-                        <div class="flex p-6 border-b">
-                            <img class="w-16 h-16 rounded-full"
-                                src="https://i.pinimg.com/736x/a1/b2/b4/a1b2b463bac40bf00a6046dac5109efe.jpg"
-                                alt="Avatar">
-                            <div class="ml-6 flex-grow">
-                                <div class="flex justify-between items-center pb-3">
-                                    <h2 class="text-xl font-semibold" th:text="${review.user.name}">Tên Người Dùng</h2>
-                                    <p class="text-gray-600 italic mt-2">— Ngày đánh giá:
-                                        <span class="font-semibold"
-                                            th:text="${#dates.format(review.reviewDate, 'dd/MM/yyyy')}">25/09/2024</span>
-                                    </p>
-                                </div>
-                                <div class="flex items-center mt-1">
-                                    <span class="text-yellow-500">
-                                        <span th:text="${'⭐️'.repeat(review.rating)}">⭐️</span>
-                                         <span th:text="${'#'.repeat(5 - review.rating)}">&#9734;</span>
-                                    </span>
-                                    <span class="ml-2 text-gray-600" th:text="('(' + ${review.rating} + ')')"> (0)
-                                    </span>
-                                </div>
-                                <p class="text-gray-700 text-lg mt-4" th:text="${review.comment}">Nội dung đánh giá của
-                                    người dùng.</p>
-                            </div>
+        <strong class="text-2xl text-black">Bình luận</strong>
+        <section class="article mt-10 flex justify-center">
+            <div class="justify-between justify-center space-y-4 space-x-4 p-8">
+                <button th:data-store-desktop-id="${store.storeId}"
+                    class="open-reviewdestop bg-blue-500 text-white px-6 py-2 rounded-full w-96">
+                    Xem đánh giá cửa hàng
+                </button>
+                <button id="openModaldanhgia"
+                    class="open-reviewdestop bg-pink-500 text-white px-6 py-2 rounded-full w-96">
+                    Đánh giá cửa hàng
+                </button>
+            </div>
+            <div th:each="store : ${stores}">
+                <div th:id="'review-modal-' + ${store.storeId}"
+                    class="review-modal fixed z-50 top-0 left-0 w-full h-full bg-black bg-opacity-50 hidden flex items-center justify-center transition-opacity duration-300 ease-in-out">
+                    <div
+                        class="bg-white rounded-lg shadow-lg p-6 w-full max-w-2xl mx-auto transform scale-0 transition-transform duration-300 ease-in-out modal-content">
+                        <div class="flex justify-between items-center border-b pb-3 mb-4">
+                            <h2 class="text-lg font-bold">ĐÁNH GIÁ</h2>
+                            <h2 class="text-lg font-bold text-center text-white bg-blue-500 rounded-full px-2">
+                                <strong th:text="${store.storeName}">Tên Cửa Hàng</strong>
+                            </h2>
+                            <button class="close-review text-gray-800 text-3xl bi bi-x-circle-fill"></button>
                         </div>
-                        <div class="flex overflow-x-auto max-x-80 p-4 gap-4" th:each="review : ${reviews}">
-                            <div th:each="photo : ${reviewPhotosMap[review.reviewId]}">
-                                <img class="w-auto h-20 rounded-lg" th:src="${photo}" alt="Hình ảnh đánh giá">
+                        <div class="p-4 overflow-y-auto max-h-96 space-y-4">
+                            <!-- Hiển thị các đánh giá -->
+                            <div th:if="${#lists.isEmpty(store.reviews)}">
+                                <p>Không có đánh giá nào cho cửa hàng này.</p>
+                            </div>
+                            <div th:each="review : ${store.reviews}">
+                                <div class="max-w-3xl mx-auto bg-white border rounded-lg shadow-md overflow-hidden">
+                                    <div class="flex p-6">
+                                        <img class="w-16 h-16 rounded-full"
+                                            src="https://i.pinimg.com/736x/a1/b2/b4/a1b2b463bac40bf00a6046dac5109efe.jpg"
+                                            alt="Avatar">
+                                        <div class="ml-6 flex-grow">
+                                            <div class="flex justify-between items-center pb-3">
+                                                <h2 class="text-xl font-semibold" th:text="${review.user.name}">Tên
+                                                    Người Dùng</h2>
+                                                <p class="text-gray-600 italic mt-2 text-sm">—
+                                                    <span class="font-semibold"
+                                                        th:text="${review.relativeReviewDate}">25/09/2024</span>
+                                                </p>
+
+                                            </div>
+                                            <div class="flex items-center mt-1">
+                                                <span class="text-yellow-500">
+                                                    <span th:text="${'⭐️'.repeat(review.rating)}">⭐️</span>
+                                                    <!--  <span th:text="${'#'.repeat(5 - review.rating)}">&#9734;</span> -->
+                                                </span>
+                                            </div>
+                                            <p class="text-gray-700 text-lg mt-4" th:text="${review.comment}">Nội dung
+                                                đánh giá của
+                                                người dùng.</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex overflow-x-auto max-x-auto p-4 gap-4">
+                                        <div th:each="photo : ${review.photos}">
+                                            <img class="w-auto h-20 rounded-lg" th:src="${photo.photoUrl}"
+                                                alt="Hình ảnh đánh giá">
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div> 
+                </div>
+            </div>
+            <script>
+                document.addEventListener('click', (event) => {
+                    const target = event.target;
+
+                    // Mở bảng review
+                    if (target.classList.contains('open-reviewdestop')) {
+                        const storeId = target.getAttribute('data-store-desktop-id');
+                        const modal = document.getElementById(`review-modal-${storeId}`);
+
+                        if (modal) {
+                            modal.classList.remove('hidden');
+                            document.body.classList.add('modal-open');  // Thêm lớp quản lý overflow
+                            setTimeout(() => {
+                                modal.querySelector('.modal-content').classList.remove('scale-0');
+                            }, 10);
+                        }
+                    }
+
+                    // Đóng bảng review
+                    if (target.classList.contains('close-review') || target.classList.contains('review-modal')) {
+                        const modal = target.closest('.review-modal') || target;
+                        if (modal) {
+                            modal.querySelector('.modal-content').classList.add('scale-0');
+                            setTimeout(() => {
+                                modal.classList.add('hidden');
+                                document.body.classList.remove('modal-open');  // Gỡ bỏ lớp khi đóng modal
+                            }, 300);
+                        }
+                    }
+                });
+
+                // Đóng modal khi nhấn phím "Esc"
+                document.addEventListener('keydown', (event) => {
+                    if (event.key === 'Escape') {
+                        const openModal = document.querySelector('.review-modal:not(.hidden)');
+                        if (openModal) {
+                            openModal.querySelector('.modal-content').classList.add('scale-0');
+                            setTimeout(() => {
+                                openModal.classList.add('hidden');
+                                document.body.classList.remove('modal-open');
+                            }, 300);
+                        }
+                    }
+                });
+
+
+            </script>
+            <!-- =====================Đánh giá================ -->
+            <!-- Modal -->
+            <div id="myModaldanhgia"
+                class="fixed z-50 overflow-hidden inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center transition-opacity duration-300 ease-in-out">
+                <div
+                    class="bg-white rounded-lg shadow-lg p-6 w-full max-w-2xl mx-auto transform scale-95 transition-transform duration-300 ease-in-out modal-content">
+                    <div class="flex justify-between items-center border-b pb-3 mb-4">
+                        <h2 class="text-2xl font-bold">Đánh giá cửa hàng</h2>
+                        <button id="closeModaldanhgia" class="text-gray-400 hover:text-red-500 transition duration-200">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="w-full mt-4">
+                        <form id="reviewForm" class="space-y-6">
+                            <!-- Nội dung đánh giá -->
+                            <div>
+                                <label for="comment" class="block text-sm font-medium text-gray-700">Nội dung:</label>
+                                <textarea id="comment" name="comment"
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                    rows="4" placeholder="Viết đánh giá của bạn..."></textarea>
+                            </div>
+
+                            <!-- Đánh giá điểm bằng ngôi sao -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Điểm đánh giá:</label>
+                                <div id="rating" class="flex space-x-2">
+                                    <button type="button" data-rating="1"
+                                        class="star p-2 text-gray-400 text-3xl focus:outline-none transition duration-200">&#9733;</button>
+                                    <button type="button" data-rating="2"
+                                        class="star p-2 text-gray-400 text-3xl focus:outline-none transition duration-200">&#9733;</button>
+                                    <button type="button" data-rating="3"
+                                        class="star p-2 text-gray-400 text-3xl focus:outline-none transition duration-200">&#9733;</button>
+                                    <button type="button" data-rating="4"
+                                        class="star p-2 text-gray-400 text-3xl focus:outline-none transition duration-200">&#9733;</button>
+                                    <button type="button" data-rating="5"
+                                        class="star p-2 text-gray-400 text-3xl focus:outline-none transition duration-200">&#9733;</button>
+                                </div>
+                                <input type="hidden" id="ratingValue" name="rating" value="0" />
+                                <p class="mt-1 text-sm text-gray-500">Nhấn vào ngôi sao để chọn điểm đánh giá.</p>
+                            </div>
+
+                            <!-- Tải ảnh -->
+                            <div>
+                                <label for="images" class="block text-sm font-medium text-gray-700">Chọn ảnh (Không bắt
+                                    buộc):</label>
+                                <input type="file" id="images" name="images" multiple
+                                    class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
+                            </div>
+
+                            <!-- Nút gửi -->
+                            <div class="flex justify-end">
+                                <button type="submit"
+                                    class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-200">Gửi
+                                    đánh giá</button>
+                            </div>
+                        </form>
+
+                        <script>
+                            // Lấy tất cả các ngôi sao
+                            const stars = document.querySelectorAll('.star');
+                            const ratingValue = document.getElementById('ratingValue');
+                        
+                            stars.forEach((star, index) => {
+                                star.addEventListener('click', () => {
+                                    // Cập nhật giá trị đánh giá
+                                    ratingValue.value = index + 1;
+                        
+                                    // Làm mới màu của tất cả ngôi sao
+                                    stars.forEach((s, i) => {
+                                        if (i <= index) {
+                                            s.classList.add('text-yellow-400'); // Đánh dấu ngôi sao đã chọn
+                                            s.classList.remove('text-gray-400'); // Xóa màu xám của ngôi sao đã chọn
+                                        } else {
+                                            s.classList.remove('text-yellow-400'); // Ngôi sao không được chọn sẽ không có màu vàng
+                                            s.classList.add('text-gray-400'); // Ngôi sao chưa chọn vẫn giữ màu xám
+                                        }
+                                    });
+                                });
+                            });
+                        
+                            // Ngăn không submit form khi chưa chọn điểm đánh giá
+                            const form = document.getElementById('reviewForm');
+                            form.addEventListener('submit', (event) => {
+                                // Kiểm tra nếu không có giá trị hợp lệ
+                                const ratingNum = Number(ratingValue.value);
+                                // Kiểm tra giá trị ratingValue trước khi gửi
+                                if (isNaN(ratingNum) || ratingNum < 1 || ratingNum > 5) {
+                                    alert("Vui lòng chọn điểm đánh giá từ 1 đến 5.");
+                                    event.preventDefault(); // Ngăn gửi form khi chưa có đánh giá hợp lệ
+                                }
+                            });
+                        </script>                        
+                    </div>
+                </div>
             </div>
 
-            <!-- Cột bên phải chứa quảng cáo (3 phần) -->
-            <div class="md:w-3/12 w-full md:ml-20 mt-8 md:mt-6">
-                <form id="reviewForm">
-                    <label for="comment">Comment:</label>
-                    <textarea id="comment" name="comment"></textarea><br>
+            <script>
+                const modal = document.getElementById("myModaldanhgia");
+                const openModalBtn = document.getElementById("openModaldanhgia");
+                const closeModalBtn = document.getElementById("closeModaldanhgia");
 
-                    <label for="rating">Rating:</label>
-                    <input type="number" id="rating" name="rating" min="1" max="5" /><br>
+                // Open the modal
+                openModalBtn.addEventListener("click", () => {
+                    modal.classList.remove("hidden");
+                    modal.classList.add("flex");
+                    document.querySelector('.modal-content').classList.add('scale-100');
+                });
 
-                    <label for="images">Images:</label>
-                    <input type="file" id="images" name="images" multiple /><br>
+                // Close the modal
+                closeModalBtn.addEventListener("click", () => {
+                    modal.classList.add("hidden");
+                    modal.classList.remove("flex");
+                });
 
-                    <button type="submit">Submit Review</button>
-                </form>
-            </div>
-
+                // Close the modal when clicking outside of it
+                window.addEventListener("click", (event) => {
+                    if (event.target === modal) {
+                        modal.classList.add("hidden");
+                        modal.classList.remove("flex");
+                    }
+                });
+            </script>
         </section>
     </div>
     <br>
+
+    <!-- <div class="md:w-3/12 w-full md:ml-20 mt-8 md:mt-6">
+        <form id="reviewForm">
+            <label for="comment">Comment:</label>
+            <textarea id="comment" name="comment"></textarea><br>
+
+            <label for="rating">Rating:</label>
+            <input type="number" id="rating" name="rating" min="1" max="5" /><br>
+
+            <label for="images">Images:</label>
+            <input type="file" id="images" name="images" multiple /><br>
+
+            <button type="submit">Submit Review</button>
+        </form>
+    </div> -->
     <!-- footer -->
     <div class="containerer"></div>
     <!-- ------- -->

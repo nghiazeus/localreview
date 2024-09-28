@@ -15,7 +15,14 @@ function submitReviewForm() {
 
     var formData = new FormData();
     formData.append('comment', document.getElementById('comment').value);
-    formData.append('rating', document.getElementById('rating').value);
+    
+    // Get the rating value from hidden input
+    var ratingValue = document.getElementById('ratingValue').value;
+    if (ratingValue === "0" || ratingValue === "undefined") {
+        alert('Please select a valid rating between 1 and 5.');
+        return;
+    }
+    formData.append('rating', ratingValue);
 
     var images = document.getElementById('images').files;
     if (images.length > 0) {
@@ -24,14 +31,21 @@ function submitReviewForm() {
         }
     }
 
+    // Send review data to the server
     fetch('/api/reviews/' + storeId, {
         method: 'POST',
         body: formData
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
     .then(data => {
         console.log('Success:', data);
         alert('Review submitted successfully!');
+        // Optionally reset the form or do other UI updates here
     })
     .catch(error => {
         console.error('Error:', error);
@@ -43,7 +57,7 @@ function submitReviewForm() {
 document.addEventListener('DOMContentLoaded', function() {
     var form = document.getElementById('reviewForm');
     form.addEventListener('submit', function(event) {
-        event.preventDefault();
-        submitReviewForm();
+        event.preventDefault(); // Prevent default form submission
+        submitReviewForm(); // Call the function to submit the form
     });
 });

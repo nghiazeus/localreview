@@ -84,13 +84,12 @@ public class StoreOfUserController {
 	@Autowired
 	private PhotoService photoService;
 
-	@GetMapping("/my-stores") // Đường dẫn không cần userId
+	@GetMapping("/my-stores")
 	public String getUserStores(@RequestParam(required = false) String storeId, Model model) {
-	    // Lấy thông tin người dùng đang đăng nhập
-	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-	    String email = ((UserDetails) authentication.getPrincipal()).getUsername(); // Hoặc cách lấy email phù hợp với lớp User của bạn
 
-	    // Tìm người dùng theo email
+	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	    String email = ((UserDetails) authentication.getPrincipal()).getUsername();
+
 	    User currentUser = userRepository.findByEmail(email);
 	    if (currentUser == null) {
 	        model.addAttribute("error", "Không tìm thấy người dùng");
@@ -98,7 +97,6 @@ public class StoreOfUserController {
 	    }
 
 	    List<Store> stores = storeService.getStoresByOwnerId(currentUser.getUserId());
-	    // List<Store> stores = storeService.getStoresByOwnerId(userId);
 	    List<Photo> storePhotos = photoService.getPhotosByStoreId(storeId);
 	    
 	    model.addAttribute("stores", stores);
@@ -106,7 +104,7 @@ public class StoreOfUserController {
 
 	    List<Breadcrumb> breadcrumbs = new ArrayList<>();
 	    breadcrumbs.add(new Breadcrumb("Trang chủ", "/index"));
-	    breadcrumbs.add(new Breadcrumb("Tài khoản", "/profile/" + currentUser.getUserId()));
+	    breadcrumbs.add(new Breadcrumb("Tài khoản", "/profile/user"));
 	    breadcrumbs.add(new Breadcrumb("Cửa hàng của tôi", "/stores")); // Cập nhật đường dẫn breadcrumb
 	    model.addAttribute("breadcrumbs", breadcrumbs);
 
@@ -119,8 +117,7 @@ public class StoreOfUserController {
 	            .orElseThrow(() -> new IllegalArgumentException("Invalid store Id:" + storeId));
 	    model.addAttribute("store", store);
 	    
-	    // Lấy danh sách danh mục để hiển thị trong dropdown
-	    List<Categories> categories = categoryRepository.findAll(); // Hoặc phương thức tương tự
+	    List<Categories> categories = categoryRepository.findAll();
 	    model.addAttribute("categories", categories);
 	    
 	    return "stores/edit_user_store";
@@ -163,9 +160,8 @@ public class StoreOfUserController {
 	            Path tempFilePath = null;
 	            try {
 	                tempFilePath = saveFile(photo);
-	                String imageUrl = storeService.uploadImageToImgur(tempFilePath.toString());
-	                // Cập nhật ảnh mới cho cửa hàng
-	                store.getPhotos().clear(); // Xóa ảnh cũ nếu cần
+	                String imageUrl = storeService.uploadImageToImgur(tempFilePath.toString());	                
+	                store.getPhotos().clear(); 
 	                Photo newPhoto = new Photo();
 	                newPhoto.setPhotoUrl(imageUrl);
 	                newPhoto.setStoreId(storeId);
@@ -181,13 +177,10 @@ public class StoreOfUserController {
 	            }
 	        }
 
-	        // Lưu cửa hàng
 	        storeService.saveStore(store);
 
-	        // Lấy userId từ cửa hàng
 	        String userId = store.getOwnerId();
 
-	        // Redirect đến trang của người dùng
 	        redirectAttributes.addFlashAttribute("success", "Cập nhật cửa hàng thành công!");
 	        return "redirect:/stores/" + userId;
 
@@ -230,7 +223,6 @@ public class StoreOfUserController {
 		Store store = storeOptional.get();
 		String ownerId = store.getOwnerId();
 
-		// Tìm thực đơn của cửa hàng
 		List<StoreMenu> storeMenus = storeMenuService.findByStore_StoreId(storeId);
 		model.addAttribute("menulist", storeMenus);
 		model.addAttribute("storeId", storeId);
@@ -238,7 +230,7 @@ public class StoreOfUserController {
 		// Tạo breadcrumb
 		List<Breadcrumb> breadcrumbs = new ArrayList<>();
 		breadcrumbs.add(new Breadcrumb("Trang chủ", "/index"));
-		breadcrumbs.add(new Breadcrumb("Tài khoản", "/profile/" + ownerId));
+		breadcrumbs.add(new Breadcrumb("Tài khoản", "/profile/user"));
 		breadcrumbs.add(new Breadcrumb("Cửa hàng của tôi", "/stores/" + ownerId));
 		breadcrumbs.add(new Breadcrumb("Menu của tôi", "/menu/" + storeId));
 		model.addAttribute("breadcrumbs", breadcrumbs);
@@ -320,7 +312,6 @@ public class StoreOfUserController {
 
 		Store store = storeOptional.get();
 		String ownerId = store.getOwnerId();
-
 		List<StoreFood> storeFood = storeFoodService.findByStore_StoreId(storeId);
 		
 		for (StoreFood food : storeFood) {
@@ -333,7 +324,7 @@ public class StoreOfUserController {
 		// Tạo breadcrumb
 		List<Breadcrumb> breadcrumbs = new ArrayList<>();
 		breadcrumbs.add(new Breadcrumb("Trang chủ", "/index"));
-		breadcrumbs.add(new Breadcrumb("Tài khoản", "/profile/" + ownerId));
+		breadcrumbs.add(new Breadcrumb("Tài khoản", "/profile/user"));
 		breadcrumbs.add(new Breadcrumb("Cửa hàng của tôi", "/stores/" + ownerId));
 		breadcrumbs.add(new Breadcrumb("Món ăn", "/food/" + storeId));
 		model.addAttribute("breadcrumbs", breadcrumbs);
@@ -355,6 +346,7 @@ public class StoreOfUserController {
 	    }
 
 	    Store store = storeOptional.get();
+	    
 	    StoreFood newFood = new StoreFood();
 	    newFood.setStore(store);
 	    newFood.setFoodName(foodName);
@@ -462,7 +454,7 @@ public class StoreOfUserController {
 		// Tạo breadcrumb
 		List<Breadcrumb> breadcrumbs = new ArrayList<>();
 		breadcrumbs.add(new Breadcrumb("Trang chủ", "/index"));
-		breadcrumbs.add(new Breadcrumb("Tài khoản", "/profile/" + ownerId));
+		breadcrumbs.add(new Breadcrumb("Tài khoản", "/profile/user"));
 		breadcrumbs.add(new Breadcrumb("Cửa hàng của tôi", "/stores/" + ownerId));
 		breadcrumbs.add(new Breadcrumb("Đồ uống", "/drink/" + storeId));
 		model.addAttribute("breadcrumbs", breadcrumbs);

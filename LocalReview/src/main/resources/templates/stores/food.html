@@ -77,6 +77,7 @@
                             type="text" id="price" name="price" required placeholder="100000...">
                         <p id="priceInWords" class="mt-2 inline-block text-white bg-blue-600 rounded-full px-4"></p>
                     </div>
+
                     <!-- Thêm trường upload ảnh -->
                     <div>
                         <label class="block text-gray-700 font-medium mb-1" for="food_images">Chọn ảnh món ăn:</label>
@@ -102,18 +103,23 @@
                         let value = e.target.value;
 
                         // Xóa tất cả ký tự không phải số
-                        value = value.replace(/\D/g, '');
+                        value = value.replace(/\D/g, ''); // Chỉ giữ lại số nguyên
 
-                        // Định dạng lại số thành chuỗi có dấu phân cách hàng nghìn
-                        let formattedValue = new Intl.NumberFormat().format(value);
+                        // Nếu giá trị sau khi làm sạch rỗng thì không làm gì cả
+                        if (value === '') {
+                            e.target.value = '';
+                            priceInWords.textContent = '';
+                            return;
+                        }
 
-                        // Gán lại giá trị đã định dạng vào ô input
-                        e.target.value = formattedValue;
+                        // Gán lại giá trị đã nhập vào ô input (không định dạng lại)
+                        e.target.value = value;
 
                         // Chuyển đổi số thành chữ
                         priceInWords.textContent = convertNumberToWords(value) + ' đồng';
                     });
 
+                    // Hàm để chuyển đổi số thành chữ
                     function convertNumberToWords(number) {
                         const units = ['', 'nghìn', 'triệu', 'tỷ'];
                         const ones = ['không', 'một', 'hai', 'ba', 'bốn', 'năm', 'sáu', 'bảy', 'tám', 'chín'];
@@ -123,6 +129,7 @@
                         let wordArray = [];
                         let unitIndex = 0;
 
+                        // Lặp qua từng phần ba chữ số từ phải sang trái
                         while (number.length > 0) {
                             let chunk = number.slice(-3);
                             number = number.slice(0, -3);
@@ -137,6 +144,7 @@
                         return wordArray.join(' ').trim();
                     }
 
+                    // Hàm để chuyển đổi từng phần ba chữ số thành chữ
                     function convertChunkToWords(chunk) {
                         const ones = ['không', 'một', 'hai', 'ba', 'bốn', 'năm', 'sáu', 'bảy', 'tám', 'chín'];
                         const tens = ['', '', 'hai mươi', 'ba mươi', 'bốn mươi', 'năm mươi', 'sáu mươi', 'bảy mươi', 'tám mươi', 'chín mươi'];

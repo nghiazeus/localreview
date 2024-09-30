@@ -37,5 +37,7 @@ public interface StoreService {
 
 //	Lọc của hàng theo danh mục
 	List<Store> getStoresByCategoryId(String categoriesId);
+	
+	Double getAverageRating(String storeId);
 
 }

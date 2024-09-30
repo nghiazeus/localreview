@@ -263,6 +263,12 @@ public class StoreController {
 				List<StoreFood> storeFoodList = storeFoodService.findByStore_StoreId(storeId);
 				List<StoreDrink> storeDrinkList = storeDrinkService.findByStore_StoreId(storeId);
 				List<Photo> storePhotos = photoService.getPhotosByStoreId(storeId);
+				Double averageRating = storeService.getAverageRating(storeId);
+				
+				String formattedAverageRating = String.format("%.1f", averageRating);
+				int fullStars = averageRating.intValue();
+				boolean hasHalfStar = (averageRating - fullStars >= 0.5);
+				int emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
 
 				for (StoreFood food : storeFoodList) {
 					food.getFormattedPrice();
@@ -272,6 +278,10 @@ public class StoreController {
 				model.addAttribute("foodlist", storeFoodList);
 				model.addAttribute("drinklist", storeDrinkList);
 				model.addAttribute("storePhotos", storePhotos);
+				model.addAttribute("fullStars", fullStars);
+				model.addAttribute("hasHalfStar", hasHalfStar);
+				model.addAttribute("emptyStars", emptyStars);
+				 model.addAttribute("averageRating", formattedAverageRating);
 
 				List<Breadcrumb> breadcrumbs = new ArrayList<>();
 				breadcrumbs.add(new Breadcrumb("Trang chủ", "/index"));

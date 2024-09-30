@@ -1,58 +1,107 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tuyết Rơi</title>
-    <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-            background-color: white; /* Nền trắng */
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Cropper</title>
+  <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.5.12/dist/cropper.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.5.12/dist/cropper.min.css">
+  <style>
+   .header-background {
+    background-image: url('your-image-url.jpg');
+    background-size: cover;
+    background-position: center;
+}
 
-        .snowflake {
-            position: absolute;
-            top: -10px;
-            color: #00f; /* Màu sắc bông tuyết (có thể thay đổi) */
-            font-size: 1em;
-            pointer-events: none;
-            opacity: 0.8;
-        }
-    </style>
+.fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 1s ease-out, transform 1s ease-out;
+}
+
+.fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+  </style>
 </head>
 <body>
-    <script>
-        const snowflakeCount = 100;
+  <header class="relative bg-cover bg-center h-screen" style="background-image: url('your-image-url.jpg');">
+    <!-- Overlay -->
+    <div class="absolute inset-0 bg-black opacity-50"></div>
 
-        for (let i = 0; i < snowflakeCount; i++) {
-            const snowflake = document.createElement('div');
-            snowflake.classList.add('snowflake');
-            snowflake.textContent = '❄'; // Ký hiệu tuyết
-            snowflake.style.left = Math.random() * window.innerWidth + 'px';
-            snowflake.style.fontSize = Math.random() * 1 + 0.5 + 'em';
-            document.body.appendChild(snowflake);
+    <!-- Navbar -->
+    <nav class="container mx-auto flex justify-between items-center py-6 px-4 lg:px-8">
+        <div class="text-white text-2xl font-bold">
+            <a href="#">YourLogo</a>
+        </div>
+        <div class="space-x-6 hidden lg:flex">
+            <a href="#features" class="text-white hover:text-gray-300">Features</a>
+            <a href="#about" class="text-white hover:text-gray-300">About</a>
+            <a href="#contact" class="text-white hover:text-gray-300">Contact</a>
+        </div>
+        <div class="lg:hidden text-white">Menu</div> <!-- Hamburger icon for mobile -->
+    </nav>
 
-            animateSnowflake(snowflake);
-        }
+    <!-- Hero Section -->
+    <div class="container mx-auto text-center relative z-10">
+        <h1 class="text-5xl lg:text-6xl text-white font-extrabold leading-tight">Khám phá cửa hàng tốt nhất</h1>
+        <p class="text-white text-xl mt-4">Tìm hiểu những cửa hàng được đánh giá cao ngay tại thành phố của bạn.</p>
+        <a href="#explore"
+            class="mt-8 inline-block bg-purple-600 text-white text-lg font-semibold py-3 px-8 rounded-full hover:bg-purple-700 transition duration-300">Khám
+            Phá Ngay</a>
+    </div>
 
-        function animateSnowflake(snowflake) {
-            const fallDuration = Math.random() * 6 + 4; // Thời gian rơi từ 4 đến 10 giây
-            const fallDistance = window.innerHeight + 50; // Khoảng cách rơi
+    <!-- Scroll Down Indicator -->
+    <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 text-white text-xl">
+        <span class="block">Scroll Down</span>
+        <i class="bi bi-chevron-down animate-bounce"></i>
+    </div>
+</header>
 
-            snowflake.animate(
-                [
-                    { transform: `translateY(0)` },
-                    { transform: `translateY(${fallDistance}px)` }
-                ],
-                {
-                    duration: fallDuration * 1000,
-                    easing: 'linear',
-                    iterations: Infinity,
-                    direction: 'normal'
-                }
-            );
-        }
-    </script>
+<!-- Card 1 -->
+<div class="group perspective">
+  <div
+      class="relative h-64 bg-gradient-to-r from-purple-500 to-pink-500 p-6 rounded-lg shadow-lg transform group-hover:rotate-y-6 transition-transform duration-500">
+      
+      <!-- Nội dung hover -->
+      <div
+          class="absolute inset-0 rounded-lg bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-auto z-10">
+          <div class="flex flex-col justify-center items-center h-full text-center p-4">
+              <h3 class="text-xl font-semibold text-gray-800">Cửa hàng A</h3>
+              <p class="text-gray-600 mt-4">Cửa hàng nổi bật với các sản phẩm chất lượng cao, phục vụ chuyên nghiệp.</p>
+              <a href="#"
+                  class="mt-6 inline-block bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600">
+                  Xem chi tiết
+              </a>
+          </div>
+      </div>
+      
+      <!-- Nội dung trước khi hover -->
+      <div
+          class="absolute inset-0 flex flex-col justify-center items-center text-white text-center opacity-100 group-hover:opacity-0 transition-opacity duration-500 pointer-events-none">
+          <i class="bi bi-shop text-5xl"></i>
+          <h3 class="text-2xl font-bold mt-4">Cửa hàng A</h3>
+      </div>
+  </div>
+</div>
+
+
+<script>
+  document.addEventListener("scroll", function() {
+    const header = document.querySelector('header');
+    const heroText = document.querySelector('.hero-text');
+
+    const rect = header.getBoundingClientRect();
+    if (rect.top < window.innerHeight - 100) {
+        heroText.classList.add('visible');
+    }
+});
+
+</script>
+
+
 </body>
 </html>

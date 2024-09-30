@@ -6,38 +6,134 @@
 @tailwind utilities;
 
 body {
-	-webkit-user-select: none;
-	/* Ngăn chọn văn bản */
+	/* -webkit-user-select: none;
 	-webkit-touch-callout: none;
+	*/
+} 
+
+.hidden-content {
+    opacity: 0; /* Ẩn nội dung ban đầu */
+    transform: translateY(20px); /* Di chuyển một chút xuống dưới */
+    transition: opacity 4s ease, transform 4s ease; /* Hiệu ứng chuyển tiếp */
+}
+
+.hidden-content.visible {
+    opacity: 1; /* Hiện nội dung */
+    transform: translateY(0); /* Quay trở lại vị trí ban đầu */
+}
+
+.fade-in-content {
+    opacity: 0; /* Ẩn nội dung ban đầu */
+    transition: opacity 4s ease; /* Hiệu ứng chuyển tiếp */
+}
+
+.fade-in-content.visible {
+    opacity: 1; /* Hiện nội dung */
+}
+
+.flip-object {
+    opacity: 0; /* Ẩn đồ vật ban đầu */
+    transform: rotateY(90deg); /* Lật đồ vật */
+    transition: opacity 2s ease, transform 2s ease; /* Hiệu ứng chuyển tiếp */
+}
+
+.flip-object.visible {
+    opacity: 1; /* Hiện đồ vật */
+    transform: rotateY(0); /* Quay lại vị trí ban đầu */
+}
+
+.roll-object {
+    opacity: 0; /* Ẩn đồ vật ban đầu */
+    transform: translateY(100px) rotate(20deg); /* Di chuyển xuống và lăn */
+    transition: opacity 2s ease, transform 2s ease; /* Hiệu ứng chuyển tiếp */
+}
+
+.roll-object.visible {
+    opacity: 1; /* Hiện đồ vật */
+    transform: translateY(0) rotate(0); /* Quay lại vị trí ban đầu */
 }
 
 
+
 #menumobile {
-    background-color: rgba(255, 255, 255, 0.5); /* Màu nền trắng với độ trong suốt 50% */
+    background-color: rgba(255, 255, 255, 0.7); /* Màu nền trắng với độ trong suốt 50% */
     backdrop-filter: blur(20px); /* Làm mờ nền phía sau khi cuộn qua */
-    -webkit-backdrop-filter: blur(20px); /* Hỗ trợ cho các trình duyệt WebKit */
+    -webkit-backdrop-filter: blur(30px); /* Hỗ trợ cho các trình duyệt WebKit */
     opacity: 10; /* Độ trong suốt của chính thanh điều hướng */
     transition: background-color 0.3s ease, opacity 0.3s ease; /* Hiệu ứng chuyển khi thay đổi */
 }
 
 @media only screen and (max-width: 760px) {
     #header {
-        background-color: rgba(255, 255, 255, 0.5); /* Màu nền trắng với độ trong suốt 50% */
-        backdrop-filter: blur(20px); /* Làm mờ nền phía sau khi cuộn qua */
+        background-color: rgba(255, 255, 255, 0.7); /* Màu nền trắng với độ trong suốt 50% */
+        backdrop-filter: blur(30px); /* Làm mờ nền phía sau khi cuộn qua */
         -webkit-backdrop-filter: blur(20px); /* Hỗ trợ cho các trình duyệt WebKit */
         opacity: 1; /* Độ trong suốt của chính thanh điều hướng */
         transition: background-color 0.3s ease, opacity 0.3s ease; /* Hiệu ứng chuyển khi thay đổi */
     }
 }
 
-    .modal-open {
-        overflow: hidden;
-    }
+.modal-open {
+    overflow: hidden;
+}
 
-    .no-scroll {
-        overflow: hidden;
-        height: 100%;
-    }
+.no-scroll {
+   overflow: hidden;
+   height: 100%;
+}
+    
+    
+#emojiDisplay {
+    visibility: hidden; /* Hide the emoji by default */
+    transition: visibility 0s, opacity 0.2s linear;
+    opacity: 0; /* Initially transparent */
+}
+
+/* =======Star detail========= */
+
+.star-rating {
+  position: relative;
+  font-size: 2rem;
+  color: #d1d5db; /* Màu xám cho sao trống */
+}
+
+.star-rating .filled {
+  position: absolute;
+  top: 0;
+  left: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  color: #fbbf24; /* Màu vàng cho sao đầy */
+}
+
+.star-rating .half-filled {
+  position: absolute;
+  top: 0;
+  left: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  color: #fbbf24; /* Màu vàng cho nửa sao */
+}
+/* ============================ */
+
+.star:hover + #emojiDisplay {
+    visibility: visible; /* Show emoji when hovering */
+    opacity: 1; /* Fade in */
+}
+
+.star {
+    cursor: pointer; /* Change cursor on hover */
+}
+
+.text-gray-400 {
+    color: #9CA3AF; /* Light gray for unselected stars */
+}
+
+.text-yellow-400 {
+    color: #FBBF24; /* Yellow for selected stars */
+}
+
+    
     
 
 /* Tùy chọn CSS để tạo hiệu ứng chuyển động */

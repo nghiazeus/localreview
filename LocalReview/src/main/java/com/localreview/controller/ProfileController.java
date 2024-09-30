@@ -161,11 +161,11 @@ public class ProfileController {
             storeRepository.save(existingStore);
 
             model.addAttribute("store", existingStore);
-            model.addAttribute("success", "Store updated successfully");
+            model.addAttribute("success", "Cập nhật cửa hàng thành công");
 
             return "redirect:/profile/" + existingStore.getOwnerId();
         } else {
-            model.addAttribute("error", "Store not found");
+            model.addAttribute("error", "Không tìm thấy cửa hàng");
             return "error";
         }
     }
@@ -189,7 +189,7 @@ public class ProfileController {
         // Lấy đối tượng StoreMenu từ cơ sở dữ liệu
         Optional<StoreMenu> menuOptional = storeMenuRepository.findById(menuId);
         if (!menuOptional.isPresent()) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Menu not found");
+            redirectAttributes.addFlashAttribute("errorMessage", "Không tìm thấy menu");
             return "redirect:/error"; // Chuyển hướng đến trang lỗi
         }
 
@@ -201,7 +201,7 @@ public class ProfileController {
 
         storeMenuRepository.save(storeMenu);
 
-        redirectAttributes.addFlashAttribute("successMessage", "Menu updated successfully");
+        redirectAttributes.addFlashAttribute("successMessage", "Cập nhật menu thành công");
         return "redirect:/profile/" + store.getOwnerId(); // Chuyển hướng đến trang profile của người sở hữu cửa hàng
     }
 

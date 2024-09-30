@@ -1,23 +1,9 @@
-<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
-<style>
-    .grid-item {
-        box-sizing: border-box;
-        width: calc(50% - 0.5rem);
-    }
-
-    @media (min-width: 640px) {
-        .grid-item {
-            width: calc(50% - 0.5rem);
-        }
-    }
-</style>
-
 <!-- ===========================================Mobile============================================ -->
 
 <div class="mx-auto mt-2 ml-2 md:hidden pb-16">
     <div class="grid" id="grid" style="display: flex; flex-wrap: wrap; justify-content: flex-start;">
         <div th:each="store : ${stores}"
-            class="grid-item mb-4 break-inside bg-white shadow-lg rounded-xl overflow-hidden">
+            class="grid-item mb-3 break-inside bg-white shadow-lg rounded-xl overflow-hidden">
             <a th:href="@{/store/detail/{id}(id=${store.storeId})}"
                 class="block transform transition hover:scale-105 duration-300">
                 <!-- Image -->
@@ -41,7 +27,7 @@
                     <div class="flex items-center text-sm mt-3">
                         <div class="flex items-center text-gray-900">
                             <i class="bi bi-star-fill text-yellow-500 mr-1"></i>
-                            <span>4.5</span>
+                            <span th:text="${#numbers.formatDecimal(store.getAverageRating(), 1, 1).replace(',', '.')}"></span>
                         </div>
                         <div class="ml-auto flex items-center text-gray-900">
                             <i class="bi bi-eye mr-1"></i>
@@ -61,6 +47,22 @@
         </div>
     </div>
 </div>
+<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+<style>
+    .grid-item {
+        box-sizing: border-box;
+        width: calc(50% - 0.5rem);
+    }
+</style>
+
+<script>
+    var elem = document.querySelector('#grid');
+    var msnry = new Masonry(elem, {
+        itemSelector: '.grid-item',
+        columnWidth: '.grid-item',
+        gutter: 8 // Khoảng cách giữa các phần tử
+    });
+</script>
 
 <!-- Panel Review mobile -->
 <div th:each="store : ${stores}">
@@ -71,12 +73,15 @@
             <h2 class="text-lg font-bold text-center text-white bg-blue-500 rounded-full px-2">
                 <strong>[[${store.storeName}]]</strong>
             </h2>
-            <h2 class="text-lg font-semibold">Đánh giá</h2>
+            <h2 class="text-lg font-semibold">
+                <a th:href="@{/store/detail/{id}(id=${store.storeId})}">ĐÁNH GIÁ</a>
+            </h2>
         </div>
-        <div class="overflow-y-auto pb-16">
+        <div class="overflow-y-auto h-screen pb-36">
             <div class="space-y-2 bg-gray-300">
                 <div th:if="${#lists.isEmpty(store.reviews)}" class="text-center mt-4">
-                    <p>Không có đánh giá nào cho cửa hàng này.</p>
+                    <p>Không có đánh giá cho cửa hàng này. Hãy là người đầu tiên đánh giá.</p>
+                    <i class="bi bi-wechat text-7xl"></i>
                 </div>
                 <div th:each="review : ${store.reviews}" class="max-w-3xl bg-white mx-auto overflow-hidden">
                     <div class="flex p-6">
@@ -85,17 +90,28 @@
                         <div class="ml-6 flex-grow">
                             <h2 class="text-xl font-semibold" th:text="${review.user.name}">Tên Người Dùng</h2>
                             <div class="flex items-center mt-1">
-                                <span class="text-yellow-500 text-sm">
-                                    <span th:text="${'⭐️'.repeat(review.rating)}">⭐️</span>
+                                <span class="text-yellow-500 text-lg">
+                                    <!-- Hiển thị các ngôi sao vàng theo điểm đánh giá -->
+                                    <span th:each="i : ${#numbers.sequence(1, review.rating)}">&#9733;</span>
+                                </span>
+                                <span class="text-gray-400 text-sm" th:if="${review.rating < 5}">
+                                    <!-- Hiển thị các ngôi sao xám cho phần còn lại nếu chưa đủ 5 sao -->
+                                    <span th:each="i : ${#numbers.sequence(1, 5 - review.rating)}">&#9733;</span>
                                 </span>
                             </div>
-                            <p class="text-gray-700 text-lg mt-4" th:text="${review.comment}">Nội dung đánh giá của người dùng.</p>
-                            <p class="text-gray-600 italic mt-2 text-sm">— <span class="font-semibold" th:text="${review.relativeReviewDate}">25/09/2024</span></p>
+
+                            <p class="text-gray-700 text-lg mt-4" th:text="${review.comment}">Nội dung đánh giá của
+                                người dùng.</p>
+                            <p class="text-gray-600 italic mt-2 text-sm">— <span class="font-semibold"
+                                    th:text="${review.relativeReviewDate}">25/09/2024</span></p>
                         </div>
                     </div>
-                    <div class="flex overflow-x-auto max-w-full p-4 gap-4" style="width: 100%;">
+
+                    <!-- Các ảnh nhỏ trong phần đánh giá -->
+                    <div class="flex overflow-x-auto p-4 gap-4">
                         <div th:each="photo : ${review.photos}">
-                            <img class="h-20 rounded-lg flex-shrink-0" th:src="${photo.photoUrl}" alt="Hình ảnh đánh giá" style="width: 100px;">
+                            <img class="h-20 w-auto rounded-lg flex-shrink-0 cursor-pointer" th:src="${photo.photoUrl}"
+                                alt="Hình ảnh đánh giá" onclick="showImageModal(this.src)">
                         </div>
                     </div>
                 </div>
@@ -104,7 +120,41 @@
     </div>
 </div>
 
+<!-- Modal để hiển thị ảnh lớn hơn -->
+<div id="imageModal" class="fixed inset-0 hidden bg-gray-900 bg-opacity-80 flex items-center justify-center z-50">
+    <div class="relative">
+        <img id="modalImage" class="w-auto max-h-screen rounded-none" src="" alt="Hình ảnh lớn">
+        <button id="closeModalButton"
+            class="absolute left-0 top-1/2 transform -translate-y-1/2 text-black bg-white opacity-50 rounded-r-full px-1 transition duration-200">
+            <i class="bi bi-x-circle-fill text-xl opacity-50"></i>
+        </button>
 
+    </div>
+</div>
+
+
+<script>
+    //Mở modal và hiển thị ảnh lớn
+    function showImageModal(imageSrc) {
+        const imageModal = document.getElementById('imageModal');
+        const modalImage = document.getElementById('modalImage'); // Chọn thẻ img trong modal
+        modalImage.src = imageSrc; // Đặt src hình ảnh đã nhấp
+        imageModal.classList.remove('hidden'); // Hiển thị modal
+    }
+
+    document.getElementById('closeModalButton').addEventListener('click', () => {
+        document.getElementById('imageModal').classList.add('hidden');
+    });
+
+    // Đóng modal khi nhấn ra ngoài khu vực ảnh
+    document.getElementById('imageModal').addEventListener('click', (event) => {
+        const modalImage = document.getElementById('modalImage');
+        if (!modalImage.contains(event.target)) {
+            document.getElementById('imageModal').classList.add('hidden');
+        }
+    });
+
+</script>
 
 <script>
     document.addEventListener('click', (event) => {
@@ -134,7 +184,7 @@
     });
 
 </script>
-
+<!-- ==================================================== -->
 
 <!-- ===========================================Destop============================================ -->
 <div class="rounded-lg p-2 duration-300 hidden md:block">
@@ -160,7 +210,7 @@
                     </li>
                     <li class="flex items-center">
                         <i class="bi bi-star-fill text-yellow-500 text-xl mr-2"></i>
-                        <span>4.5</span>
+                        <span th:text="${#numbers.formatDecimal(store.getAverageRating(), 1, 1).replace(',', '.')}"></span>
                     </li>
                 </ul>
             </a>
@@ -187,7 +237,9 @@
         <div
             class="bg-white rounded-lg shadow-lg p-6 w-full max-w-2xl mx-auto transform scale-0 transition-transform duration-300 ease-in-out modal-content">
             <div class="flex justify-between items-center border-b pb-3 mb-4">
-                <h2 class="text-lg font-bold">ĐÁNH GIÁ</h2>
+                <h2 class="text-lg font-semibold">
+                    <a th:href="@{/store/detail/{id}(id=${store.storeId})}">ĐÁNH GIÁ</a>
+                </h2>
                 <h2 class="text-lg font-bold text-center text-white bg-blue-500 rounded-full px-2">
                     <strong th:text="${store.storeName}">Tên Cửa Hàng</strong>
                 </h2>
@@ -195,8 +247,9 @@
             </div>
             <div class="p-4 overflow-y-auto max-h-96 space-y-4">
                 <!-- Hiển thị các đánh giá -->
-                <div th:if="${#lists.isEmpty(store.reviews)}">
-                    <p>Không có đánh giá nào cho cửa hàng này.</p>
+                <div th:if="${#lists.isEmpty(store.reviews)}" class="text-center">
+                    <p>Không có đánh giá cho cửa hàng này. Hãy là người đầu tiên đánh giá.</p>
+                    <i class="bi bi-wechat text-7xl"></i>
                 </div>
                 <div th:each="review : ${store.reviews}">
                     <div class="max-w-3xl mx-auto bg-white border rounded-lg shadow-md overflow-hidden">
@@ -214,28 +267,67 @@
 
                                 </div>
                                 <div class="flex items-center mt-1">
-                                    <span class="text-yellow-500">
-                                        <span th:text="${'⭐️'.repeat(review.rating)}">⭐️</span>
-                                        <!--  <span th:text="${'#'.repeat(5 - review.rating)}">&#9734;</span> -->
+                                    <span class="text-yellow-500 text-lg">
+                                        <!-- Hiển thị các ngôi sao vàng theo điểm đánh giá -->
+                                        <span th:each="i : ${#numbers.sequence(1, review.rating)}">&#9733;</span>
+                                    </span>
+                                    <span class="text-gray-400 text-sm" th:if="${review.rating < 5}">
+                                        <!-- Hiển thị các ngôi sao xám cho phần còn lại nếu chưa đủ 5 sao -->
+                                        <span th:each="i : ${#numbers.sequence(1, 5 - review.rating)}">&#9733;</span>
                                     </span>
                                 </div>
+
                                 <p class="text-gray-700 text-lg mt-4" th:text="${review.comment}">Nội dung đánh giá của
                                     người dùng.</p>
                             </div>
                         </div>
-                        <div class="flex overflow-x-auto max-w-full p-4 gap-4" style="width: 100%;">
-                        <div th:each="photo : ${review.photos}">
-                            <img class="h-20 rounded-lg flex-shrink-0" th:src="${photo.photoUrl}" alt="Hình ảnh đánh giá" style="width: 100px;">
+                        <div class="flex overflow-x-auto p-4 gap-4">
+                            <div th:each="photo : ${review.photos}">
+                                <img class="h-20 w-auto rounded-lg flex-shrink-0 cursor-pointer"
+                                    th:src="${photo.photoUrl}" alt="Hình ảnh đánh giá"
+                                    onclick="showImageModaldesktop(this.src)">
+                            </div>
                         </div>
-                    </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<!-- Modal để hiển thị ảnh lớn hơn -->
+<div id="imageModaldesktop"
+    class="fixed inset-0 hidden bg-gray-900 bg-opacity-80 flex items-center justify-center z-50">
+    <div class="relative">
+        <img id="modalImagedesktop" class="w-auto max-h-screen" src="" alt="Hình ảnh lớn">
+        <button id="closeModaldesktopButton"
+            class="absolute top-4 right-2 text-white bg-black rounded-full py-1 px-2 transition duration-200">
+            <i class="bi bi-x-lg"></i>
+        </button>
+    </div>
+</div>
+<script>
+    //Mở modal và hiển thị ảnh lớn
+    function showImageModaldesktop(imageSrc) {
+        const imageModal = document.getElementById('imageModaldesktop');
+        const modalImage = document.getElementById('modalImagedesktop'); // Chọn thẻ img trong modal
+        modalImage.src = imageSrc; // Đặt src hình ảnh đã nhấp
+        imageModal.classList.remove('hidden'); // Hiển thị modal
+    }
 
+    // Đóng modal khi nhấn nút "X"
+    document.getElementById('closeModaldesktopButton').addEventListener('click', () => {
+        document.getElementById('imageModaldesktop').classList.add('hidden'); // Ẩn modal
+    });
 
+    // Đóng modal khi nhấn ra ngoài khu vực ảnh
+    document.getElementById('imageModaldesktop').addEventListener('click', (event) => {
+        const modalImage = document.getElementById('modalImagedesktop');
+        if (!modalImage.contains(event.target)) {
+            document.getElementById('imageModaldesktop').classList.add('hidden');
+        }
+    });
+
+</script>
 
 <script>
     document.addEventListener('click', (event) => {
@@ -286,12 +378,3 @@
 </script>
 
 <!-- ===========================================Destop============================================ -->
-
-<script>
-    var elem = document.querySelector('#grid');
-    var msnry = new Masonry(elem, {
-        itemSelector: '.grid-item',
-        columnWidth: '.grid-item',
-        gutter: 10 // Khoảng cách giữa các phần tử
-    });
-</script>

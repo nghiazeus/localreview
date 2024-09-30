@@ -19,12 +19,12 @@
 
 </head>
 
-<body class="bg-gray-100">
+<body>
     <!-- Loading -->
     <div th:replace="/layout/_loading.html"></div>
 
     <div th:replace="/layout/_header.html"></div>
-    <nav class="mb-4 ml-2 px-3 py-1 bg-white rounded-full shadow-md w-auto inline-flex">
+    <nav class="mt-20 mb-4 ml-2 mr-2 px-3 py-1 bg-white rounded-full shadow-md w-auto inline-flex">
         <ol class="flex flex-wrap items-center space-x-2 text-gray-700 dark:text-gray-300">
             <li th:each="breadcrumb, iterStat : ${breadcrumbs}" class="flex items-center">
                 <a th:if="${not #strings.isEmpty(breadcrumb.url) and !iterStat.last}" th:href="${breadcrumb.url}"
@@ -39,7 +39,7 @@
 
     <div class="relative">
         <!-- --------------------- -->
-        <div class="bg-gray-100 overflow-hidden">
+        <div class="overflow-hidden">
             <!-- Container Flex -->
             <div class="flex flex-col lg:flex-row">
                 <!-- Hình ảnh (Carousel) -->
@@ -166,7 +166,20 @@
                         <i class="bi bi-geo-alt-fill text-red-600 mr-2 text-xl"></i>
                         <span th:text="${store.addressCity}" class="font-bold text-red-500"></span>
                     </p>
-                    <span class="text-yellow-500 text-2xl">★★★★☆</span>
+
+                    <div class="flex text-yellow-500 text-2xl">
+                        <div class="star-rating">
+                            <!-- Nền sao trống -->
+                            <div class="empty-stars">
+                                <span>★★★★★</span>
+                            </div>
+                            <!-- Sao đầy dựa trên điểm trung bình -->
+                            <div class="filled" th:style="'width:' + (${averageRating} * 20) + '%'">
+                                <span>★★★★★</span>
+                            </div>
+                        </div>
+                        <span th:text="'(' + ${averageRating} +')'" class="px-4">0.0</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -259,7 +272,7 @@
         </script>
 
 
-        <div class="mt-8 bg-gray-100 rounded-lg p-4">
+        <div class="mt-8 rounded-lg p-4">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
                 <!-- Thẻ món ăn -->
@@ -358,103 +371,109 @@
     </div>
     <br>
     <!--  -->
-    <div class="tabs-container relative">
-        <!-- Tab Links -->
-        <div class="flex space-x-4 mb-4 p-4">
-            <button
-                class="tab-button py-2 px-4 text-lg font-semibold rounded-lg focus:outline-none bg-gray-300 text-black"
-                data-tab="food" onclick="openTab(event, 'food')">MÓN ĂN</button>
-            <button class="tab-button py-2 px-4 text-lg font-semibold rounded-lg focus:outline-none" data-tab="drink"
-                onclick="openTab(event, 'drink')">ĐỒ UỐNG</button>
-        </div>
+    <div class="py-2 bg-gradient-to-b from-red-100 via-white to-blue-100">
+        <div class="container mx-auto">
+            <h2 class="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-8 mt-6">Sản Phẩm Của Cửa Hàng</h2>
+            <div class="tabs-container relative">
+                <!-- Tab Links -->
+                <div class="flex space-x-4 mb-4 p-4">
+                    <button
+                        class="tab-button py-2 px-4 text-lg font-semibold rounded-lg focus:outline-none bg-gray-300 text-black"
+                        data-tab="food" onclick="openTab(event, 'food')">MÓN ĂN</button>
+                    <button class="tab-button py-2 px-4 text-lg font-semibold rounded-lg focus:outline-none"
+                        data-tab="drink" onclick="openTab(event, 'drink')">ĐỒ UỐNG</button>
+                </div>
 
-        <!-- Tab Content for Food -->
-        <div id="food" class="tab-content relative">
+                <!-- Tab Content for Food -->
+                <div id="food" class="tab-content relative">
 
-            <div th:if="${#lists.isEmpty(foodlist)}" class="text-center flex flex-col items-center justify-center mt-8">
-                <p class="text-white text-2xl mb-4 bg-pink-500 p-2 rounded-full">
-                    Chưa có món ăn nào
-                </p>
+                    <div th:if="${#lists.isEmpty(foodlist)}"
+                        class="text-center flex flex-col items-center justify-center mt-8">
+                        <p class="text-white text-xl mb-4 bg-gray-500 p-2 px-4 rounded-full">
+                            Chưa có món ăn nào
+                        </p>
 
-                <img alt="" src="https://cdn.pixabay.com/animation/2023/03/21/10/41/10-41-09-561_512.gif"
-                    class="md:rounded-lg w-40 h-16">
-            </div>
+                        <img alt="không có sản phảm" src="https://cdn-icons-png.flaticon.com/512/4076/4076501.png"
+                            class="w-24 h-24 md:w-32 md:h-32 mb-4 opacity-75">
+                    </div>
 
-            <!-- Phần chứa các thẻ món ăn -->
-            <div class="relative overflow-x-auto" id="food-scroll">
-                <div class="flex space-x-4 p-4">
-                    <!-- Loop through foodlist for Food tab -->
-                    <div th:each="food : ${foodlist}"
-                        class="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-md w-64 flex-shrink-0">
-                        <img th:src="${#lists.isEmpty(food.photos) ? 'https://via.placeholder.com/400x300.png?text=No+Image' : food.photos[0].photoUrl}"
-                            class="w-full h-60 object-cover" alt="Ảnh của món ăn">
-                        <div class="p-4">
-                            <h3 class="font-bold text-lg mb-2" th:text="${food.foodName}">Tên Món Ăn</h3>
-                            <p class="flex items-baseline text-red-500 mb-2">
-                                <span class="font-semibold text-lg" th:text="${food.formattedPrice}">Giá</span>
-                            </p>
+                    <!-- Phần chứa các thẻ món ăn -->
+                    <div class="relative overflow-x-auto" id="food-scroll">
+                        <div class="flex space-x-4 p-4">
+                            <!-- Loop through foodlist for Food tab -->
+                            <div th:each="food : ${foodlist}"
+                                class="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-md w-64 flex-shrink-0">
+                                <img th:src="${#lists.isEmpty(food.photos) ? 'https://via.placeholder.com/400x300.png?text=No+Image' : food.photos[0].photoUrl}"
+                                    class="w-full h-60 object-cover" alt="Ảnh của món ăn">
+                                <div class="p-4">
+                                    <h3 class="font-bold text-lg mb-2" th:text="${food.foodName}">Tên Món Ăn</h3>
+                                    <p class="flex items-baseline text-red-500 mb-2">
+                                        <span class="font-semibold text-lg" th:text="${food.formattedPrice}">Giá</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-14 py-2 hidden md:block">
+                        <div class="absolute bottom-0 right-0 flex space-x-2 z-10 p-4">
+                            <!-- Nút Prev -->
+                            <button id="food-prevBtn"
+                                class="text-2xl bg-white text-black shadow-lg rounded-full p-2 focus:outline-none shadow">
+                                &#10094;
+                            </button>
+
+                            <!-- Nút Next -->
+                            <button id="food-nextBtn"
+                                class="text-2xl bg-white text-black shadow-lg rounded-full p-2 focus:outline-none shadow">
+                                &#10095;
+                            </button>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="mt-14 py-2 hidden md:block">
-                <div class="absolute bottom-0 right-0 flex space-x-2 z-10 p-4">
-                    <!-- Nút Prev -->
-                    <button id="food-prevBtn"
-                        class="text-2xl bg-white text-black shadow-lg rounded-full p-2 focus:outline-none shadow">
-                        &#10094;
-                    </button>
-
-                    <!-- Nút Next -->
-                    <button id="food-nextBtn"
-                        class="text-2xl bg-white text-black shadow-lg rounded-full p-2 focus:outline-none shadow">
-                        &#10095;
-                    </button>
-                </div>
-            </div>
-        </div>
 
 
-        <!-- Tab Content for Drinks -->
-        <div id="drink" class="tab-content hidden relative">
+                <!-- Tab Content for Drinks -->
+                <div id="drink" class="tab-content hidden relative">
 
-            <div th:if="${#lists.isEmpty(drinklist)}"
-                class="text-center flex flex-col items-center justify-center mt-8">
-                <p class="text-white text-2xl mb-4 bg-pink-500 p-2 rounded-full">
-                    Chưa có nước uống nào
-                </p>
+                    <div th:if="${#lists.isEmpty(drinklist)}"
+                        class="text-center flex flex-col items-center justify-center mt-8">
+                        <p class="text-white text-xl mb-4 bg-gray-500 p-2 px-4 rounded-full">
+                            Chưa có đồ uống nào
+                        </p>
 
-                <img alt="" src="https://cdn.pixabay.com/animation/2023/03/21/10/41/10-41-09-561_512.gif"
-                    class="md:rounded-lg w-40 h-16">
-            </div>
+                        <img alt="không có sản phảm" src="https://cdn-icons-png.flaticon.com/512/4076/4076501.png"
+                            class="w-24 h-24 md:w-32 md:h-32 mb-4 opacity-75">
+                    </div>
 
-            <div class="relative overflow-x-auto" id="drink-scroll">
-                <div class="flex space-x-4 p-4">
-                    <!-- Loop through drinklist for Drinks tab -->
-                    <div th:each="drink : ${drinklist}"
-                        class="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-md w-64 flex-shrink-0">
-                        <img th:src="${#lists.isEmpty(drink.photos) ? 'https://via.placeholder.com/400x300.png?text=No+Image' : drink.photos[0].photoUrl}"
-                            class="w-full h-60 object-cover" alt="Ảnh của đồ uống">
-                        <div class="p-4">
-                            <h3 class="font-bold text-lg mb-2" th:text="${drink.drinkName}">Tên Đồ Uống</h3>
-                            <p class="flex items-baseline text-red-500 mb-2">
-                                <span class="font-semibold text-lg" th:text="${drink.formattedPrice}">Giá</span>
-                            </p>
+                    <div class="relative overflow-x-auto" id="drink-scroll">
+                        <div class="flex space-x-4 p-4">
+                            <!-- Loop through drinklist for Drinks tab -->
+                            <div th:each="drink : ${drinklist}"
+                                class="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-md w-64 flex-shrink-0">
+                                <img th:src="${#lists.isEmpty(drink.photos) ? 'https://via.placeholder.com/400x300.png?text=No+Image' : drink.photos[0].photoUrl}"
+                                    class="w-full h-60 object-cover" alt="Ảnh của đồ uống">
+                                <div class="p-4">
+                                    <h3 class="font-bold text-lg mb-2" th:text="${drink.drinkName}">Tên Đồ Uống</h3>
+                                    <p class="flex items-baseline text-red-500 mb-2">
+                                        <span class="font-semibold text-lg" th:text="${drink.formattedPrice}">Giá</span>
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="mt-14 py-2 hidden md:block">
-                <div class="absolute bottom-0 right-0 flex space-x-2 z-10 p-4">
-                    <button id="drink-prevBtn"
-                        class="text-2xl bg-white text-black shadow-lg rounded-full p-2 focus:outline-none shadow">
-                        &#10094;
-                    </button>
+                    <div class="mt-14 py-2 hidden md:block">
+                        <div class="absolute bottom-0 right-0 flex space-x-2 z-10 p-4">
+                            <button id="drink-prevBtn"
+                                class="text-2xl bg-white text-black shadow-lg rounded-full p-2 focus:outline-none shadow">
+                                &#10094;
+                            </button>
 
-                    <button id="drink-nextBtn"
-                        class="text-2xl bg-white text-black shadow-lg rounded-full p-2 focus:outline-none shadow">
-                        &#10095;
-                    </button>
+                            <button id="drink-nextBtn"
+                                class="text-2xl bg-white text-black shadow-lg rounded-full p-2 focus:outline-none shadow">
+                                &#10095;
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -531,250 +550,313 @@
 
     <br>
     <!--  -->
-    <div class="bg-gray-100 rounded-lg overflow-hidden">
-        <strong class="text-2xl text-black">Bình luận</strong>
-        <section class="article mt-10 flex justify-center">
-            <div class="justify-between justify-center space-y-4 space-x-4 p-8">
-                <button th:data-store-desktop-id="${store.storeId}"
-                    class="open-reviewdestop bg-blue-500 text-white px-6 py-2 rounded-full w-96">
-                    Xem đánh giá cửa hàng
-                </button>
-                <button id="openModaldanhgia"
-                    class="open-reviewdestop bg-pink-500 text-white px-6 py-2 rounded-full w-96">
-                    Đánh giá cửa hàng
-                </button>
-            </div>
-            <div th:each="store : ${stores}">
-                <div th:id="'review-modal-' + ${store.storeId}"
-                    class="review-modal fixed z-50 top-0 left-0 w-full h-full bg-black bg-opacity-50 hidden flex items-center justify-center transition-opacity duration-300 ease-in-out">
-                    <div
-                        class="bg-white rounded-lg shadow-lg p-6 w-full max-w-2xl mx-auto transform scale-0 transition-transform duration-300 ease-in-out modal-content">
-                        <div class="flex justify-between items-center border-b pb-3 mb-4">
-                            <h2 class="text-lg font-bold">ĐÁNH GIÁ</h2>
-                            <h2 class="text-lg font-bold text-center text-white bg-blue-500 rounded-full px-2">
-                                <strong th:text="${store.storeName}">Tên Cửa Hàng</strong>
-                            </h2>
-                            <button class="close-review text-gray-800 text-3xl bi bi-x-circle-fill"></button>
-                        </div>
-                        <div class="p-4 overflow-y-auto max-h-96 space-y-4">
-                            <!-- Hiển thị các đánh giá -->
-                            <div th:if="${#lists.isEmpty(store.reviews)}">
-                                <p>Không có đánh giá nào cho cửa hàng này.</p>
-                            </div>
-                            <div th:each="review : ${store.reviews}">
-                                <div class="max-w-3xl mx-auto bg-white border rounded-lg shadow-md overflow-hidden">
-                                    <div class="flex p-6">
-                                        <img class="w-16 h-16 rounded-full"
-                                            src="https://i.pinimg.com/736x/a1/b2/b4/a1b2b463bac40bf00a6046dac5109efe.jpg"
-                                            alt="Avatar">
-                                        <div class="ml-6 flex-grow">
-                                            <div class="flex justify-between items-center pb-3">
-                                                <h2 class="text-xl font-semibold" th:text="${review.user.name}">Tên
-                                                    Người Dùng</h2>
-                                                <p class="text-gray-600 italic mt-2 text-sm">—
-                                                    <span class="font-semibold"
-                                                        th:text="${review.relativeReviewDate}">25/09/2024</span>
-                                                </p>
-
-                                            </div>
-                                            <div class="flex items-center mt-1">
-                                                <span class="text-yellow-500">
-                                                    <span th:text="${'⭐️'.repeat(review.rating)}">⭐️</span>
-                                                    <!--  <span th:text="${'#'.repeat(5 - review.rating)}">&#9734;</span> -->
-                                                </span>
-                                            </div>
-                                            <p class="text-gray-700 text-lg mt-4" th:text="${review.comment}">Nội dung
-                                                đánh giá của
-                                                người dùng.</p>
-                                        </div>
-                                    </div>
-                                    <div class="flex overflow-x-auto max-x-auto p-4 gap-4">
-                                        <div th:each="photo : ${review.photos}">
-                                            <img class="w-auto h-20 rounded-lg" th:src="${photo.photoUrl}"
-                                                alt="Hình ảnh đánh giá">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <script>
-                document.addEventListener('click', (event) => {
-                    const target = event.target;
-
-                    // Mở bảng review
-                    if (target.classList.contains('open-reviewdestop')) {
-                        const storeId = target.getAttribute('data-store-desktop-id');
-                        const modal = document.getElementById(`review-modal-${storeId}`);
-
-                        if (modal) {
-                            modal.classList.remove('hidden');
-                            document.body.classList.add('modal-open');  // Thêm lớp quản lý overflow
-                            setTimeout(() => {
-                                modal.querySelector('.modal-content').classList.remove('scale-0');
-                            }, 10);
-                        }
-                    }
-
-                    // Đóng bảng review
-                    if (target.classList.contains('close-review') || target.classList.contains('review-modal')) {
-                        const modal = target.closest('.review-modal') || target;
-                        if (modal) {
-                            modal.querySelector('.modal-content').classList.add('scale-0');
-                            setTimeout(() => {
-                                modal.classList.add('hidden');
-                                document.body.classList.remove('modal-open');  // Gỡ bỏ lớp khi đóng modal
-                            }, 300);
-                        }
-                    }
-                });
-
-                // Đóng modal khi nhấn phím "Esc"
-                document.addEventListener('keydown', (event) => {
-                    if (event.key === 'Escape') {
-                        const openModal = document.querySelector('.review-modal:not(.hidden)');
-                        if (openModal) {
-                            openModal.querySelector('.modal-content').classList.add('scale-0');
-                            setTimeout(() => {
-                                openModal.classList.add('hidden');
-                                document.body.classList.remove('modal-open');
-                            }, 300);
-                        }
-                    }
-                });
-
-
-            </script>
-            <!-- =====================Đánh giá================ -->
-            <!-- Modal -->
-            <div id="myModaldanhgia"
-                class="fixed z-50 overflow-hidden inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center transition-opacity duration-300 ease-in-out">
-                <div
-                    class="bg-white rounded-lg shadow-lg p-6 w-full max-w-2xl mx-auto transform scale-95 transition-transform duration-300 ease-in-out modal-content">
-                    <div class="flex justify-between items-center border-b pb-3 mb-4">
-                        <h2 class="text-2xl font-bold">Đánh giá cửa hàng</h2>
-                        <button id="closeModaldanhgia" class="text-gray-400 hover:text-red-500 transition duration-200">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M6 18L18 6M6 6l12 12" />
-                            </svg>
+    <div class="py-2 bg-gradient-to-b from-yellow-100 via-white to-blue-100">
+        <div class="container mx-auto">
+            <h2 class="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-8 mt-6">Mục Đánh Giá</h2>
+            <div class="rounded-lg overflow-hidden">
+                <section class="article flex justify-center">
+                    <div class="justify-between justify-center space-y-4 space-x-4 p-8">
+                        <button th:data-store-desktop-id="${store.storeId}"
+                            class="open-reviewdestop bg-blue-500 text-white px-6 py-2 rounded-full w-96">
+                            Xem đánh giá cửa hàng
+                        </button>
+                        <button id="openModaldanhgia"
+                            class="open-reviewdestop bg-pink-500 text-white px-6 py-2 rounded-full w-96">
+                            Đánh giá cửa hàng
                         </button>
                     </div>
-
-                    <div class="w-full mt-4">
-                        <form id="reviewForm" class="space-y-6">
-                            <!-- Nội dung đánh giá -->
-                            <div>
-                                <label for="comment" class="block text-sm font-medium text-gray-700">Nội dung:</label>
-                                <textarea id="comment" name="comment"
-                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                                    rows="4" placeholder="Viết đánh giá của bạn..."></textarea>
-                            </div>
-
-                            <!-- Đánh giá điểm bằng ngôi sao -->
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Điểm đánh giá:</label>
-                                <div id="rating" class="flex space-x-2">
-                                    <button type="button" data-rating="1"
-                                        class="star p-2 text-gray-400 text-3xl focus:outline-none transition duration-200">&#9733;</button>
-                                    <button type="button" data-rating="2"
-                                        class="star p-2 text-gray-400 text-3xl focus:outline-none transition duration-200">&#9733;</button>
-                                    <button type="button" data-rating="3"
-                                        class="star p-2 text-gray-400 text-3xl focus:outline-none transition duration-200">&#9733;</button>
-                                    <button type="button" data-rating="4"
-                                        class="star p-2 text-gray-400 text-3xl focus:outline-none transition duration-200">&#9733;</button>
-                                    <button type="button" data-rating="5"
-                                        class="star p-2 text-gray-400 text-3xl focus:outline-none transition duration-200">&#9733;</button>
+                    <div th:each="store : ${stores}">
+                        <div th:id="'review-modal-' + ${store.storeId}"
+                            class="review-modal fixed z-50 top-0 left-0 w-full h-full bg-black bg-opacity-70 hidden flex items-center justify-center transition-opacity duration-300 ease-in-out">
+                            <div
+                                class="bg-white rounded-lg shadow-lg p-6 w-full max-w-2xl mx-auto transform scale-0 transition-transform duration-300 ease-in-out modal-content">
+                                <div class="flex justify-between items-center border-b pb-3 mb-4">
+                                    <h2 class="text-lg font-bold text-center text-white bg-blue-500 rounded-full px-2">
+                                        <strong th:text="${store.storeName}">Tên Cửa Hàng</strong>
+                                    </h2>
+                                    <button class="close-review text-gray-800 text-3xl bi bi-x-circle-fill"></button>
                                 </div>
-                                <input type="hidden" id="ratingValue" name="rating" value="0" />
-                                <p class="mt-1 text-sm text-gray-500">Nhấn vào ngôi sao để chọn điểm đánh giá.</p>
-                            </div>
+                                <div class="p-2 overflow-y-auto max-h-96 space-y-4">
+                                    <!-- Hiển thị các đánh giá -->
+                                    <div th:if="${#lists.isEmpty(store.reviews)}" class="text-center">
+                                        <p>Không có đánh giá cho cửa hàng này. Hãy là người đầu tiên đánh giá.</p>
+                                        <i class="bi bi-wechat text-7xl"></i>
+                                    </div>
 
-                            <!-- Tải ảnh -->
-                            <div>
-                                <label for="images" class="block text-sm font-medium text-gray-700">Chọn ảnh (Không bắt
-                                    buộc):</label>
-                                <input type="file" id="images" name="images" multiple
-                                    class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
-                            </div>
+                                    <div th:each="review : ${store.reviews}">
+                                        <div
+                                            class="max-w-3xl mx-auto bg-white border rounded-lg shadow-md overflow-hidden">
+                                            <div class="flex flex-col md:flex-row p-4 md:p-6">
+                                                <!-- Avatar -->
+                                                <img class="w-12 h-12 md:w-16 md:h-16 rounded-full object-cover"
+                                                    src="https://i.pinimg.com/736x/a1/b2/b4/a1b2b463bac40bf00a6046dac5109efe.jpg"
+                                                    alt="Avatar">
 
-                            <!-- Nút gửi -->
-                            <div class="flex justify-end">
-                                <button type="submit"
-                                    class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-200">Gửi
-                                    đánh giá</button>
-                            </div>
-                        </form>
+                                                <!-- Thông tin đánh giá -->
+                                                <div class="ml-0 md:ml-6 mt-4 md:mt-0 flex-grow">
+                                                    <div class="flex justify-between items-center pb-2">
+                                                        <h2 class="text-lg md:text-xl font-semibold text-gray-800"
+                                                            th:text="${review.user.name}">Tên Người Dùng</h2>
+                                                        <p class="text-gray-500 italic text-xs md:text-sm">—
+                                                            <span class="font-semibold"
+                                                                th:text="${review.relativeReviewDate}">25/09/2024</span>
+                                                        </p>
+                                                    </div>
+                                                    <!-- Số sao -->
+                                                    <div class="flex items-center mt-1">
+                                                        <span class="text-yellow-500 text-sm">
+                                                            <!-- Hiển thị các ngôi sao vàng theo điểm đánh giá -->
+                                                            <span
+                                                                th:each="i : ${#numbers.sequence(1, review.rating)}">&#9733;</span>
+                                                        </span>
+                                                        <span class="text-gray-400 text-lg"
+                                                            th:if="${review.rating < 5}">
+                                                            <!-- Hiển thị các ngôi sao xám cho phần còn lại nếu chưa đủ 5 sao -->
+                                                            <span
+                                                                th:each="i : ${#numbers.sequence(1, 5 - review.rating)}">&#9733;</span>
+                                                        </span>
+                                                    </div>
+                                                    <!-- Nội dung đánh giá -->
+                                                    <p class="text-gray-700 text-sm md:text-lg mt-3"
+                                                        th:text="${review.comment}">
+                                                        Nội dung đánh giá của người dùng.
+                                                    </p>
+                                                </div>
+                                            </div>
 
-                        <script>
-                            // Lấy tất cả các ngôi sao
-                            const stars = document.querySelectorAll('.star');
-                            const ratingValue = document.getElementById('ratingValue');
-                        
-                            stars.forEach((star, index) => {
-                                star.addEventListener('click', () => {
-                                    // Cập nhật giá trị đánh giá
-                                    ratingValue.value = index + 1;
-                        
-                                    // Làm mới màu của tất cả ngôi sao
-                                    stars.forEach((s, i) => {
-                                        if (i <= index) {
-                                            s.classList.add('text-yellow-400'); // Đánh dấu ngôi sao đã chọn
-                                            s.classList.remove('text-gray-400'); // Xóa màu xám của ngôi sao đã chọn
-                                        } else {
-                                            s.classList.remove('text-yellow-400'); // Ngôi sao không được chọn sẽ không có màu vàng
-                                            s.classList.add('text-gray-400'); // Ngôi sao chưa chọn vẫn giữ màu xám
-                                        }
-                                    });
-                                });
-                            });
-                        
-                            // Ngăn không submit form khi chưa chọn điểm đánh giá
-                            const form = document.getElementById('reviewForm');
-                            form.addEventListener('submit', (event) => {
-                                // Kiểm tra nếu không có giá trị hợp lệ
-                                const ratingNum = Number(ratingValue.value);
-                                // Kiểm tra giá trị ratingValue trước khi gửi
-                                if (isNaN(ratingNum) || ratingNum < 1 || ratingNum > 5) {
-                                    alert("Vui lòng chọn điểm đánh giá từ 1 đến 5.");
-                                    event.preventDefault(); // Ngăn gửi form khi chưa có đánh giá hợp lệ
-                                }
-                            });
-                        </script>                        
+                                            <!-- Hình ảnh đánh giá -->
+                                            <div class="flex overflow-x-auto p-4 gap-4">
+                                                <div th:each="photo : ${review.photos}">
+                                                    <img class="h-16 w-auto md:h-20 rounded-lg flex-shrink-0 cursor-pointer object-cover"
+                                                        th:src="${photo.photoUrl}" alt="Hình ảnh đánh giá"
+                                                        onclick="showImageModaldesktop(this.src)">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
-                </div>
+
+                    <!-- Modal để hiển thị ảnh lớn hơn -->
+                    <div id="imageModaldesktop"
+                        class="fixed inset-0 hidden bg-gray-900 bg-opacity-80 flex items-center justify-center z-50">
+                        <div class="relative">
+                            <img id="modalImagedesktop" class="w-auto max-h-96" src="" alt="Hình ảnh lớn">
+                            <button id="closeModaldesktopButton"
+                                class="absolute top-2 right-2 text-gray-900 bg-white rounded-full px-1 transition duration-200">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <script>
+                        //Mở modal và hiển thị ảnh lớn
+                        function showImageModaldesktop(imageSrc) {
+                            const imageModal = document.getElementById('imageModaldesktop');
+                            const modalImage = document.getElementById('modalImagedesktop');
+                            modalImage.src = imageSrc; // Đặt src hình ảnh đã nhấp
+                            imageModal.classList.remove('hidden'); // Hiển thị modal
+                        }
+
+                        // Đóng modal khi nhấn nút "X"
+                        document.getElementById('closeModaldesktopButton').addEventListener('click', () => {
+                            document.getElementById('imageModaldesktop').classList.add('hidden'); // Ẩn modal
+                        });
+
+                        // Đóng modal khi nhấn ra ngoài khu vực ảnh
+                        document.getElementById('imageModaldesktop').addEventListener('click', (event) => {
+                            const modalImage = document.getElementById('modalImagedesktop');
+                            if (!modalImage.contains(event.target)) {
+                                document.getElementById('imageModaldesktop').classList.add('hidden');
+                            }
+                        });
+
+                    </script>
+                    <script>
+                        document.addEventListener('click', (event) => {
+                            const target = event.target;
+
+                            // Mở bảng review
+                            if (target.classList.contains('open-reviewdestop')) {
+                                const storeId = target.getAttribute('data-store-desktop-id');
+                                const modal = document.getElementById(`review-modal-${storeId}`);
+
+                                if (modal) {
+                                    modal.classList.remove('hidden');
+                                    document.body.classList.add('modal-open');  // Thêm lớp quản lý overflow
+                                    setTimeout(() => {
+                                        modal.querySelector('.modal-content').classList.remove('scale-0');
+                                    }, 10);
+                                }
+                            }
+
+                            // Đóng bảng review
+                            if (target.classList.contains('close-review') || target.classList.contains('review-modal')) {
+                                const modal = target.closest('.review-modal') || target;
+                                if (modal) {
+                                    modal.querySelector('.modal-content').classList.add('scale-0');
+                                    setTimeout(() => {
+                                        modal.classList.add('hidden');
+                                        document.body.classList.remove('modal-open');  // Gỡ bỏ lớp khi đóng modal
+                                    }, 300);
+                                }
+                            }
+                        });
+
+                        // Đóng modal khi nhấn phím "Esc"
+                        document.addEventListener('keydown', (event) => {
+                            if (event.key === 'Escape') {
+                                const openModal = document.querySelector('.review-modal:not(.hidden)');
+                                if (openModal) {
+                                    openModal.querySelector('.modal-content').classList.add('scale-0');
+                                    setTimeout(() => {
+                                        openModal.classList.add('hidden');
+                                        document.body.classList.remove('modal-open');
+                                    }, 300);
+                                }
+                            }
+                        });
+
+
+                    </script>
+                    <!-- =====================Đánh giá================ -->
+                    <!-- Modal -->
+                    <div id="myModaldanhgia"
+                        class="fixed z-50 overflow-hidden inset-0 bg-black bg-opacity-70 hidden flex items-center justify-center transition-opacity duration-300 ease-in-out">
+                        <div
+                            class="bg-white rounded-lg shadow-lg p-4 w-full max-w-2xl mx-auto transform scale-95 transition-transform duration-300 ease-in-out modal-content">
+                            <div class="flex justify-between items-center border-b pb-3 mb-4">
+                                <h2 class="text-xl font-bold">Đánh giá cửa hàng</h2>
+                                <button id="closeModaldanhgia"
+                                    class="text-white bg-black rounded-full py-2 px-2 transition duration-200"
+                                    onclick="closeModal()">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <div th:each="store : ${store}" class="text-center">
+                                <strong th:text="${store.storeName}"
+                                    class="px-4 text-lg text-white bg-blue-500 rounded-full">Tên Cửa Hàng</strong>
+                            </div>
+                            <div class="w-full mt-4">
+                                <form id="reviewForm" class="space-y-6 p-4">
+                                    <!-- Nội dung đánh giá -->
+                                    <div>
+                                        <label for="comment" class="block text-sm font-medium text-gray-700 mb-2">Nội
+                                            dung:</label>
+                                        <textarea id="comment" name="comment"
+                                            class="p-4 mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 transition duration-150 ease-in-out sm:text-sm"
+                                            rows="4" placeholder="Viết đánh giá của bạn..."></textarea>
+                                    </div>
+
+                                    <!-- Đánh giá điểm bằng ngôi sao -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-8">Điểm đánh
+                                            giá:</label>
+                                        <div id="rating" class="flex space-x-2 relative">
+                                            <button type="button" data-rating="1"
+                                                class="star p-2 text-gray-400 hover:text-yellow-500 text-3xl focus:outline-none transition duration-200 relative group">
+                                                &#9733;
+                                                <span
+                                                    class="absolute left-1/2 transform -translate-x-1/2 -top-6 text-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100">😢</span>
+                                            </button>
+                                            <button type="button" data-rating="2"
+                                                class="star p-2 text-gray-400 hover:text-yellow-500 text-3xl focus:outline-none transition duration-200 relative group">
+                                                &#9733;
+                                                <span
+                                                    class="absolute left-1/2 transform -translate-x-1/2 -top-6 text-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100">😟</span>
+                                            </button>
+                                            <button type="button" data-rating="3"
+                                                class="star p-2 text-gray-400 hover:text-yellow-500 text-3xl focus:outline-none transition duration-200 relative group">
+                                                &#9733;
+                                                <span
+                                                    class="absolute left-1/2 transform -translate-x-1/2 -top-6 text-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100">😐</span>
+                                            </button>
+                                            <button type="button" data-rating="4"
+                                                class="star p-2 text-gray-400 hover:text-yellow-500 text-3xl focus:outline-none transition duration-200 relative group">
+                                                &#9733;
+                                                <span
+                                                    class="absolute left-1/2 transform -translate-x-1/2 -top-6 text-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100">😊</span>
+                                            </button>
+                                            <button type="button" data-rating="5"
+                                                class="star p-2 text-gray-400 hover:text-yellow-500 text-3xl focus:outline-none transition duration-200 relative group">
+                                                &#9733;
+                                                <span
+                                                    class="absolute left-1/2 transform -translate-x-1/2 -top-6 text-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100">😍</span>
+                                            </button>
+                                        </div>
+                                        <input type="hidden" id="ratingValue" name="rating" value="0" />
+                                    </div>
+
+                                    <!-- Tải ảnh -->
+                                    <div>
+                                        <label for="images" class="block text-sm font-medium text-gray-700">Chọn ảnh
+                                            (Không bắt
+                                            buộc):</label>
+                                        <label for="images" class="block text-sm font-medium text-red-500">Lưu ý chỉ sử
+                                            dụng tối
+                                            đa <strong>(3)</strong> ảnh</label>
+                                        <input type="file" id="images" name="images" multiple
+                                            class="mt-4 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
+                                    </div>
+
+
+                                    <!-- Nút gửi -->
+                                    <div class="flex justify-end text-xl">
+                                        <button id="submitButton" type="submit"
+                                            class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-200">Gửi
+                                            đánh giá</button>
+                                        <span id="loadingMessage" class="hidden ml-2 text-blue-600">Đang gửi...</span>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                        const modal = document.getElementById("myModaldanhgia");
+                        const openModalBtn = document.getElementById("openModaldanhgia");
+                        const closeModalBtn = document.getElementById("closeModaldanhgia");
+
+                        // Open the modal
+                        openModalBtn.addEventListener("click", () => {
+                            modal.classList.remove("hidden");
+                            modal.classList.add("flex");
+                            document.querySelector('.modal-content').classList.add('scale-100');
+                        });
+
+                        // Close the modal
+                        closeModalBtn.addEventListener("click", () => {
+                            modal.classList.add("hidden");
+                            modal.classList.remove("flex");
+                        });
+
+                        // Close the modal when clicking outside of it
+                        window.addEventListener("click", (event) => {
+                            if (event.target === modal) {
+                                modal.classList.add("hidden");
+                                modal.classList.remove("flex");
+                            }
+                        });
+
+                        document.getElementById('images').addEventListener('change', function (event) {
+                            const files = event.target.files;
+
+                            if (files.length > 3) {
+                                alert('Bạn chỉ có thể chọn tối đa 3 ảnh!');
+                                event.target.value = ''; // Reset lại giá trị của input
+                            }
+                        });
+
+                    </script>
+                </section>
             </div>
-
-            <script>
-                const modal = document.getElementById("myModaldanhgia");
-                const openModalBtn = document.getElementById("openModaldanhgia");
-                const closeModalBtn = document.getElementById("closeModaldanhgia");
-
-                // Open the modal
-                openModalBtn.addEventListener("click", () => {
-                    modal.classList.remove("hidden");
-                    modal.classList.add("flex");
-                    document.querySelector('.modal-content').classList.add('scale-100');
-                });
-
-                // Close the modal
-                closeModalBtn.addEventListener("click", () => {
-                    modal.classList.add("hidden");
-                    modal.classList.remove("flex");
-                });
-
-                // Close the modal when clicking outside of it
-                window.addEventListener("click", (event) => {
-                    if (event.target === modal) {
-                        modal.classList.add("hidden");
-                        modal.classList.remove("flex");
-                    }
-                });
-            </script>
-        </section>
+        </div>
     </div>
     <br>
 
@@ -794,8 +876,6 @@
     </div> -->
     <!-- footer -->
     <div class="containerer"></div>
-    <!-- ------- -->
-
 
     <script src="/build/js/reviews.js"></script>
 

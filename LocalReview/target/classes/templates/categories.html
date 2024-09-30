@@ -22,7 +22,7 @@
     <div th:replace="/layout/_header.html"></div>
 
     <div class="p-px">
-        <nav class="mb-4 ml-2 px-3 py-1 bg-white rounded-full shadow-md w-auto inline-flex">
+        <nav class="mt-20 mb-4 ml-2 px-3 py-1 bg-white rounded-full shadow-md w-auto inline-flex">
         <ol class="flex flex-wrap items-center space-x-2 text-gray-700 dark:text-gray-300">
             <li th:each="breadcrumb, iterStat : ${breadcrumbs}" class="flex items-center">
                 <a th:if="${not #strings.isEmpty(breadcrumb.url) and !iterStat.last}" th:href="${breadcrumb.url}"

@@ -28,11 +28,51 @@
 <body>
     <!-- Loading -->
     <div th:replace="/layout/_loading.html"></div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const hiddenContent = document.querySelector('.hidden-content');
+
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        hiddenContent.classList.add('visible');
+                        observer.unobserve(hiddenContent); // Ngừng quan sát sau khi hiển thị
+                    }
+                });
+            });
+
+            observer.observe(hiddenContent);
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const flipObject = document.querySelector('.flip-object');
+
+            window.addEventListener('scroll', () => {
+                const rect = flipObject.getBoundingClientRect();
+                if (rect.top < window.innerHeight - 100) { // Kiểm tra vị trí để hiện
+                    flipObject.classList.add('visible');
+                }
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const fadeInContent = document.querySelector('.fade-in-content');
+
+            window.addEventListener('scroll', () => {
+                const rect = fadeInContent.getBoundingClientRect();
+                if (rect.top < window.innerHeight) {
+                    fadeInContent.classList.add('visible');
+                }
+            });
+        });
+
+
+    </script>
     <!-- Màn hình chào mừng -->
     <!--  <div id="welcome-screen" class="fixed inset-0 bg-white flex items-center justify-center z-50">
         <h1 class="text-4xl font-bold zoom-in gradient-text">Welcome To Review</h1>
     </div> -->
-    
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const welcomeScreen = document.getElementById('welcome-screen');
@@ -46,8 +86,9 @@
             // Kiểm tra nếu không có hoặc đã hết hạn
             if (!welcomeScreenData || (new Date().getTime() - welcomeScreenData.timestamp) > expirationTime) {
                 // Nếu chưa xem hoặc đã hết hạn, hiển thị màn hình chào mừng
-                setTimeout(function () {b=
-                    welcomeScreen.classList.add('fade-out');
+                setTimeout(function () {
+                    b =
+                        welcomeScreen.classList.add('fade-out');
                     setTimeout(function () {
                         welcomeScreen.style.display = 'none';
                         mainContent.classList.remove('hidden');
@@ -61,40 +102,64 @@
                 mainContent.classList.remove('hidden');
             }
         });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const rollObject = document.querySelector('.roll-object');
+
+            window.addEventListener('scroll', () => {
+                const rect = rollObject.getBoundingClientRect();
+                if (rect.top < window.innerHeight - 100) { // Kiểm tra vị trí để hiện
+                    rollObject.classList.add('visible');
+                }
+            });
+        });
+
     </script>
     <!-- =================================================================================== -->
-     <!-- Hero Section -->
-     <section class="relative h-screen flex flex-col justify-center items-center text-center">
+    <!-- Hero Section -->
+    <section class="relative h-screen flex flex-col justify-center items-center text-center bg-gray-900">
         <!-- Swiper Background -->
         <div class="absolute inset-0 z-0">
             <div class="swiper-container h-full">
                 <div class="swiper-wrapper">
                     <div class="swiper-slide">
-                        <img src="https://i.pinimg.com/564x/33/2e/ca/332eca74ba97c3c7d887ca144ae28a29.jpg" class="w-full h-full object-cover"
-                            alt="Slide 1">
+                        <img src="https://i.pinimg.com/564x/33/2e/ca/332eca74ba97c3c7d887ca144ae28a29.jpg"
+                            class="w-full h-full object-cover brightness-75" alt="Slide 1">
                     </div>
                     <div class="swiper-slide">
-                        <img src="https://i.pinimg.com/564x/3f/d2/95/3fd29534d75c642ec7baed3949d5751e.jpg" class="w-full h-full object-cover"
-                            alt="Slide 2">
+                        <img src="https://i.pinimg.com/564x/3f/d2/95/3fd29534d75c642ec7baed3949d5751e.jpg"
+                            class="w-full h-full object-cover brightness-75" alt="Slide 2">
                     </div>
                     <div class="swiper-slide">
-                        <img src="https://i.pinimg.com/564x/f4/55/7c/f4557c11c9a566c025217c50fbb87614.jpg" class="w-full h-full object-cover"
-                            alt="Slide 3">
+                        <img src="https://i.pinimg.com/564x/f4/55/7c/f4557c11c9a566c025217c50fbb87614.jpg"
+                            class="w-full h-full object-cover brightness-75" alt="Slide 3">
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Content -->
-        <div class="relative z-10 text-white">
-            <h1 class="text-3xl font-semibold mb-6">CỬA HÀNG</h1>
-            <p class="text-lg mb-10">Đi đến những cửa hàng mà bạn có thể thích.</p>
-            <a href="/store" class="bg-white text-gray-800 px-8 py-3 rounded-full shadow-md">Bắt đầu</a>
+        <div class="relative z-10 text-white animate-fade-in">
+            <h1 class="text-4xl lg:text-6xl font-extrabold mb-8 uppercase tracking-wide">Khám phá cửa hàng</h1>
+            <p class="text-lg lg:text-2xl mb-10 max-w-2xl mx-auto">Khám phá những cửa hàng mà bạn có thể sẽ thích nhất.
+            </p>
+            <a href="/store" class="bg-gray-300 bg-opacity-80 text-white px-10 py-3 rounded-full shadow-lg transition duration-300">
+                Bắt đầu ngay
+            </a>
         </div>
 
         <!-- Overlay to darken the background -->
-        <div class="absolute inset-0 bg-black opacity-50 z-5"></div>
+        <div class="absolute inset-0 bg-gray-800 opacity-60 z-5"></div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10 text-white">
+            <p class="mb-2 text-sm">Lướt xuống để xem thêm</p>
+            <div id="scroll-down" class="animate-bounce cursor-pointer">
+                <i class="bi bi-chevron-double-down text-3xl"></i>
+            </div>
+        </div>
     </section>
+
     <script>
         var swiper = new Swiper('.swiper-container', {
             loop: true,
@@ -105,40 +170,47 @@
             effect: 'fade',
             speed: 1000,
         });
+
+        document.getElementById('scroll-down').addEventListener('click', function () {
+            window.scrollBy({
+                top: 650,
+                behavior: 'smooth'
+            });
+        });
     </script>
-     <!-- ================================================================================== -->
-<!-- =================================================================================== -->
-   
+    <!-- ================================================================================== -->
+
     <!-- ================================================================================== -->
 
 
     <!-- Header -->
     <div th:replace="/layout/_header.html"></div>
 
-    <div class="mt-2 md:mt-16"></div>
     <!-- Store -->
-    <div class="relative w-full">
-        <!-- Image container with horizontal scroll -->
-        <div id="image-scroll" class="flex overflow-x-auto scroll-smooth snap-x snap-mandatory">
-            <!-- Individual images -->
-            <div th:replace="/layout/_storeone.html"></div>
-        </div>
+    <div class="py-2 bg-gradient-to-b from-red-100 via-white to-blue-100 flip-object">
+        <div class="container mx-auto">
+            <h2 class="text-4xl font-bold text-center text-gray-800 mb-8 mt-6">Cửa Hàng Được Đánh Giá Tốt Nhất</h2>
 
-        <div class="hidden md:block">
-            <!-- Previous button -->
-            <button id="prevBtn"
-                class="absolute top-2/3 transform -translate-y-1/2 left-2 bg-white text-2xl text-black rounded-full p-2 focus:outline-none">
-                &#10094;
-            </button>
+            <div class="relative w-full">
+                <div id="image-scroll" class="flex overflow-x-auto scroll-smooth snap-x snap-mandatory">
+                    <div th:replace="/layout/_storeone.html"></div>
+                </div>
+                <div class="py-12 hidden md:block">
+                    <div class="absolute bottom-0 py-8 right-4 flex space-x-2">
+                        <button id="prevBtn"
+                            class="text-2xl bg-white text-black shadow-lg rounded-full p-2 focus:outline-none">
+                            &#10094;
+                        </button>
 
-            <!-- Next button -->
-            <button id="nextBtn"
-                class="absolute top-2/3 transform -translate-y-1/2 right-2 bg-white text-2xl text-black rounded-full p-2 focus:outline-none">
-                &#10095;
-            </button>
+                        <button id="nextBtn"
+                            class="text-2xl bg-white text-black shadow-lg rounded-full p-2 focus:outline-none">
+                            &#10095;
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-
     <script>
         const scrollContainer = document.getElementById('image-scroll');
         const nextButton = document.getElementById('nextBtn');
@@ -155,52 +227,145 @@
         scrollContainer.addEventListener('scroll', checkScrollButtons);
 
         nextButton.addEventListener('click', () => {
-            scrollContainer.scrollBy({ left: 375, behavior: 'smooth' });
+            scrollContainer.scrollBy({ left: 1000, behavior: 'smooth' });
         });
 
         prevButton.addEventListener('click', () => {
-            scrollContainer.scrollBy({ left: -375, behavior: 'smooth' });
+            scrollContainer.scrollBy({ left: -1000, behavior: 'smooth' });
         });
 
         // Kiểm tra nút ngay từ lúc tải trang
         checkScrollButtons();
     </script>
-    
-    <!-- Categories -->
-    <div class="relative p-4 gap-2">
-        <h2 class="text-xl font-semibold text-gray-800 mb-2 top-0 ml-2">LOẠI CỬA HÀNG</h2>
-        <div class="py-2 hidden md:block">
-            <div class="absolute top-0 mb-2 right-0 flex space-x-2 z-10 p-4">
-                <button id="prevBtncate"
-                    class="text-2xl bg-white text-black shadow-lg rounded-full p-2 focus:outline-none shadow">
-                    &#10094;
-                </button>
 
-                <!-- Next button -->
-                <button id="nextBtcate"
-                    class="text-2xl bg-white text-black shadow-lg rounded-full p-2 focus:outline-none shadow">
-                    &#10095;
-                </button>
+
+    <!-- ==============================Article=========================== -->
+    <!-- Highlight Stores Section -->
+    <section class="py-16 md:mt-4 bg-gradient-to-b from-yellow-100 via-white to-blue-100 fade-in-content">
+        <div class="container mx-auto px-4">
+            <!-- Tiêu đề Section -->
+            <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">
+                Cửa Hàng Được Yêu Thích Nhất
+            </h2>
+
+            <!-- Cards Section -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="group perspective">
+                    <div
+                        class="relative h-64 bg-gradient-to-r from-purple-500 to-pink-500 p-6 rounded-lg shadow-lg transform group-hover:rotate-y-6 transition-transform duration-500">
+                        <div
+                            class="absolute inset-0 rounded-lg bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-auto z-10">
+                            <div class="flex flex-col justify-center items-center h-full text-center p-4">
+                                <h3 class="text-xl font-semibold text-gray-800">Cửa hàng A</h3>
+                                <p class="text-gray-600 mt-4">Cửa hàng nổi bật với các sản phẩm chất lượng cao, phục vụ
+                                    chuyên nghiệp.</p>
+                                <a href="#"
+                                    class="mt-6 inline-block bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600">
+                                    Xem chi tiết
+                                </a>
+                            </div>
+                        </div>
+                        <div
+                            class="absolute inset-0 flex flex-col justify-center items-center text-white text-center opacity-100 group-hover:opacity-0 transition-opacity duration-500 pointer-events-none">
+                            <i class="bi bi-gem text-6xl"></i>
+                            <h3 class="text-2xl font-bold mt-4">Hạng nhất</h3>
+                        </div>
+                    </div>
+                </div>
+                <!--2 -->
+                <div class="group perspective">
+                    <div
+                        class="relative h-64 bg-gradient-to-r from-blue-500 to-green-500 p-6 rounded-lg shadow-lg transform group-hover:rotate-y-6 transition-transform duration-500">
+                        <div
+                            class="absolute inset-0 rounded-lg bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-auto z-10">
+                            <div class="flex flex-col justify-center items-center h-full text-center p-4">
+                                <h3 class="text-xl font-semibold text-gray-800">Cửa hàng B</h3>
+                                <p class="text-gray-600 mt-4">Cửa hàng nổi bật với các sản phẩm chất lượng cao, phục vụ
+                                    chuyên nghiệp.</p>
+                                <a href="#"
+                                    class="mt-6 inline-block bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600">
+                                    Xem chi tiết
+                                </a>
+                            </div>
+                        </div>
+                        <div
+                            class="absolute inset-0 flex flex-col justify-center items-center text-white text-center opacity-100 group-hover:opacity-0 transition-opacity duration-500 pointer-events-none">
+                            <i class="bi bi-diamond text-6xl"></i>
+                            <h3 class="text-2xl font-bold mt-4">Hạng Nhì</h3>
+                        </div>
+                    </div>
+                </div>
+                <!-- 3 -->
+                <div class="group perspective">
+                    <div
+                        class="relative h-64 bg-gradient-to-r from-red-500 to-yellow-500 p-6 rounded-lg shadow-lg transform group-hover:rotate-y-6 transition-transform duration-500">
+                        <div
+                            class="absolute inset-0 rounded-lg bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-auto z-10">
+                            <div class="flex flex-col justify-center items-center h-full text-center p-4">
+                                <h3 class="text-xl font-semibold text-gray-800">Cửa hàng C</h3>
+                                <p class="text-gray-600 mt-4">Cửa hàng nổi bật với các sản phẩm chất lượng cao, phục vụ
+                                    chuyên nghiệp.</p>
+                                <a href="#"
+                                    class="mt-6 inline-block bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600">
+                                    Xem chi tiết
+                                </a>
+                            </div>
+                        </div>
+                        <div
+                            class="absolute inset-0 flex flex-col justify-center items-center text-white text-center opacity-100 group-hover:opacity-0 transition-opacity duration-500 pointer-events-none">
+                            <i class="bi bi-suit-diamond text-6xl"></i>
+                            <h3 class="text-2xl font-bold mt-4">Hạng Ba</h3>
+                        </div>
+                    </div>
+                </div>
+                <!--  -->
             </div>
         </div>
-        <div class="relative w-full space-y-4">
-            <div id="category-scroll"
-                class="flex overflow-x-auto scroll-smooth snap-x snap-mandatory gap-2 hide-scrollbar">
-                <!-- Image Tiles -->
-                <a th:each="category : ${categories}" th:href="@{/store/category(categoryId=${category.categoriesId})}"
-                    class="flex bg-white rounded-lg shadow-md p-4 m-2 min-w-max">
-                    <div class="w-40 rounded-lg overflow-hidden">
-                        <img src="https://i.pinimg.com/564x/4e/a0/31/4ea0315ab5b65ca0997c17e7f08b324d.jpg"
-                            alt="Category Image" class="w-full h-full object-cover rounded-lg">
-                    </div>
-                    <div class="flex flex-col items-start ml-4">
-                        <h4 class="text-xl text-blue-500 font-semibold" th:text="${category.categoriesName}">Category
-                            Name</h4>
-                    </div>
-                </a>
+    </section>
+    <!-- End of Highlight Stores Section -->
+
+    <!-- =============================================================== -->
+    <!-- Categories -->
+    <section class="relative py-12 mt-4 bg-gradient-to-b from-pink-100 via-white to-blue-100 hidden-content">
+        <div class="container mx-auto">
+            <!-- Tiêu đề Section -->
+            <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">
+                Loại cửa hàng
+            </h2>
+            <div class="relative w-full space-y-4">
+                <div id="category-scroll"
+                    class="flex overflow-x-auto scroll-smooth snap-x snap-mandatory gap-2 hide-scrollbar">
+                    <!-- Image Tiles -->
+                    <a th:each="category : ${categories}"
+                        th:href="@{/store/category(categoryId=${category.categoriesId})}"
+                        class="flex bg-white rounded-lg shadow-md p-4 m-2 min-w-max">
+                        <div class="w-40 rounded-lg overflow-hidden">
+                            <img src="https://i.pinimg.com/564x/4e/a0/31/4ea0315ab5b65ca0997c17e7f08b324d.jpg"
+                                alt="Category Image" class="w-full h-full object-cover rounded-lg">
+                        </div>
+                        <div class="flex flex-col items-start ml-4">
+                            <h4 class="text-xl text-blue-500 font-semibold" th:text="${category.categoriesName}">
+                                CategoryName</h4>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="py-4 hidden md:block">
+                <div class="absolute bottom-0 right-0 flex space-x-2 z-10 p-6">
+                    <button id="prevBtncate"
+                        class="text-2xl bg-white text-black shadow-lg rounded-full p-2 focus:outline-none shadow">
+                        &#10094;
+                    </button>
+
+                    <!-- Next button -->
+                    <button id="nextBtcate"
+                        class="text-2xl bg-white text-black shadow-lg rounded-full p-2 focus:outline-none shadow">
+                        &#10095;
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
     <!-- JavaScript for scrolling -->
     <script>
         const scrollContainer1 = document.getElementById('category-scroll');
@@ -231,11 +396,15 @@
 
     <!-- ------------------- -->
     <!-- Store -->
-    <div th:replace="/layout/_store.html"></div>
+    <div class="py-2 mt-4">
+        <div class="container mx-auto">
+            <h2 class="text-4xl font-bold text-center text-gray-800 mb-8">Các Cửa Hàng Khác</h2>
+            <div th:replace="/layout/_store.html"></div>
+        </div>
+    </div>
     <!-- ---- -->
-    <br>
     <!-- Main -->
-    <div class="flex bg-gray-100 overflow-hidden shadow-lg">
+    <div class="flex bg-gray-100 overflow-hidden shadow-lg mt-4">
         <!-- Phần chứa hình ảnh (7 phần) -->
         <div class="w-7/12 relative">
             <a href="#">

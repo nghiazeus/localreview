@@ -18,6 +18,9 @@ public interface ReviewRepository extends JpaRepository<Review, String> {
     @Query("SELECT r FROM Review r LEFT JOIN FETCH r.photos WHERE r.store.storeId = :storeId")
     List<Review> findReviewsWithPhotosByStoreId(@Param("storeId") String storeId);
     
+    @Query("SELECT AVG(r.rating) FROM Review r WHERE r.store.storeId = :storeId")
+    Double findAverageRatingByStoreId(String storeId);
+    
     
     
 }

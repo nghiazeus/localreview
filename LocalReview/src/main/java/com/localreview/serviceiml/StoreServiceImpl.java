@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.localreview.entity.Photo;
 import com.localreview.entity.Store;
 import com.localreview.repository.PhotoRepository;
+import com.localreview.repository.ReviewRepository;
 import com.localreview.repository.StoreRepository;
 import com.localreview.service.StoreService;
 
@@ -39,6 +40,9 @@ public class StoreServiceImpl implements StoreService {
 
 	@Autowired
 	private PhotoRepository photoRepository;
+	
+	@Autowired
+    private ReviewRepository reviewRepository;
 
 	@Override
 	public List<Store> getAllStores() {
@@ -121,6 +125,12 @@ public class StoreServiceImpl implements StoreService {
 	@Override
 	public Optional<Store> getStoreById(String storeId) {
 		return storeRepository.findById(storeId);
+	}
+
+	@Override
+	public Double getAverageRating(String storeId) {
+		Double averageRating = reviewRepository.findAverageRatingByStoreId(storeId);
+        return (averageRating != null) ? averageRating : 0.0;
 	}
 
 

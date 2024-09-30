@@ -25,49 +25,56 @@ import java.util.List;
 @AllArgsConstructor
 public class Store {
 
-    @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "store_id", columnDefinition = "CHAR(36)")
-    private String storeId;
+	@Id
+	@GeneratedValue(generator = "UUID")
+	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+	@Column(name = "store_id", columnDefinition = "CHAR(36)")
+	private String storeId;
 
-    @Column(name = "store_name", nullable = false)
-    private String storeName;
+	@Column(name = "store_name", nullable = false)
+	private String storeName;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "store_categories", nullable = false)
-    private Categories storeCategories;
-    
-    @OneToMany(mappedBy = "store", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Review> reviews;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "store_categories", nullable = false)
+	private Categories storeCategories;
 
-    @OneToMany(mappedBy = "store", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private List<StoreMenu> storeMenus;
+	@OneToMany(mappedBy = "store", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<Review> reviews;
 
-    @OneToMany(mappedBy = "store", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private List<Photo> photos;
+	@OneToMany(mappedBy = "store", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	private List<StoreMenu> storeMenus;
 
-    @Column(name = "address_city", nullable = false)
-    private String addressCity;
+	@OneToMany(mappedBy = "store", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	private List<Photo> photos;
 
-    @Column(name = "address_district", nullable = false)
-    private String addressDistrict;
+	@Column(name = "address_city", nullable = false)
+	private String addressCity;
 
-    @Column(name = "address_commune", nullable = false)
-    private String addressCommune;
+	@Column(name = "address_district", nullable = false)
+	private String addressDistrict;
 
-    @Column(name = "address_street", nullable = false)
-    private String addressStreet;
+	@Column(name = "address_commune", nullable = false)
+	private String addressCommune;
 
-    @Column(name = "owner_id", nullable = false, columnDefinition = "CHAR(36)")
-    private String ownerId;
+	@Column(name = "address_street", nullable = false)
+	private String addressStreet;
 
-    @Column(name = "phone_number", nullable = false)
-    private String phoneNumber;
+	@Column(name = "owner_id", nullable = false, columnDefinition = "CHAR(36)")
+	private String ownerId;
 
-    @Column(name = "created_at", updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private Timestamp createdAt;
+	@Column(name = "phone_number", nullable = false)
+	private String phoneNumber;
 
-    @Column(name = "updated_at", insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
-    private Timestamp updatedAt;
+	@Column(name = "created_at", updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+	private Timestamp createdAt;
+
+	@Column(name = "updated_at", insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+	private Timestamp updatedAt;
+
+	public Double getAverageRating() {
+		if (reviews == null || reviews.isEmpty()) {
+			return 0.0;
+		}
+		return reviews.stream().mapToDouble(Review::getRating).average().orElse(0.0);
+	}
 }

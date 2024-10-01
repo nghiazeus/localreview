@@ -6,6 +6,7 @@ import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -133,6 +134,17 @@ public class StoreServiceImpl implements StoreService {
         return (averageRating != null) ? averageRating : 0.0;
 	}
 
+	@Override
+	public List<Store> getTopRatedStores() {
+		return storeRepository.findTopRatedStores().stream().limit(10).toList();
+	}
 
+	@Override
+	public List<String> findStoreNamesByKeyword(String keyword) {
+	    return storeRepository.findByStoreNameContainingIgnoreCase(keyword)
+	                          .stream()
+	                          .map(Store::getStoreName)
+	                          .collect(Collectors.toList());
+	}
 
 }

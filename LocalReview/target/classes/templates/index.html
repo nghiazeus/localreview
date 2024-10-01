@@ -143,7 +143,8 @@
             <h1 class="text-4xl lg:text-6xl font-extrabold mb-8 uppercase tracking-wide">Khám phá cửa hàng</h1>
             <p class="text-lg lg:text-2xl mb-10 max-w-2xl mx-auto">Khám phá những cửa hàng mà bạn có thể sẽ thích nhất.
             </p>
-            <a href="/store" class="bg-gray-300 bg-opacity-80 text-white px-10 py-3 rounded-full shadow-lg transition duration-300">
+            <a href="/store"
+                class="bg-gray-300 bg-opacity-80 text-white px-10 py-3 rounded-full shadow-lg transition duration-300">
                 Bắt đầu ngay
             </a>
         </div>
@@ -188,7 +189,7 @@
 
     <!-- Store -->
     <div class="py-2 bg-gradient-to-b from-red-100 via-white to-blue-100 flip-object">
-        <div class="container mx-auto">
+        <div class="mx-auto">
             <h2 class="text-4xl font-bold text-center text-gray-800 mb-8 mt-6">Cửa Hàng Được Đánh Giá Tốt Nhất</h2>
 
             <div class="relative w-full">
@@ -208,6 +209,12 @@
                         </button>
                     </div>
                 </div>
+            </div>
+            <div th:if="${#lists.isEmpty(topRatedStores)}"
+                class="text-center justify-between flex flex-col items-center justify-center mt-8">
+                <p class="text-white text-xl mb-4 bg-gray-500 p-2 px-4 rounded-full">
+                    Các cửa hàng chưa được đánh giá!
+                </p>
             </div>
         </div>
     </div>
@@ -242,7 +249,7 @@
     <!-- ==============================Article=========================== -->
     <!-- Highlight Stores Section -->
     <section class="py-16 md:mt-4 bg-gradient-to-b from-yellow-100 via-white to-blue-100 fade-in-content">
-        <div class="container mx-auto px-4">
+        <div class="mx-auto px-4">
             <!-- Tiêu đề Section -->
             <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">
                 Cửa Hàng Được Yêu Thích Nhất
@@ -327,7 +334,7 @@
     <!-- =============================================================== -->
     <!-- Categories -->
     <section class="relative py-12 mt-4 bg-gradient-to-b from-pink-100 via-white to-blue-100 hidden-content">
-        <div class="container mx-auto">
+        <div class="mx-auto">
             <!-- Tiêu đề Section -->
             <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">
                 Loại cửa hàng
@@ -349,6 +356,12 @@
                         </div>
                     </a>
                 </div>
+            </div>
+            <div th:if="${#lists.isEmpty(categories)}"
+                class="text-center justify-between flex flex-col items-center justify-center mt-8">
+                <p class="text-white text-xl mb-4 bg-gray-500 p-2 px-4 rounded-full">
+                    Chưa có loại cửa hàng
+                </p>
             </div>
             <div class="py-4 hidden md:block">
                 <div class="absolute bottom-0 right-0 flex space-x-2 z-10 p-6">
@@ -397,9 +410,15 @@
     <!-- ------------------- -->
     <!-- Store -->
     <div class="py-2 mt-4">
-        <div class="container mx-auto">
+        <div class="mx-auto">
             <h2 class="text-4xl font-bold text-center text-gray-800 mb-8">Các Cửa Hàng Khác</h2>
             <div th:replace="/layout/_store.html"></div>
+            <div th:if="${#lists.isEmpty(stores)}"
+                class="text-center justify-between flex flex-col items-center justify-center mt-8">
+                <p class="text-white text-xl mb-4 bg-gray-500 p-2 px-4 rounded-full">
+                    Chưa có cửa hàng
+                </p>
+            </div>
         </div>
     </div>
     <!-- ---- -->
@@ -433,8 +452,8 @@
     <!-- Carousel -->
 
     <!-- ----------- -->
-    <footer class="container mx-auto bg-white py-8 border-t border-gray-400">
-        <div class="mx-auto container py-16 xl:px-20 lg:px-12 sm:px-6 px-4">
+    <footer class="mx-auto bg-white py-8 border-t border-gray-400">
+        <div class="mx-auto py-16 xl:px-20 lg:px-12 sm:px-6 px-4">
             <!--- more free and premium Tailwind CSS components at https://tailwinduikit.com/ --->
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 md:gap-8 gap-4">
                 <div class="flex flex-col flex-shrink-0">

@@ -33,6 +33,12 @@ public class Store {
 
 	@Column(name = "store_name", nullable = false)
 	private String storeName;
+	
+	@Column(name = "view_count", nullable = false)
+    private int viewCount = 0;  
+
+    @Column(name = "favorite_count", nullable = false)
+    private int favoriteCount = 0;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "store_categories", nullable = false)

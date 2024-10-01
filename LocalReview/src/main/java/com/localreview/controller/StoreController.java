@@ -107,25 +107,7 @@ public class StoreController {
 		return "stores/stores";
 	}
 
-//	Search........
-	@GetMapping("/store/search")
-	public String searchStores(@RequestParam("query") String query, Model model) {
-		List<Store> searchResults = storeService.searchStores(query);
-		model.addAttribute("stores", searchResults);
-
-		List<Breadcrumb> breadcrumbs = new ArrayList<>();
-		breadcrumbs.add(new Breadcrumb("Trang chủ", "/index"));
-		breadcrumbs.add(new Breadcrumb("Cửa hàng", "/store"));
-		breadcrumbs.add(new Breadcrumb("Tìm kiếm", "/store/search?query=" + query));
-		breadcrumbs.add(new Breadcrumb("" + query, "/store/search?query= " + query));
-		model.addAttribute("breadcrumbs", breadcrumbs);
-
-		return "stores/stores";
-	}
-
-//	Đăng ký của hàng..........
-
-//	Localhost đăng ký
+	
 	@GetMapping("/register-store")
 	public String Registersore(Model model) {
 		List<Categories> list = category.findAll();
@@ -133,7 +115,6 @@ public class StoreController {
 		return "stores/register-store";
 	}
 
-//	Đăng ký cửa hàng
 
 	@PostMapping("/register-store")
 	public String registerStore(@RequestParam("store_name") String storeName,
@@ -141,23 +122,21 @@ public class StoreController {
 			@RequestParam("address_city") String addressCity, @RequestParam("address_district") String addressDistrict,
 			@RequestParam("address_commune") String addressCommune,
 			@RequestParam("address_street") String addressStreet, @RequestParam("phone_number") String phoneNumber,
-			@RequestParam("store_images") MultipartFile[] storeImages, // Nhiều ảnh cửa hàng
+			@RequestParam("store_images") MultipartFile[] storeImages,
 			RedirectAttributes redirectAttributes) {
 
 		try {
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 			String currentID;
-
-			// Kiểm tra nếu đăng nhập bằng Google (OAuth2AuthenticationToken)
+	
 			if (authentication instanceof OAuth2AuthenticationToken) {
 				OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
 				Map<String, Object> attributes = oauthToken.getPrincipal().getAttributes();
-				currentID = (String) attributes.get("email"); // Lấy email từ OAuth2 user
+				currentID = (String) attributes.get("email"); 
 			} else {
-				currentID = authentication.getName(); // Sử dụng cách thông thường cho đăng nhập bình thường
+				currentID = authentication.getName(); 
 			}
 
-			// Kiểm tra sự tồn tại của người dùng
 			User currentUser = userService.findByEmail(currentID);
 			if (currentUser == null) {
 				redirectAttributes.addFlashAttribute("error", "Người dùng không tồn tại. Vui lòng đăng nhập lại.");
@@ -168,8 +147,7 @@ public class StoreController {
 			if (role != null) {
 				role.setRole(UserRole.store_owner);
 			}
-
-			// Tạo đối tượng Store và lưu thông tin
+			
 			Store store = new Store();
 			store.setStoreName(storeName);
 			store.setStoreCategories(storeCategories);
@@ -180,10 +158,8 @@ public class StoreController {
 			store.setPhoneNumber(phoneNumber);
 			store.setOwnerId(currentUser.getUserId());
 
-			// Lưu đối tượng store vào cơ sở dữ liệu trước khi lưu ảnh
 			Store savedStore = storeService.saveStore(store);
 
-			// Xử lý và lưu nhiều ảnh
 			if (storeImages != null && storeImages.length > 0) {
 				for (MultipartFile image : storeImages) {
 					if (!image.isEmpty()) {
@@ -256,7 +232,9 @@ public class StoreController {
 		try {
 			Store store = storeService.findStoreById(storeId);
 			if (store != null) {
-
+				
+				store.setViewCount(store.getViewCount() + 1);
+				storeService.saveStore(store);
 				model.addAttribute("store", store);
 
 				List<StoreMenu> storeMenuList = storeMenuService.findByStore_StoreId(storeId);

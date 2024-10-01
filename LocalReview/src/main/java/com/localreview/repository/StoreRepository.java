@@ -1,5 +1,6 @@
 package com.localreview.repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,5 +24,10 @@ public interface StoreRepository extends JpaRepository<Store, String> {
     List<Store> searchStoresByName(@Param("searchTerm") String searchTerm);
 	
 	List<Store> findByStoreCategories_CategoriesId(String categoriesId);
+	
+	@Query("SELECT s FROM Store s JOIN s.reviews r GROUP BY s.id ORDER BY AVG(r.rating) DESC")
+    List<Store> findTopRatedStores();
+
+	List<Store> findByStoreNameContainingIgnoreCase(String storeName);
 	
 }

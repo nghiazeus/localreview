@@ -103,7 +103,7 @@
                     </h2>
                     <div class="flex font-bold text-xl text-gray-800 mb-4 gap-4">
                         Loại cửa hàng:
-                        <div class="text-center text-white bg-blue-500 dark:bg-neutral-700 rounded-full px-2 w-40">
+                        <div class="text-center text-white bg-blue-500 dark:bg-neutral-700 rounded-full px-4 w-auto">
                             <i class="bi bi-tags"></i>
                             <span th:text="${store.storeCategories.categoriesName}">Loại</span>
                         </div>
@@ -162,11 +162,16 @@
                         }
                     </script>
 
-                    <p class="flex items-center mb-4">
-                        <i class="bi bi-geo-alt-fill text-red-600 mr-2 text-xl"></i>
+                    <p class="flex items-center mb-4 text-xl">
+                        <i class="bi bi-geo-alt-fill text-red-600 mr-2"></i>
                         <span th:text="${store.addressCity}" class="font-bold text-red-500"></span>
                     </p>
-
+                    <p class="flex font-bold text-center mb-4 text-xl mt-2 text-gray-600">Lượt xem:
+                        <span th:text="${store.ViewCount}" class="text-green-500 ml-2"></span>
+                    </p>
+                    <p class="flex font-bold text-center mb-4 text-xl mt-2 text-gray-600">Yêu thích:
+                        <i class="bi bi-heart-fill text-2xl cursor-pointer text-gray-500 hover:text-red-500 ml-2"></i>
+                    </p>
                     <div class="flex text-yellow-500 text-2xl">
                         <div class="star-rating">
                             <!-- Nền sao trống -->
@@ -604,7 +609,7 @@
                                                     </div>
                                                     <!-- Số sao -->
                                                     <div class="flex items-center mt-1">
-                                                        <span class="text-yellow-500 text-sm">
+                                                        <span class="text-yellow-500 text-lg">
                                                             <!-- Hiển thị các ngôi sao vàng theo điểm đánh giá -->
                                                             <span
                                                                 th:each="i : ${#numbers.sequence(1, review.rating)}">&#9733;</span>

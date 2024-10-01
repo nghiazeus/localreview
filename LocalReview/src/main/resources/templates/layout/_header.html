@@ -3,7 +3,7 @@
     <!--Nav-->
     <div class="fixed top-0 left-0 w-full shadow z-40">
         <nav id="header" class="w-full z-40 top-0 py-2 bg-white backdrop-blur-lg">
-            <div class="container mx-auto flex items-center justify-between px-2 relative">
+            <div class="mx-auto flex items-center justify-between px-2 relative">
                 <!-- Tiêu đề mobile -->
                 <div class="md:hidden flex items-center">
                     <a th:href="@{/index}" class="font-bold text-xl">
@@ -21,15 +21,12 @@
 
                 <!-- Thanh tìm kiếm destop -->
                 <div class="flex-grow mx-2 flex items-center justify-center hidden md:flex relative">
-                    <!-- Form tìm kiếm -->
-                    <form id="searchForm" action="/store/search" method="GET"
-                        class="relative flex items-center w-full max-w-2xl">
-                        <!-- Ô nhập từ khóa tìm kiếm -->
-                        <input id="searchInput" name="query" type="text" placeholder="Tìm kiếm..." class="w-full py-3 pl-4 pr-10 text-sm bg-white border border-gray-300 
+                    <form action="/store/search" method="GET" class="relative flex items-center w-full max-w-2xl">
+                        <input name="query" type="text" placeholder="Tìm kiếm..." class="w-full py-3 pl-4 pr-10 text-sm bg-white border border-gray-300 
                             rounded-full shadow-sm dark:bg-neutral-800 dark:border-neutral-600 
                             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent 
-                            transition duration-300 ease-in-out" required autocomplete="off">
-                        <!-- Nút tìm kiếm -->
+                            transition duration-300 ease-in-out" required autocomplete="off" id="searchInput">
+
                         <button type="submit" id="searchButton" class="absolute right-0 mr-2 text-blue-500">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor" stroke-width="2">
@@ -39,110 +36,136 @@
                         </button>
                     </form>
 
-                    <!-- Lịch sử tìm kiếm trên desktop -->
-                    <div id="searchHistory"
+                    <!-- Lịch sử tìm kiếm -->
+                    <div id="searchHistory" th:if="${not #lists.isEmpty(searchHistory)}"
                         class="absolute inset-x-0 mt-2 max-w-2xl p-4 mx-auto bg-white md:rounded-lg shadow-lg hidden">
-                        <ul id="searchHistoryList" class="divide-y divide-gray-200"></ul>
+                        <ul class="space-y-2">
+                            <!-- Gợi ý -->
+                            <ul id="suggestionList"></ul>
+                            <li th:each="history : ${searchHistory}">
+                                <div class="flex justify-between items-center">
+                                    <span class="mr-4">
+                                        <i class="bi bi-clock-history"></i>
+                                    </span>
+                                    <button type="button" th:attr="data-term=${history.searchTerm}"
+                                        th:text="${history.searchTerm}"
+                                        class="block w-full text-left py-2 text-gray-700 hover:text-blue-500 cursor-pointer"
+                                        onclick="searchTermClicked(this)">
+                                    </button>
+                                    <button type="button" th:attr="data-id=${history.historyId}"
+                                        class="text-red-500 ml-2" onclick="deleteSearchHistory(this)">
+                                        Xóa
+                                    </button>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
                 </div>
 
-
-                <!-- Js tìm kiém -->
-                <!-- ====================Script Destop=========================== -->
                 <script>
-                    document.addEventListener('DOMContentLoaded', function () {
-                        const searchInput = document.getElementById('searchInput');
-                        const searchButton = document.getElementById('searchButton');
-                        const searchHistory = document.getElementById('searchHistory');
-                        const searchHistoryList = document.getElementById('searchHistoryList');
-                        const searchForm = document.getElementById('searchForm');
-                        const closeSearchHistoryButton = document.getElementById('closeSearchHistory');
+                    document.addEventListener("DOMContentLoaded", function () {
+                        const searchInput = document.getElementById("searchInput");
+                        const searchHistory = document.getElementById("searchHistory");
+                        const suggestionList = document.getElementById("suggestionList");
 
-                        let searchTerms = JSON.parse(localStorage.getItem('searchHistory')) || [];
+                        // Hiển thị lịch sử tìm kiếm khi nhấn vào ô input
+                        searchInput.addEventListener("focus", function () {
+                            searchHistory.classList.remove("hidden"); // Hiện lịch sử tìm kiếm
+                        });
 
-                        function toggleSearchHistory() {
-                            searchHistory.classList.toggle('hidden');
-                            updateSearchHistory();
-                        }
-
-                        searchInput.addEventListener('focus', toggleSearchHistory);
-
-                        function handleSearch(event) {
-                            const term = searchInput.value.trim();
-                            if (term !== '') {
-                                searchTerms = [term, ...searchTerms.filter(item => item !== term)].slice(0, 10);
-                                localStorage.setItem('searchHistory', JSON.stringify(searchTerms));
-                                updateSearchHistory();
-                                searchForm.submit();
-                                searchHistory.classList.add('hidden');
-                            }
-                            event.preventDefault();
-                        }
-
-                        searchButton.addEventListener('click', handleSearch);
-
-                        searchInput.addEventListener('keydown', function (event) {
-                            if (event.key === 'Enter') {
-                                handleSearch(event);
+                        // Ẩn lịch sử tìm kiếm và gợi ý khi click ra ngoài
+                        document.addEventListener("click", function (event) {
+                            if (!searchHistory.contains(event.target) && !searchInput.contains(event.target)) {
+                                searchHistory.classList.add("hidden"); // Ẩn lịch sử tìm kiếm
                             }
                         });
 
-                        function updateSearchHistory() {
-                            searchHistoryList.innerHTML = '';
-                            if (searchTerms.length > 0) {
-                                searchTerms.forEach((term, index) => {
-                                    const li = document.createElement('li');
-                                    li.classList.add('flex', 'justify-between', 'items-center', 'border-b', 'py-2');
+                        // Giữ lịch sử tìm kiếm hiển thị nếu nhấn vào
+                        searchHistory.addEventListener("click", function (event) {
+                            event.stopPropagation(); // Ngăn chặn sự kiện click nổi lên
+                        });
 
-                                    const icon = document.createElement('i');
-                                    icon.classList.add('bi', 'bi-clock-history', 'text-xl', 'mr-4');
+                        function deleteSearchHistory(button) {
+                            const historyId = button.getAttribute("data-id"); // Lấy ID của lịch sử tìm kiếm
+                            const listItem = button.closest('li'); // Lưu lại mục danh sách để xử lý sau
 
-                                    const termSpan = document.createElement('span');
-                                    termSpan.textContent = term;
-                                    termSpan.classList.add('flex-grow', 'cursor-pointer');
-                                    termSpan.addEventListener('click', function () {
-                                        searchInput.value = term;
-                                        searchHistory.classList.add('hidden');
-                                        searchForm.submit();
-                                    });
+                            fetch(`/search/history/delete?historyId=${historyId}`, {
+                                method: 'POST'
+                            })
+                                .then(response => {
+                                    if (response.ok) {
+                                        // Xóa mục trong DOM
+                                        listItem.remove();
 
-                                    const deleteButton = document.createElement('button');
-                                    deleteButton.innerHTML = '<div class="text-base">Xóa</div>';
-                                    deleteButton.classList.add('text-red-500', 'hover:text-red-700');
-                                    deleteButton.addEventListener('click', function (event) {
-                                        event.stopPropagation();
-                                        searchTerms.splice(index, 1);
-                                        localStorage.setItem('searchHistory', JSON.stringify(searchTerms));
-                                        updateSearchHistory();
-                                    });
-
-                                    li.appendChild(icon);
-                                    li.appendChild(termSpan);
-                                    li.appendChild(deleteButton);
-                                    searchHistoryList.appendChild(li);
+                                        // Kiểm tra xem còn mục nào trong danh sách không
+                                        const historyList = document.querySelector('#searchHistory ul');
+                                        if (historyList.children.length === 0) {
+                                            // Nếu không còn mục nào thì ẩn bảng lịch sử
+                                            document.getElementById('searchHistory').classList.add('hidden');
+                                        }
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                    // Có thể xử lý lỗi ở đây nếu cần
                                 });
-                                searchHistory.classList.remove('hidden');
+                        }
+
+                        // Hiển thị gợi ý tìm kiếm
+                        searchInput.addEventListener("input", function () {
+                            const query = searchInput.value;
+
+                            if (query.length > 0) {
+                                fetch(`/api/store/suggestions?keyword=${query}`)
+                                    .then(response => response.json())
+                                    .then(suggestions => {
+                                        // Xóa các gợi ý cũ
+                                        suggestionList.innerHTML = '';
+
+                                        // Sắp xếp gợi ý dựa trên độ dài và độ tương đồng
+                                        suggestions.sort((a, b) => {
+                                            // Đưa từ khóa giống nhất lên đầu
+                                            const aLower = a.toLowerCase();
+                                            const bLower = b.toLowerCase();
+                                            const queryLower = query.toLowerCase();
+
+                                            const aIndex = aLower.indexOf(queryLower);
+                                            const bIndex = bLower.indexOf(queryLower);
+
+                                            // So sánh vị trí xuất hiện của từ khóa trong gợi ý
+                                            if (aIndex === bIndex) {
+                                                return aLower.length - bLower.length; // Sắp xếp theo độ dài nếu vị trí giống nhau
+                                            }
+                                            return aIndex - bIndex; // Đưa từ có vị trí xuất hiện trước lên trên
+                                        });
+
+                                        if (suggestions.length > 0) {
+                                            // Hiển thị các gợi ý
+                                            suggestions.forEach(suggestion => {
+                                                const li = document.createElement('li');
+                                                li.textContent = suggestion;
+                                                li.className = "py-2 text-gray-700 hover:text-blue-500 cursor-pointer";
+                                                li.onclick = function () {
+                                                    searchInput.value = suggestion;  // Gán giá trị vào ô tìm kiếm
+                                                    searchHistory.classList.add("hidden");  // Ẩn danh sách gợi ý
+                                                    searchInput.form.submit();  // Gửi form
+                                                };
+                                                suggestionList.appendChild(li);
+                                            });
+                                            suggestionList.classList.remove("hidden"); // Hiện danh sách gợi ý
+                                        } else {
+                                            suggestionList.classList.add("hidden"); // Ẩn danh sách gợi ý nếu không có
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.error('Error fetching suggestions:', error);
+                                    });
                             } else {
-                                searchHistory.classList.add('hidden');
+                                suggestionList.classList.add("hidden"); // Ẩn nếu không có ký tự nào
                             }
-                        }
-
-                        function clickOutsideHandler(event) {
-                            if (!searchHistory.contains(event.target) && event.target !== searchInput) {
-                                searchHistory.classList.add('hidden');
-                            }
-                        }
-
-                        document.addEventListener('click', clickOutsideHandler);
-
-                        updateSearchHistory();
-                        searchHistory.classList.add('hidden');
-
-                        // Xử lý sự kiện nhấn nút "X"
-                        closeSearchHistoryButton.addEventListener('click', function () {
-                            searchHistory.classList.add('hidden');
                         });
                     });
+
                 </script>
                 <!-- ====================Script Destop=========================== -->
 
@@ -186,16 +209,17 @@
            font-medium text-gray-800 text-left w-34 md:w-auto truncate">
             Hi, <span th:text="${currentUser.name}">User</span>!
         </h1>
-        <!-- ------------------------------ -->
+        <!-- -----------------Mobile------------- -->
         <div id="searchPanel"
             class="fixed top-0 right-0 w-full h-full bg-white transform translate-x-full transition-transform duration-500 ease-in-out z-50">
             <div class="flex items-center p-4 gap-2 w-full">
                 <i id="closeSearchPanel" class="bi bi-chevron-left text-gray-400 text-3xl"></i>
-                <form id="searchForm" action="/store/search" method="GET"
-                    class="relative flex items-center w-full max-w-2xl">
-                    <input id="searchInputMobile" name="query" type="text" placeholder="Tìm kiếm..."
-                        class="w-full py-2 pl-4 text-sm bg-white border border-gray-300 rounded-full shadow-sm dark:bg-neutral-800 dark:border-neutral-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300 ease-in-out"
-                        required autocomplete="off">
+                <form action="/store/search" method="GET" class="relative flex items-center w-full max-w-2xl">
+                    <input name="query" type="text" placeholder="Tìm kiếm..." class="w-full py-2 pl-4 pr-10 text-sm bg-white border border-gray-300 
+                        rounded-full shadow-sm dark:bg-neutral-800 dark:border-neutral-600 
+                        focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent 
+                        transition duration-300 ease-in-out" required autocomplete="off" id="searchInput">
+
                     <button type="submit" id="searchButton" class="absolute right-0 mr-2 text-blue-500">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor" stroke-width="2">
@@ -205,69 +229,24 @@
                     </button>
                 </form>
             </div>
-            <div id="searchHistoryMobile" class="mt-4 px-4">
-                <ul id="searchHistoryListMobile" class="divide-y divide-gray-200"></ul>
-            </div>
+            <ul class="p-4 space-y-4 ">
+                <li th:each="history : ${searchHistory}">
+                    <div class="flex justify-between items-center">
+                        <span class="mr-4">
+                            <i class="bi bi-clock-history"></i>
+                        </span>
+                        <button type="button" th:attr="data-term=${history.searchTerm}" th:text="${history.searchTerm}"
+                            class="block w-full text-left py-2 text-gray-700 hover:text-blue-500 cursor-pointer"
+                            onclick="searchTermClicked(this)">
+                        </button>
+                        <button type="button" th:attr="data-id=${history.historyId}" class="text-red-500 ml-2"
+                            onclick="deleteSearchHistory(this)">
+                            Xóa
+                        </button>
+                    </div>
+                </li>
+            </ul>
         </div>
-
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                const searchInputMobile = document.getElementById('searchInputMobile');
-                const searchHistoryListMobile = document.getElementById('searchHistoryListMobile');
-                const searchForm = document.getElementById('searchForm');
-
-                let searchTermsMobile = JSON.parse(localStorage.getItem('searchHistory')) || [];
-
-                function updateSearchHistoryMobile() {
-                    searchHistoryListMobile.innerHTML = '';
-                    searchTermsMobile.forEach((term, index) => {
-                        const li = document.createElement('li');
-                        li.classList.add('flex', 'justify-between', 'items-center', 'py-2');
-
-                        const icon = document.createElement('i');
-                        icon.classList.add('bi', 'bi-clock-history', 'text-xl', 'mr-6');
-
-                        const termSpan = document.createElement('span');
-                        termSpan.textContent = term;
-                        termSpan.classList.add('flex-grow', 'cursor-pointer');
-                        termSpan.addEventListener('click', function () {
-                            searchInput.value = term;
-                            searchHistory.classList.add('hidden');
-                            searchForm.submit();
-                        });
-
-                        const deleteButton = document.createElement('button');
-                        deleteButton.innerHTML = '<div class="text-sm">Xóa</div>';
-                        deleteButton.classList.add('text-red-500', 'hover:text-red-700');
-                        deleteButton.addEventListener('click', function (event) {
-                            event.stopPropagation();
-                            searchTermsMobile.splice(index, 1);
-                            localStorage.setItem('searchHistory', JSON.stringify(searchTermsMobile));
-                            updateSearchHistoryMobile();
-                        });
-
-                        li.appendChild(icon);
-                        li.appendChild(termSpan);
-                        li.appendChild(deleteButton);
-                        searchHistoryListMobile.appendChild(li);
-                    });
-                }
-
-                searchInputMobile.addEventListener('keydown', function (event) {
-                    if (event.key === 'Enter') {
-                        const query = searchInputMobile.value.trim();
-                        if (query && !searchTermsMobile.includes(query)) {
-                            searchTermsMobile.push(query);
-                            localStorage.setItem('searchHistory', JSON.stringify(searchTermsMobile));
-                            updateSearchHistoryMobile();
-                        }
-                    }
-                });
-
-                // Hiển thị lịch sử tìm kiếm ngay khi tải trang
-                updateSearchHistoryMobile();
-            });
-        </script>
         <script>
             const toggleSearchPanel = document.getElementById('toggleSearchPanel');
             const closeSearchPanel = document.getElementById('closeSearchPanel');
@@ -283,6 +262,34 @@
                 searchPanel.classList.add('translate-x-full');
             });
 
+            function deleteSearchHistory(button) {
+                const historyId = button.getAttribute("data-id"); // Lấy ID của lịch sử tìm kiếm
+                const listItem = button.closest('li'); // Lưu lại mục danh sách để xử lý sau
+
+                fetch(`/search/history/delete?historyId=${historyId}`, {
+                    method: 'POST'
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            // Xóa mục trong DOM
+                            listItem.remove();
+
+                            // Kiểm tra xem còn mục nào trong danh sách không
+                            const historyList = document.querySelector('#searchHistory ul');
+                            if (historyList.children.length === 0) {
+                                // Nếu không còn mục nào thì ẩn bảng lịch sử
+                                document.getElementById('searchHistory').classList.add('hidden');
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        // Có thể xử lý lỗi ở đây nếu cần
+                    });
+            }
+
+
+
         </script>
         <!-- =============================================== -->
     </div>
@@ -295,8 +302,7 @@
             <ul class="mt-2 space-y-2 p-2 gap-4">
                 <li>
                     <th:block th:if="${#request.remoteUser}" class="py-1" role="none">
-                        <a th:href="@{/profile/user}"
-                            class="block px-2 py-4 text-lg md:text-xl text-gray-900">
+                        <a th:href="@{/profile/user}" class="block px-2 py-4 text-lg md:text-xl text-gray-900">
                             <i class="bi bi-person"></i> Tài khoản
                         </a>
 
@@ -402,8 +408,7 @@
         </a>
         <!-- Profile Icon -->
         <th:block th:if="${#request.remoteUser}">
-            <a th:href="@{/profile/user}"
-                class="menu-item flex flex-col items-center text-gray-600 hover:text-black">
+            <a th:href="@{/profile/user}" class="menu-item flex flex-col items-center text-gray-600 hover:text-black">
                 <i class="bi bi-person text-2xl"></i>
                 <span class="text-xs">Tài khoản</span>
             </a>

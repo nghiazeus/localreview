@@ -1,5 +1,5 @@
 <!-- Store Card -->
-<div th:each="store : ${stores}" class="relative h-full w-full sm:w-3/4 md:w-2/4 xl:w-1/4 flex-shrink-0 md:p-2">
+<div th:each="store : ${topRatedStores}" class="relative h-full w-full sm:w-3/4 md:w-2/4 xl:w-1/4 flex-shrink-0 md:p-2">
     <a th:href="@{/store/detail/{id}(id=${store.storeId})}"
         class="block h-full bg-white dark:bg-gray-800 md:rounded-lg md:shadow-md duration-300">
         <div
@@ -17,8 +17,8 @@
                 </div>
                 <div
                     class="flex truncate text-center bg-gray-100 dark:bg-gray-700 rounded-md px-2 py-1 text-gray-900 dark:text-gray-100 text-sm">
-                   <span th:text="${#numbers.formatDecimal(store.getAverageRating(), 1, 1).replace(',', '.')}"></span>
-                   <i class="bi bi-star-fill text-yellow-500 ml-1"></i>
+                    <span th:text="${#numbers.formatDecimal(store.getAverageRating(), 1, 1).replace(',', '.')}"></span>
+                    <i class="bi bi-star-fill text-yellow-500 ml-1"></i>
                 </div>
             </div>
 

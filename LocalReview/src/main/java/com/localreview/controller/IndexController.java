@@ -32,8 +32,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class IndexController {
 
+	@Autowired
+	private StoreService storeService;
+
 	@GetMapping("/index")
 	public String index(Model model) {
+
+		List<Store> topRatedStores = storeService.getTopRatedStores();
+		model.addAttribute("topRatedStores", topRatedStores);
+
 		return "index";
 	}
 
@@ -48,7 +55,7 @@ public class IndexController {
 		List<Breadcrumb> breadcrumbs = new ArrayList<>();
 		breadcrumbs.add(new Breadcrumb("Trang chủ", "/index"));
 		breadcrumbs.add(new Breadcrumb("Loại cửa hàng", "/categories"));
-		
+
 		model.addAttribute("breadcrumbs", breadcrumbs);
 
 		return "categories";

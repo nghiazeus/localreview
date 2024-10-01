@@ -35,9 +35,12 @@ public interface StoreService {
 
 	Photo savePhoto(Photo photo);
 
-//	Lọc của hàng theo danh mục
 	List<Store> getStoresByCategoryId(String categoriesId);
 	
-	Double getAverageRating(String storeId);
+	Double getAverageRating(String storeId); // Điểm trung bình rating
+	
+	List<Store> getTopRatedStores(); //Top cửa hàng
+
+	List<String> findStoreNamesByKeyword(String keyword);
 
 }

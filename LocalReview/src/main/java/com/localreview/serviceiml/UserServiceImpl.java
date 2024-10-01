@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -71,9 +72,18 @@ public class UserServiceImpl implements UserService {
 	    return userRepository.findByEmail(email);
 	}
 
-	
+	@Override
+    public User getCurrentUser() {
+        // Lấy thông tin người dùng từ SecurityContext
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-
-
+        if (principal instanceof UserDetails) {
+            String userid = ((UserDetails) principal).getUsername();
+            // Trả về người dùng từ cơ sở dữ liệu theo tên đăng nhập
+            return userRepository.findByUserId(userid);
+        } else {
+            return null; // Nếu không có người dùng hiện tại
+        }
+    }
     
 }

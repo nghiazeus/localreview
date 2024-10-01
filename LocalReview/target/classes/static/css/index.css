@@ -198,11 +198,6 @@ body {
 	transition: color 0.3s;
 }
 
-.delete-button:hover {
-	color: #e53e3e;
-	/* Màu đỏ cho hiệu ứng hover */
-}
-
 /* CSS tùy chỉnh cho lịch sử tìm kiếm */
 /* Điều chỉnh cho desktop */
 @media (min-width: 768px) {

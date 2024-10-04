@@ -34,7 +34,7 @@ body {
 .flip-object {
     opacity: 0; /* Ẩn đồ vật ban đầu */
     transform: rotateY(90deg); /* Lật đồ vật */
-    transition: opacity 2s ease, transform 2s ease; /* Hiệu ứng chuyển tiếp */
+    transition: opacity 1s ease, transform 1s ease; /* Hiệu ứng chuyển tiếp */
 }
 
 .flip-object.visible {
@@ -62,6 +62,7 @@ body {
     opacity: 10; /* Độ trong suốt của chính thanh điều hướng */
     transition: background-color 0.3s ease, opacity 0.3s ease; /* Hiệu ứng chuyển khi thay đổi */
 }
+
 
 @media only screen and (max-width: 760px) {
     #header {
@@ -198,22 +199,9 @@ body {
 	transition: color 0.3s;
 }
 
-/* CSS tùy chỉnh cho lịch sử tìm kiếm */
-/* Điều chỉnh cho desktop */
-@media (min-width: 768px) {
-    #searchHistory {
-        position: absolute;
-        top: calc(100% + 8px); /* Đặt phần tử ngay dưới thanh tìm kiếm với khoảng cách 8px */
-        left: 50%; /* Đặt phần tử ở giữa ngang của container */
-        transform: translateX(-50%); /* Dịch chuyển phần tử về bên trái để căn giữa chính xác */
-        width: 100%; /* Chiều rộng bằng với container của thanh tìm kiếm */
-        max-width: 600px; /* Đặt chiều rộng tối đa để kiểm soát trên màn hình lớn */       
-        background: white; /* Màu nền */
-        border: 1px solid #e5e7eb; /* Đường viền */
-        border-radius: 0.5rem; /* Bo góc */
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Đổ bóng */
-        z-index: 40; /* Đặt chỉ số z để phần tử không bị che khuất */
-    }
+.snap-mandatory{
+	-ms-overflow-style: none;
+    scrollbar-width: none; 
 }
 
 

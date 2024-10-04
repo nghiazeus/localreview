@@ -30,7 +30,7 @@
                             <span
                                 th:text="${#numbers.formatDecimal(store.getAverageRating(), 1, 1).replace(',', '.')}"></span>
                         </div>
-                        <div class="ml-auto flex items-center space-x-2 text-gray-800">
+                        <div class="ml-auto flex items-center space-x-1 text-gray-800">
                             <i class="bi bi-eye"></i>
                             <span th:text="${store.viewCount}">0</span>
                         </div>
@@ -39,10 +39,10 @@
             </a>
 
             <!-- Button -->
-            <div class="px-4 py-3 bg-gray-50 flex justify-center">
+            <div class="px-3 py-3 bg-gray-50 flex justify-center">
                 <button th:data-store-id="${store.storeId}"
-                    class="open-review bg-gray-200 text-black px-5 py-2 rounded-full text-sm font-medium transition duration-200">
-                    Xem đánh giá
+                    class="open-review bg-gray-200 text-black px-3 py-2 w-full rounded-full text-xs transition duration-200">
+                    Xem đánh giá (<span th:text="${store.reviewCount}" class="truncate">0</span>)
                 </button>
             </div>
         </div>
@@ -90,12 +90,12 @@
                             src="https://i.pinimg.com/736x/0c/19/0b/0c190bbefc773d57bc8b721f8f140109.jpg" alt="Avatar">
                         <div class="ml-6 flex-grow">
                             <h2 class="text-xl font-semibold" th:text="${review.user.name}">Tên Người Dùng</h2>
-                            <div class="flex items-center mt-1">
-                                <span class="text-yellow-500 text-lg">
+                            <div class="flex items-center mt-1 text-lg">
+                                <span class="text-yellow-500">
                                     <!-- Hiển thị các ngôi sao vàng theo điểm đánh giá -->
                                     <span th:each="i : ${#numbers.sequence(1, review.rating)}">&#9733;</span>
                                 </span>
-                                <span class="text-gray-400 text-sm" th:if="${review.rating < 5}">
+                                <span class="text-gray-400" th:if="${review.rating < 5}">
                                     <!-- Hiển thị các ngôi sao xám cho phần còn lại nếu chưa đủ 5 sao -->
                                     <span th:each="i : ${#numbers.sequence(1, 5 - review.rating)}">&#9733;</span>
                                 </span>
@@ -189,7 +189,7 @@
 
 <!-- ===========================================Destop============================================ -->
 <div class="rounded-lg p-2 duration-300 hidden md:block">
-    <div class="grid grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
+    <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
         <div th:each="store : ${stores}" class="bg-white p-4 rounded-lg shadow-md h-full w-full flex-shrink-0">
             <!-- Product Image -->
             <a th:href="@{/store/detail/{id}(id=${store.storeId})}">
@@ -209,24 +209,26 @@
                         <i class="bi bi-tag text-blue-500 text-xl mr-2"></i>
                         <span th:text="${store.storeCategories.categoriesName}">Category</span>
                     </li>
-                    <li class="flex items-center">
-                        <i class="bi bi-star-fill text-yellow-500 text-xl mr-2"></i>
-                        <span
-                            th:text="${#numbers.formatDecimal(store.getAverageRating(), 1, 1).replace(',', '.')}"></span>
-                    </li>
+                    <div class="flex justify-between items-center">
+                        <li class="flex items-center">
+                            <i class="bi bi-star-fill text-yellow-500 text-xl mr-2"></i>
+                            <span
+                                th:text="${#numbers.formatDecimal(store.getAverageRating(), 1, 1).replace(',', '.')}"></span>
+                        </li>
+                        <div class="flex justify-between items-center text-gray-900 gap-2">               
+                            <div class="bg-gray-200 rounded-full px-2 text-black">
+                                <span th:text="${store.viewCount}">0</span> lượt xem
+                            </div>
+                        </div>
+                    </div>
                 </ul>
             </a>
 
             <!-- Price and Button -->
-            <div class="flex justify-between items-center">
-                <div class="flex justify-between items-center text-gray-900 font-semibold gap-2">               
-                    <div class="bg-green-500 rounded-full px-2 text-white">
-                        <span th:text="${store.viewCount}">0</span> lượt xem
-                    </div>
-                </div>
+            <div class="flex justify-center">
                 <button th:data-store-desktop-id="${store.storeId}"
-                    class="open-reviewdestop bg-blue-500 text-white px-6 py-2 rounded-full">
-                    Xem đánh giá
+                    class="open-reviewdestop bg-blue-500 text-white px-6 py-2 rounded-full w-full">
+                    Xem đánh giá (<span th:text="${store.reviewCount}" class="truncate">0</span>)
                 </button>
             </div>
         </div>
@@ -269,12 +271,12 @@
                                     </p>
 
                                 </div>
-                                <div class="flex items-center mt-1">
-                                    <span class="text-yellow-500 text-lg">
+                                <div class="flex items-center mt-1 text-lg">
+                                    <span class="text-yellow-500">
                                         <!-- Hiển thị các ngôi sao vàng theo điểm đánh giá -->
                                         <span th:each="i : ${#numbers.sequence(1, review.rating)}">&#9733;</span>
                                     </span>
-                                    <span class="text-gray-400 text-sm" th:if="${review.rating < 5}">
+                                    <span class="text-gray-400" th:if="${review.rating < 5}">
                                         <!-- Hiển thị các ngôi sao xám cho phần còn lại nếu chưa đủ 5 sao -->
                                         <span th:each="i : ${#numbers.sequence(1, 5 - review.rating)}">&#9733;</span>
                                     </span>

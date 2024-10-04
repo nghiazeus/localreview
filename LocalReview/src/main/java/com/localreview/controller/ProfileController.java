@@ -15,12 +15,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.localreview.entity.Breadcrumb;
+import com.localreview.entity.Review;
 import com.localreview.entity.Store;
 import com.localreview.entity.StoreMenu;
 import com.localreview.entity.User;
+import com.localreview.entity.UserFavorites;
 import com.localreview.repository.StoreMenuRepository;
 import com.localreview.repository.StoreRepository;
 import com.localreview.repository.UserRepository;
+import com.localreview.service.ReviewService;
+import com.localreview.service.UserFavoritesService;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -39,6 +43,13 @@ public class ProfileController {
 
     @Autowired
     private StoreMenuRepository storeMenuRepository;
+    
+    @Autowired
+    private UserFavoritesService userFavoritesService;
+    
+    @Autowired
+    private ReviewService reviewService;
+
 
     @GetMapping("/user")
     public String profileByLoggedInUser(Model model, Principal principal) {
@@ -90,8 +101,52 @@ public class ProfileController {
     }
 
 
+    @GetMapping("/favorites")
+    public String getFavoriteStores(Model model, Principal principal) {
+        String email = principal.getName(); 
+        User user = userRepository.findByEmail(email);
 
+        if (user == null) {
+            model.addAttribute("error", "Không tìm thấy người dùng với email: " + email);
+            return "error";
+        }
 
+        List<UserFavorites> favorites = userFavoritesService.getFavoriteStoresByUserId(user.getUserId());
+        
+        List<Breadcrumb> breadcrumbs = new ArrayList<>();
+        breadcrumbs.add(new Breadcrumb("Trang chủ", "/index"));
+        breadcrumbs.add(new Breadcrumb("Tài khoản", "/profile/user"));
+        breadcrumbs.add(new Breadcrumb("Yêu thích", "/prifile/favorites"));
+        model.addAttribute("breadcrumbs", breadcrumbs);
+        
+        model.addAttribute("favorites", favorites);
+
+        return "favorites"; 
+    }
+    
+    @GetMapping("/reviewuser")
+    public String getreviewsByUser(Model model, Principal principal) {
+    	String email = principal.getName();
+    	User user = userRepository.findByEmail(email);
+    	
+    	if (user == null) {
+			model.addAttribute("error", "Không tìm thấy người dùng: " + email);
+			return "error";
+		}
+    	
+    	List<Review> reviewuser = reviewService.getReviewsByUser(user);
+    	
+    	List<Breadcrumb> breadcrumbs = new ArrayList<>();
+        breadcrumbs.add(new Breadcrumb("Trang chủ", "/index"));
+        breadcrumbs.add(new Breadcrumb("Tài khoản", "/profile/user"));
+        breadcrumbs.add(new Breadcrumb("Lịch sử đánh giá", "/prifile/reviewuser"));
+        model.addAttribute("breadcrumbs", breadcrumbs);
+    	
+    	model.addAttribute("reviewuser", reviewuser);
+    	
+        return "reviewuser";
+    }
+    
 
 
     @PostMapping("/updatethongtincanhan")

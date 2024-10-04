@@ -231,7 +231,7 @@ public class StoreOfUserController {
 		List<Breadcrumb> breadcrumbs = new ArrayList<>();
 		breadcrumbs.add(new Breadcrumb("Trang chủ", "/index"));
 		breadcrumbs.add(new Breadcrumb("Tài khoản", "/profile/user"));
-		breadcrumbs.add(new Breadcrumb("Cửa hàng của tôi", "/stores/" + ownerId));
+		breadcrumbs.add(new Breadcrumb("Cửa hàng của tôi", "/stores/my-stores"));
 		breadcrumbs.add(new Breadcrumb("Menu của tôi", "/menu/" + storeId));
 		model.addAttribute("breadcrumbs", breadcrumbs);
 
@@ -325,7 +325,7 @@ public class StoreOfUserController {
 		List<Breadcrumb> breadcrumbs = new ArrayList<>();
 		breadcrumbs.add(new Breadcrumb("Trang chủ", "/index"));
 		breadcrumbs.add(new Breadcrumb("Tài khoản", "/profile/user"));
-		breadcrumbs.add(new Breadcrumb("Cửa hàng của tôi", "/stores/" + ownerId));
+		breadcrumbs.add(new Breadcrumb("Cửa hàng của tôi", "/stores/my-stores"));
 		breadcrumbs.add(new Breadcrumb("Món ăn", "/food/" + storeId));
 		model.addAttribute("breadcrumbs", breadcrumbs);
 
@@ -455,7 +455,7 @@ public class StoreOfUserController {
 		List<Breadcrumb> breadcrumbs = new ArrayList<>();
 		breadcrumbs.add(new Breadcrumb("Trang chủ", "/index"));
 		breadcrumbs.add(new Breadcrumb("Tài khoản", "/profile/user"));
-		breadcrumbs.add(new Breadcrumb("Cửa hàng của tôi", "/stores/" + ownerId));
+		breadcrumbs.add(new Breadcrumb("Cửa hàng của tôi", "/stores/my-stores"));
 		breadcrumbs.add(new Breadcrumb("Đồ uống", "/drink/" + storeId));
 		model.addAttribute("breadcrumbs", breadcrumbs);
 

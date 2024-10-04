@@ -1,9 +1,11 @@
 package com.localreview.repository;
 
+import java.awt.print.Pageable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -29,5 +31,8 @@ public interface StoreRepository extends JpaRepository<Store, String> {
     List<Store> findTopRatedStores();
 
 	List<Store> findByStoreNameContainingIgnoreCase(String storeName);
+	
+	@Query("SELECT s FROM Store s ORDER BY s.favoriteCount DESC")
+    List<Store> findTop3ByOrderByFavoriteCountDesc(PageRequest pageRequest);
 	
 }

@@ -39,6 +39,9 @@ public class IndexController {
 	public String index(Model model) {
 
 		List<Store> topRatedStores = storeService.getTopRatedStores();
+		List<Store> topStores = storeService.getTop3FavoriteStores();
+		
+        model.addAttribute("topStores", topStores);
 		model.addAttribute("topRatedStores", topRatedStores);
 
 		return "index";

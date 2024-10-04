@@ -15,6 +15,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -37,8 +39,8 @@ public class Store {
 	@Column(name = "view_count", nullable = false)
     private int viewCount = 0;  
 
-    @Column(name = "favorite_count", nullable = false)
-    private int favoriteCount = 0;
+	@Column(name = "favorite_count", nullable = false)
+	private int favoriteCount = 0;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "store_categories", nullable = false)
@@ -76,6 +78,11 @@ public class Store {
 
 	@Column(name = "updated_at", insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
 	private Timestamp updatedAt;
+	
+	private int reviewCount;
+	
+	@Transient // Đảm bảo không lưu trong cơ sở dữ liệu
+    private boolean favorited;
 
 	public Double getAverageRating() {
 		if (reviews == null || reviews.isEmpty()) {
@@ -83,4 +90,13 @@ public class Store {
 		}
 		return reviews.stream().mapToDouble(Review::getRating).average().orElse(0.0);
 	}
+	
+	public void incrementFavoriteCount() {
+	    this.favoriteCount++;
+	}
+
+	public void decrementFavoriteCount() {
+	    this.favoriteCount--;
+	}
+	
 }

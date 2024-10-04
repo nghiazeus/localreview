@@ -74,7 +74,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
             .and()
             .rememberMe()
-                .tokenValiditySeconds(86400) // 86400 giây = 1 ngày
+                .tokenValiditySeconds(604800) // 86400 giây = 1 ngày
             .and()
             .sessionManagement()
                 .sessionFixation().newSession() // Tạo session mới sau khi đăng nhập

@@ -6,6 +6,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -74,15 +75,16 @@ public class AuthController {
     @GetMapping("/login")
     public String showLoginForm(@RequestParam(value = "error", required = false) String error,
                                 @RequestParam(value = "logout", required = false) String logout,
-                                RedirectAttributes redirectAttributes) {
+                                Model model) {
         if (error != null) {
-            redirectAttributes.addFlashAttribute("error", "Sai email hoặc mật khẩu.");
+            model.addAttribute("error", "Sai email hoặc mật khẩu.");
         }
         if (logout != null) {
-            redirectAttributes.addFlashAttribute("success", "Đăng xuất thành công."); // Chỉnh sửa thông báo cho hợp lý
+            model.addAttribute("success", "Đăng xuất thành công.");
         }
-        return "login";  // Thêm redirect để thông báo hiển thị đúng
+        return "login";
     }
+
 
     
     @GetMapping("/login/oauth2/success")

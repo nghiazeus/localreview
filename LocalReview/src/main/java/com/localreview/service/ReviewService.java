@@ -24,6 +24,10 @@ public interface ReviewService {
     List<ReviewWithPhotosDTO> getReviewsWithPhotosByStoreId(String storeId);
 
 	List<Review> getAllReviews();
+
+	int countReviewsByStoreId(String storeId);
+	
+	List<Review> getReviewsByUser(User user);
 	
     
 }

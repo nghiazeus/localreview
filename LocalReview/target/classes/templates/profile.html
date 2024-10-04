@@ -14,14 +14,10 @@
         href="https://cdn.jsdelivr.net/gh/creativetimofficial/tailwind-starter-kit/compiled-tailwind.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
         integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
-
-    <link rel="stylesheet" href="/css/loading.css">
-    <script src="/js/loading.js" defer></script>
 </head>
 
 <body class="bg-gray-100 antialiased">
     <!-- Loading -->
-     <div th:replace="/layout/_loading.html"></div>
     <!-- -------------Thông báo-------------- -->
     <div class="fixed top-4 inset-x-0 flex justify-center z-50">
         <!-- Thông báo thành công -->
@@ -128,9 +124,9 @@
                     <div class="mt-4 flex space-x-4">
                         <a th:href="@{/index}" class="text-gray-600 text-xl hover:text-gray-800">
                             <i class="bi bi-app-indicator"></i>
-                            <a href="" class="text-blue-500 hover:text-blue-700 ">Đánh giá của bạn</a>
+                            <a th:href="@{/profile/reviewuser}" class="text-blue-500 hover:text-blue-700 ">Đánh giá của bạn</a>
                             <p>|</p>
-                            <a href="" class="text-blue-500 hover:text-blue-700 ">Yêu thích</a>
+                            <a th:href="@{/profile/favorites}" class="text-blue-500 hover:text-blue-700 ">Yêu thích</a>
                     </div>
                     <div class="mt-4 flex space-x-4">
                         <a href="mailto:john.doe@example.com" class="text-blue-500 hover:text-blue-700"

@@ -23,6 +23,7 @@ import com.localreview.service.StoreDrinkService;
 import com.localreview.service.StoreFoodService;
 import com.localreview.service.StoreMenuService;
 import com.localreview.service.StoreService;
+import com.localreview.service.UserFavoritesService;
 import com.localreview.service.UserService;
 
 import java.io.IOException;
@@ -41,8 +42,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -97,6 +101,9 @@ public class StoreController {
 
 	@Autowired
 	private ReviewService reviewService;
+	
+    @Autowired
+    private UserFavoritesService userFavoritesService;
 
 	@GetMapping("/store")
 	public String store(Model model) {
@@ -106,6 +113,7 @@ public class StoreController {
 		model.addAttribute("breadcrumbs", breadcrumbs);
 		return "stores/stores";
 	}
+	
 
 	
 	@GetMapping("/register-store")
@@ -228,56 +236,72 @@ public class StoreController {
 
 //	----------------------------------
 	@GetMapping("/store/detail/{storeId}")
-	public String showStoreDetail(@PathVariable("storeId") String storeId, Model model) {
-		try {
-			Store store = storeService.findStoreById(storeId);
-			if (store != null) {
-				
-				store.setViewCount(store.getViewCount() + 1);
-				storeService.saveStore(store);
-				model.addAttribute("store", store);
+	public String showStoreDetail(@PathVariable("storeId") String storeId, 
+	        @AuthenticationPrincipal UserDetails userDetails,
+	        Model model, HttpSession session) {
+	    try {
+	        Store store = storeService.findStoreById(storeId);
+	        if (store != null) {
+	            Set<String> viewedStores = (Set<String>) session.getAttribute("viewedStores");
+	            if (viewedStores == null) {
+	                viewedStores = new HashSet<>();
+	            }
 
-				List<StoreMenu> storeMenuList = storeMenuService.findByStore_StoreId(storeId);
-				List<StoreFood> storeFoodList = storeFoodService.findByStore_StoreId(storeId);
-				List<StoreDrink> storeDrinkList = storeDrinkService.findByStore_StoreId(storeId);
-				List<Photo> storePhotos = photoService.getPhotosByStoreId(storeId);
-				Double averageRating = storeService.getAverageRating(storeId);
-				
-				String formattedAverageRating = String.format("%.1f", averageRating);
-				int fullStars = averageRating.intValue();
-				boolean hasHalfStar = (averageRating - fullStars >= 0.5);
-				int emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+	            if (!viewedStores.contains(storeId)) {
+	                storeService.incrementViewCount(storeId);
+	                viewedStores.add(storeId);
+	                session.setAttribute("viewedStores", viewedStores);
+	            }
 
-				for (StoreFood food : storeFoodList) {
-					food.getFormattedPrice();
-				}
+	            model.addAttribute("store", store);
 
-				model.addAttribute("menulist", storeMenuList);
-				model.addAttribute("foodlist", storeFoodList);
-				model.addAttribute("drinklist", storeDrinkList);
-				model.addAttribute("storePhotos", storePhotos);
-				model.addAttribute("fullStars", fullStars);
-				model.addAttribute("hasHalfStar", hasHalfStar);
-				model.addAttribute("emptyStars", emptyStars);
-				 model.addAttribute("averageRating", formattedAverageRating);
+	            List<StoreMenu> storeMenuList = storeMenuService.findByStore_StoreId(storeId);
+	            List<StoreFood> storeFoodList = storeFoodService.findByStore_StoreId(storeId);
+	            List<StoreDrink> storeDrinkList = storeDrinkService.findByStore_StoreId(storeId);
+	            List<Photo> storePhotos = photoService.getPhotosByStoreId(storeId);
+	            Double averageRating = storeService.getAverageRating(storeId);
 
-				List<Breadcrumb> breadcrumbs = new ArrayList<>();
-				breadcrumbs.add(new Breadcrumb("Trang chủ", "/index"));
-				breadcrumbs.add(new Breadcrumb("Cửa hàng", "/store"));
-				breadcrumbs.add(new Breadcrumb(store.getStoreName(), "/store/detail/" + store.getStoreId()));
-				model.addAttribute("breadcrumbs", breadcrumbs);
+	            User currentUser = userDetails != null ? userService.findByEmail(userDetails.getUsername()) : null;
 
-				return "stores/store-detail";
-			} else {
-				model.addAttribute("error", "Cửa hàng không tồn tại.");
-				return "error";
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			model.addAttribute("error", "Đã xảy ra lỗi khi lấy thông tin cửa hàng.");
-			return "error";
-		}
+	            boolean isFavorited = currentUser != null && userFavoritesService.existsByUserAndStore(currentUser, store);
+	            store.setFavorited(isFavorited);
+
+	            String formattedAverageRating = String.format("%.1f", averageRating);
+	            int fullStars = averageRating.intValue();
+	            boolean hasHalfStar = (averageRating - fullStars >= 0.5);
+	            int emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+
+	            for (StoreFood food : storeFoodList) {
+	                food.getFormattedPrice();
+	            }
+
+	            model.addAttribute("menulist", storeMenuList);
+	            model.addAttribute("foodlist", storeFoodList);
+	            model.addAttribute("drinklist", storeDrinkList);
+	            model.addAttribute("storePhotos", storePhotos);
+	            model.addAttribute("fullStars", fullStars);
+	            model.addAttribute("hasHalfStar", hasHalfStar);
+	            model.addAttribute("emptyStars", emptyStars);
+	            model.addAttribute("averageRating", formattedAverageRating);
+
+	            List<Breadcrumb> breadcrumbs = new ArrayList<>();
+	            breadcrumbs.add(new Breadcrumb("Trang chủ", "/index"));
+	            breadcrumbs.add(new Breadcrumb("Cửa hàng", "/store"));
+	            breadcrumbs.add(new Breadcrumb(store.getStoreName(), "/store/detail/" + store.getStoreId()));
+	            model.addAttribute("breadcrumbs", breadcrumbs);
+
+	            return "stores/store-detail";
+	        } else {
+	            model.addAttribute("error", "Cửa hàng không tồn tại.");
+	            return "error";
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        model.addAttribute("error", "Đã xảy ra lỗi khi lấy thông tin cửa hàng.");
+	        return "error";
+	    }
 	}
+
 
 //	-----------------------------------------------
 

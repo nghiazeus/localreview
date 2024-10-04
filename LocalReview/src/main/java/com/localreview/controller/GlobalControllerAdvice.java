@@ -25,6 +25,7 @@ import com.localreview.service.ReviewService;
 import com.localreview.service.SearchHistoryService;
 import com.localreview.service.StoreFoodService;
 import com.localreview.service.StoreService;
+import com.localreview.service.UserFavoritesService;
 import com.localreview.service.UserService;
 
 import java.util.Collections;
@@ -45,6 +46,9 @@ public class GlobalControllerAdvice {
 
     @Autowired
     private CategoriesRepository category;
+    
+    @Autowired
+    private UserFavoritesService userFavoritesService;
     
     @Autowired
     private SearchHistoryService searchHistoryService;
@@ -74,21 +78,28 @@ public class GlobalControllerAdvice {
             User currentUser = userService.findByEmail(currentEmail);
             if (currentUser != null) {
                 model.addAttribute("currentUser", currentUser);
-           
+               
                 List<SearchHistory> searchHistory = searchHistoryService.getSearchHistoryByUser(currentUser);
                 model.addAttribute("searchHistory", searchHistory);
             } else {
                 model.addAttribute("error", "Không tìm thấy thông tin người dùng.");
             }
         } else {
-            model.addAttribute("error", "Người dùng chưa đăng nhập.");
+            model.addAttribute("error", "Bạn chưa đăng nhập.");
         }
-
+        
         List<Store> randomStores = storeService.getRandomStores();
         List<Categories> listscategori = category.findAll();
         
+        for (Store store : randomStores) {
+            int reviewCount = reviewService.countReviewsByStoreId(store.getStoreId());
+            store.setReviewCount(reviewCount); 
+        }
+        
         model.addAttribute("stores", randomStores);
         model.addAttribute("categories", listscategori);
+        model.addAttribute("userFavoritesService", userFavoritesService); // Thêm dòng này
     }
 
+    
 }

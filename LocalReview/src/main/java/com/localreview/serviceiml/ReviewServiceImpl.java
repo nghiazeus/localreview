@@ -131,5 +131,16 @@ public class ReviewServiceImpl implements ReviewService {
 	public List<Review> getAllReviews() {
 		return reviewRepository.findAll();
 	}
+	
+
+	@Override
+	public int countReviewsByStoreId(String storeId) {
+		return reviewRepository.countReviewsByStoreId(storeId);
+	}
+
+	@Override
+	public List<Review> getReviewsByUser(User user) {
+		return reviewRepository.findByUser(user);
+	}
 
 }

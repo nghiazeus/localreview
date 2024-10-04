@@ -14,6 +14,8 @@
     <script src="https://cdn.jsdelivr.net/npm/emoji-button@4.6.0/dist/index.min.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Thư viện Font Awesome cho biểu tượng trái tim -->
     <link rel="stylesheet" href="/css/loading.css">
     <script src="/js/loading.js"></script>
 
@@ -21,7 +23,7 @@
 
 <body>
     <!-- Loading -->
-    <div th:replace="/layout/_loading.html"></div>
+    <!--  <div th:replace="/layout/_loading.html"></div> -->
 
     <div th:replace="/layout/_header.html"></div>
     <nav class="mt-20 mb-4 ml-2 mr-2 px-3 py-1 bg-white rounded-full shadow-md w-auto inline-flex">
@@ -166,12 +168,90 @@
                         <i class="bi bi-geo-alt-fill text-red-600 mr-2"></i>
                         <span th:text="${store.addressCity}" class="font-bold text-red-500"></span>
                     </p>
+                    <p class="flex items-center mb-4 text-xl">
+                        <i class="bi bi-suit-heart-fill text-red-600 mr-2"></i>
+                        <span th:text="${store.favoriteCount}" class="font-bold text-red-500"></span>
+                    </p>
                     <p class="flex font-bold text-center mb-4 text-xl mt-2 text-gray-600">Lượt xem:
-                        <span th:text="${store.ViewCount}" class="text-green-500 ml-2"></span>
+                        <span th:text="${store.ViewCount}" class="text-blue-500 ml-2"></span>
                     </p>
-                    <p class="flex font-bold text-center mb-4 text-xl mt-2 text-gray-600">Yêu thích:
+                    <!--   <p class="flex font-bold text-center mb-4 text-xl mt-2 text-gray-600">Yêu thích:
                         <i class="bi bi-heart-fill text-2xl cursor-pointer text-gray-500 hover:text-red-500 ml-2"></i>
-                    </p>
+                    </p> -->
+
+                    <!-- Thêm yêu thích -->
+                    <div class="favorite-section mb-6 mt-2">
+                        <!-- Form để thêm yêu thích, chỉ hiện nếu chưa yêu thích -->
+                        <form th:if="${!store.isFavorited}" th:action="@{/add-favorite}" method="post"
+                            class="favorite-form" id="favorite-form-${store.storeId}" data-store-id="${store.storeId}"
+                            onsubmit="return addFavorite(event, '${store.storeId}')">
+                            <input type="hidden" name="storeId" th:value="${store.storeId}" />
+                            <div
+                                class="flex items-center justify-between text-xl bg-gradient-to-r from-purple-500 to-pink-400 text-white rounded-full px-4 py-1 w-32">
+                                <span>Thích</span>
+                                <span class="mx-2 border-l border-white h-4"></span>
+                                <button type="submit" class="favorite-button">
+                                    <span class="heart-icon"><i class="bi bi-heart-fill text-2xl"></i></span>
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- Form để xóa yêu thích, chỉ hiện nếu đã yêu thích -->
+                        <form th:if="${store.isFavorited}" th:action="@{/remove-favorite}" method="post"
+                            class="remove-favorite-form" id="remove-favorite-form-${store.storeId}"
+                            data-store-id="${store.storeId}"
+                            onsubmit="return removeFavorite(event, '${store.storeId}')">
+                            <input type="hidden" name="storeId" th:value="${store.storeId}" />
+                            <div
+                                class="flex items-center justify-between space-x-4 text-xl bg-gradient-to-r from-purple-500 to-pink-400 text-white rounded-full px-4 py-1 w-32">
+                                <span>Xóa</span>
+                                <span class="border-l border-white h-4 mx-2"></span>
+                                <button type="submit" class="remove-favorite-button items-center">
+                                    <span class="heart-icon favorite hover:text-white">
+                                        <i class="bi bi-heart-fill text-red-600 text-2xl"></i>
+                                    </span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+
+                    <script>
+                        function addFavorite(event, storeId) {
+                            event.preventDefault();
+                            fetch(`/add-favorite`, {
+                                method: 'POST',
+                                body: new URLSearchParams(new FormData(event.target)),
+                            })
+                                .then(response => {
+                                    if (response.ok) {                  
+                                        location.reload();
+                                    } else {                                      
+                                        alert(data.message);
+                                    }
+                                });
+                            return false;
+                        }
+
+                        function removeFavorite(event, storeId) {
+                            event.preventDefault(); // Ngăn form submit ngay lập tức
+                            fetch(`/remove-favorite`, {
+                                method: 'POST',
+                                body: new URLSearchParams(new FormData(event.target)),
+                            })
+                                .then(response => {
+                                    if (response.ok) {
+                                        // Tải lại trang để cập nhật trạng thái yêu thích
+                                        location.reload();
+                                    } else {
+                                        console.error('Lỗi khi xóa yêu thích');
+                                    }
+                                });
+                            return false;
+                        }
+
+                    </script>
+
                     <div class="flex text-yellow-500 text-2xl">
                         <div class="star-rating">
                             <!-- Nền sao trống -->
@@ -383,9 +463,9 @@
                 <!-- Tab Links -->
                 <div class="flex space-x-4 mb-4 p-4">
                     <button
-                        class="tab-button py-2 px-4 text-lg font-semibold rounded-lg focus:outline-none bg-gray-300 text-black"
+                        class="tab-button py-2 px-4 text-lg font-semibold rounded-2xl focus:outline-none bg-blue-500 text-white"
                         data-tab="food" onclick="openTab(event, 'food')">MÓN ĂN</button>
-                    <button class="tab-button py-2 px-4 text-lg font-semibold rounded-lg focus:outline-none"
+                    <button class="tab-button py-2 px-4 text-lg font-semibold rounded-2xl focus:outline-none"
                         data-tab="drink" onclick="openTab(event, 'drink')">ĐỒ UỐNG</button>
                 </div>
 
@@ -403,7 +483,7 @@
                     </div>
 
                     <!-- Phần chứa các thẻ món ăn -->
-                    <div class="relative overflow-x-auto" id="food-scroll">
+                    <div class="relative overflow-x-auto snap-mandatory" id="food-scroll">
                         <div class="flex space-x-4 p-4">
                             <!-- Loop through foodlist for Food tab -->
                             <div th:each="food : ${foodlist}"
@@ -450,7 +530,7 @@
                             class="w-24 h-24 md:w-32 md:h-32 mb-4 opacity-75">
                     </div>
 
-                    <div class="relative overflow-x-auto" id="drink-scroll">
+                    <div class="relative overflow-x-auto snap-mandatory" id="drink-scroll">
                         <div class="flex space-x-4 p-4">
                             <!-- Loop through drinklist for Drinks tab -->
                             <div th:each="drink : ${drinklist}"
@@ -541,11 +621,11 @@
             });
 
             document.querySelectorAll('.tab-button').forEach(btn => {
-                btn.classList.remove('bg-gray-300', 'text-black');
+                btn.classList.remove('bg-blue-500', 'text-white');
             });
 
             document.getElementById(tabName).classList.remove('hidden');
-            event.currentTarget.classList.add('bg-gray-300', 'text-black');
+            event.currentTarget.classList.add('bg-blue-500', 'text-white');
         }
 
         document.addEventListener('DOMContentLoaded', () => {

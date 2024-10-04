@@ -18,6 +18,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -146,5 +147,24 @@ public class StoreServiceImpl implements StoreService {
 	                          .map(Store::getStoreName)
 	                          .collect(Collectors.toList());
 	}
+
+	@Override
+	public Store findById(String storeId) {
+	    return storeRepository.findById(storeId).orElse(null);
+	}
+
+	@Override
+	public void incrementViewCount(String storeId) {
+        Store store = storeRepository.findById(storeId).orElse(null);
+        if (store != null) {
+            store.setViewCount(store.getViewCount() + 1);
+            storeRepository.save(store);
+        }
+    }
+
+	@Override
+	public List<Store> getTop3FavoriteStores() {
+        return storeRepository.findTop3ByOrderByFavoriteCountDesc(PageRequest.of(0, 3));
+    }
 
 }

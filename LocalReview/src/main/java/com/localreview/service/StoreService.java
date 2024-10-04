@@ -43,4 +43,11 @@ public interface StoreService {
 
 	List<String> findStoreNamesByKeyword(String keyword);
 
+	Store findById(String storeId);
+	
+	void incrementViewCount(String storeId);
+	
+	List<Store> getTop3FavoriteStores();
+	
+
 }

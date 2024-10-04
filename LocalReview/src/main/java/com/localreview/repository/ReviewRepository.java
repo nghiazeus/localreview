@@ -9,6 +9,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.localreview.entity.Review;
+import com.localreview.entity.Store;
+import com.localreview.entity.User;
 
 
 public interface ReviewRepository extends JpaRepository<Review, String> {
@@ -21,6 +23,9 @@ public interface ReviewRepository extends JpaRepository<Review, String> {
     @Query("SELECT AVG(r.rating) FROM Review r WHERE r.store.storeId = :storeId")
     Double findAverageRatingByStoreId(String storeId);
     
+    @Query("SELECT COUNT(r) FROM Review r WHERE r.store.storeId = :storeId")
+    int countReviewsByStoreId(@Param("storeId") String storeId);
     
+    List<Review> findByUser(User user);
     
 }

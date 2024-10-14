@@ -3,105 +3,132 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Image Cropper</title>
-  <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.5.12/dist/cropper.min.js"></script>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.5.12/dist/cropper.min.css">
-  <style>
-   .header-background {
-    background-image: url('your-image-url.jpg');
-    background-size: cover;
-    background-position: center;
-}
+  <title>Video Streaming Platform</title>
+  <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css" />
 
-.fade-in {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 1s ease-out, transform 1s ease-out;
-}
-
-.fade-in.visible {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-  </style>
 </head>
-<body>
-  <header class="relative bg-cover bg-center h-screen" style="background-image: url('your-image-url.jpg');">
-    <!-- Overlay -->
-    <div class="absolute inset-0 bg-black opacity-50"></div>
-
-    <!-- Navbar -->
-    <nav class="container mx-auto flex justify-between items-center py-6 px-4 lg:px-8">
-        <div class="text-white text-2xl font-bold">
-            <a href="#">YourLogo</a>
+<body class="bg-gray-100">
+  <!-- Navbar -->
+  <nav class="bg-white shadow-lg">
+    <div class="container mx-auto px-6 py-3">
+      <div class="flex justify-between items-center">
+        <div>
+          <a href="#" class="text-xl font-bold text-gray-800 hover:text-gray-700">VideoPlatform</a>
         </div>
-        <div class="space-x-6 hidden lg:flex">
-            <a href="#features" class="text-white hover:text-gray-300">Features</a>
-            <a href="#about" class="text-white hover:text-gray-300">About</a>
-            <a href="#contact" class="text-white hover:text-gray-300">Contact</a>
+        <div class="hidden md:flex space-x-6">
+          <a href="#" class="text-gray-800 hover:text-gray-600">Home</a>
+          <a href="#" class="text-gray-800 hover:text-gray-600">Videos</a>
+          <a href="#" class="text-gray-800 hover:text-gray-600">Categories</a>
+          <a href="#" class="text-gray-800 hover:text-gray-600">Contact</a>
         </div>
-        <div class="lg:hidden text-white">Menu</div> <!-- Hamburger icon for mobile -->
-    </nav>
-
-    <!-- Hero Section -->
-    <div class="container mx-auto text-center relative z-10">
-        <h1 class="text-5xl lg:text-6xl text-white font-extrabold leading-tight">Khám phá cửa hàng tốt nhất</h1>
-        <p class="text-white text-xl mt-4">Tìm hiểu những cửa hàng được đánh giá cao ngay tại thành phố của bạn.</p>
-        <a href="#explore"
-            class="mt-8 inline-block bg-purple-600 text-white text-lg font-semibold py-3 px-8 rounded-full hover:bg-purple-700 transition duration-300">Khám
-            Phá Ngay</a>
-    </div>
-
-    <!-- Scroll Down Indicator -->
-    <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 text-white text-xl">
-        <span class="block">Scroll Down</span>
-        <i class="bi bi-chevron-down animate-bounce"></i>
-    </div>
-</header>
-
-<!-- Card 1 -->
-<div class="group perspective">
-  <div
-      class="relative h-64 bg-gradient-to-r from-purple-500 to-pink-500 p-6 rounded-lg shadow-lg transform group-hover:rotate-y-6 transition-transform duration-500">
-      
-      <!-- Nội dung hover -->
-      <div
-          class="absolute inset-0 rounded-lg bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-auto z-10">
-          <div class="flex flex-col justify-center items-center h-full text-center p-4">
-              <h3 class="text-xl font-semibold text-gray-800">Cửa hàng A</h3>
-              <p class="text-gray-600 mt-4">Cửa hàng nổi bật với các sản phẩm chất lượng cao, phục vụ chuyên nghiệp.</p>
-              <a href="#"
-                  class="mt-6 inline-block bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600">
-                  Xem chi tiết
-              </a>
-          </div>
+        <div class="md:hidden">
+          <button type="button" class="text-gray-800 hover:text-gray-600 focus:outline-none focus:text-gray-600">
+            <!-- Hamburger menu icon -->
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+        </div>
       </div>
-      
-      <!-- Nội dung trước khi hover -->
-      <div
-          class="absolute inset-0 flex flex-col justify-center items-center text-white text-center opacity-100 group-hover:opacity-0 transition-opacity duration-500 pointer-events-none">
-          <i class="bi bi-shop text-5xl"></i>
-          <h3 class="text-2xl font-bold mt-4">Cửa hàng A</h3>
+    </div>
+  </nav>
+
+  <!-- Hero Section with Carousel -->
+  <div class="relative">
+    <div class="carousel relative w-full overflow-hidden h-96">
+      <!-- Slide 1 -->
+      <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('https://via.placeholder.com/1920x500');"></div>
+      <!-- Slide 2 -->
+      <div class="absolute inset-0 bg-cover bg-center hidden" style="background-image: url('https://via.placeholder.com/1920x500/aaa');"></div>
+      <!-- Slide 3 -->
+      <div class="absolute inset-0 bg-cover bg-center hidden" style="background-image: url('https://via.placeholder.com/1920x500/ccc');"></div>
+
+      <!-- Carousel controls -->
+      <div class="absolute inset-0 flex justify-between items-center">
+        <button class="bg-gray-800 text-white p-2 opacity-50 hover:opacity-100">‹</button>
+        <button class="bg-gray-800 text-white p-2 opacity-50 hover:opacity-100">›</button>
       </div>
+    </div>
   </div>
-</div>
 
+  <!-- Video Categories Section -->
+  <section class="container mx-auto px-6 py-8">
+    <h2 class="text-2xl font-semibold text-gray-800">Categories</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
+      <!-- Category card 1 -->
+      <div class="bg-white shadow-md rounded-lg p-4">
+        <img src="https://via.placeholder.com/150" alt="Category 1" class="rounded-lg">
+        <h3 class="mt-2 text-lg font-semibold text-gray-800">Action</h3>
+      </div>
+      <!-- Category card 2 -->
+      <div class="bg-white shadow-md rounded-lg p-4">
+        <img src="https://via.placeholder.com/150" alt="Category 2" class="rounded-lg">
+        <h3 class="mt-2 text-lg font-semibold text-gray-800">Comedy</h3>
+      </div>
+      <!-- Category card 3 -->
+      <div class="bg-white shadow-md rounded-lg p-4">
+        <img src="https://via.placeholder.com/150" alt="Category 3" class="rounded-lg">
+        <h3 class="mt-2 text-lg font-semibold text-gray-800">Drama</h3>
+      </div>
+      <!-- Category card 4 -->
+      <div class="bg-white shadow-md rounded-lg p-4">
+        <img src="https://via.placeholder.com/150" alt="Category 4" class="rounded-lg">
+        <h3 class="mt-2 text-lg font-semibold text-gray-800">Horror</h3>
+      </div>
+    </div>
+  </section>
 
-<script>
-  document.addEventListener("scroll", function() {
-    const header = document.querySelector('header');
-    const heroText = document.querySelector('.hero-text');
+  <!-- Video Section -->
+  <section class="container mx-auto px-6 py-8">
+    <h2 class="text-2xl font-semibold text-gray-800">Latest Videos</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
+      <!-- Video card 1 -->
+      <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        <img src="https://via.placeholder.com/150" alt="Video 1" class="w-full">
+        <div class="p-4">
+          <h3 class="text-lg font-semibold text-gray-800">Video Title 1</h3>
+          <p class="text-gray-600 mt-2">Some description about the video.</p>
+        </div>
+      </div>
+      <!-- Video card 2 -->
+      <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        <img src="https://via.placeholder.com/150" alt="Video 2" class="w-full">
+        <div class="p-4">
+          <h3 class="text-lg font-semibold text-gray-800">Video Title 2</h3>
+          <p class="text-gray-600 mt-2">Some description about the video.</p>
+        </div>
+      </div>
+      <!-- Video card 3 -->
+      <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        <img src="https://via.placeholder.com/150" alt="Video 3" class="w-full">
+        <div class="p-4">
+          <h3 class="text-lg font-semibold text-gray-800">Video Title 3</h3>
+          <p class="text-gray-600 mt-2">Some description about the video.</p>
+        </div>
+      </div>
+      <!-- Video card 4 -->
+      <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        <img src="https://via.placeholder.com/150" alt="Video 4" class="w-full">
+        <div class="p-4">
+          <h3 class="text-lg font-semibold text-gray-800">Video Title 4</h3>
+          <p class="text-gray-600 mt-2">Some description about the video.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    const rect = header.getBoundingClientRect();
-    if (rect.top < window.innerHeight - 100) {
-        heroText.classList.add('visible');
-    }
-});
-
-</script>
-
-
+  <!-- Footer -->
+  <footer class="bg-white shadow-lg mt-8">
+    <div class="container mx-auto px-6 py-3">
+      <div class="flex justify-between items-center">
+        <p class="text-gray-600">© 2024 VideoPlatform. All rights reserved.</p>
+        <div class="flex space-x-4">
+          <a href="#" class="text-gray-600 hover:text-gray-800">Facebook</a>
+          <a href="#" class="text-gray-600 hover:text-gray-800">Twitter</a>
+          <a href="#" class="text-gray-600 hover:text-gray-800">Instagram</a>
+        </div>
+      </div>
+    </div>
+  </footer>
 </body>
 </html>

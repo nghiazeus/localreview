@@ -18,6 +18,8 @@ import com.localreview.service.UserService;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.HashMap;
+
 
 @Service
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
@@ -39,6 +41,11 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
         Set<SimpleGrantedAuthority> authorities = new HashSet<>();
         authorities.add(new SimpleGrantedAuthority(userEntity.getRole().name()));
+        
+        // Tạo một OAuth2User mới với thông tin của userEntity
+        // Thêm userId vào attributes để có thể lấy lại sau này
+        Map<String, Object> attributesWithUserId = new HashMap<>(oAuth2User.getAttributes());
+        attributesWithUserId.put("userId", userEntity.getUserId()); // Thêm userId vào attributes
 
         // Tạo một OAuth2User mới với thông tin của userEntity
         return new DefaultOAuth2User(

@@ -17,5 +17,5 @@ public interface UserService {
     
     User getUserByEmail(String email);
     
-    
+    User findByGoogleId(String googleId);
 }

@@ -131,4 +131,15 @@ public class ReviewServiceImpl implements ReviewService {
 	public List<Review> getAllReviews() {
 		return reviewRepository.findAll();
 	}
+
+	@Override
+	public String getUserIdByReviewId(String reviewId) {
+	    // Tìm kiếm đánh giá theo reviewId
+	    Review review = reviewRepository.findById(reviewId).orElse(null);
+	    if (review != null) {
+	        return review.getUser().getUserId(); // Trả về ID người dùng đã viết đánh giá
+	    }
+	    return null; // Nếu không tìm thấy, trả về null
+	}
+	
 }

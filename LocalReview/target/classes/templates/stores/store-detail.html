@@ -575,8 +575,45 @@
                                                     <span class="font-semibold"
                                                         th:text="${review.relativeReviewDate}">25/09/2024</span>
                                                 </p>
+												<!-- Nút mở modal -->
+												<button th:attr="data-review-id=${review.reviewId}" 
+												        onclick="openReportModal(event, this)" 
+												        class="px-4 py-2 bg-blue-500 text-white rounded">
+												    Báo Cáo
+												</button>
+												
+												<!-- Modal -->
+												<div id="reportModal" class="fixed inset-0 flex items-center justify-center hidden bg-gray-900 bg-opacity-50">
+												    <div class="bg-white rounded-lg shadow-lg p-6">
+												        <h2 class="text-xl font-semibold mb-4">Báo cáo Review</h2>
+												        <p class="mb-4">Chọn lý do báo cáo:</p>
+												
+												        <!-- Các lý do báo cáo -->
+												        <div>
+												            <label>
+												                <input type="radio" name="reportReason" value="Không phù hợp" class="mr-2">
+												                Không phù hợp
+												            </label>
+												            <br>
+												            <label>
+												                <input type="radio" name="reportReason" value="Nội dung xấu" class="mr-2">
+												                Nội dung xấu
+												            </label>
+												            <br>
+												            <label>
+												                <input type="radio" name="reportReason" value="Khác" class="mr-2">
+												                Khác
+												            </label>
+												        </div>
+												
+												        <div class="mt-4">
+												            <button onclick="submitReport()" class="px-4 py-2 bg-green-500 text-white rounded">Gửi báo cáo</button>
+												            <button onclick="closeReportModal()" class="px-4 py-2 bg-red-500 text-white rounded">Đóng</button>
+												        </div>
+												    </div>
+												</div>
 
-                                            </div>
+											                                            </div>
                                             <div class="flex items-center mt-1">
                                                 <span class="text-yellow-500">
                                                     <span th:text="${'⭐️'.repeat(review.rating)}">⭐️</span>
@@ -630,6 +667,13 @@
                         }
                     }
                 });
+                
+                if (target.classList.contains('report-button-link')) {
+                    const reportModal = document.getElementById('reportModal');
+                    if (reportModal) {
+                        openReportModal(event, target);
+                    }
+                }
 
                 // Đóng modal khi nhấn phím "Esc"
                 document.addEventListener('keydown', (event) => {
@@ -798,6 +842,7 @@
 
 
     <script src="/build/js/reviews.js"></script>
+    <script src="/build/js/reportReview.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"

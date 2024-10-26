@@ -1,9 +1,13 @@
 package com.localreview.controller;
 
+import com.localreview.entity.Blacklist;
 import com.localreview.entity.Photo;
 import com.localreview.entity.Review;
 import com.localreview.entity.Store;
 import com.localreview.entity.User;
+import com.localreview.repository.BlacklistRepository;
+import com.localreview.repository.ReviewReportRepository;
+import com.localreview.repository.ReviewRepository;
 import com.localreview.service.ReviewService;
 import com.localreview.service.UserService;
 
@@ -21,8 +25,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.Principal;
+import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/api/reviews")
@@ -33,10 +40,16 @@ public class ReviewController {
     
     @Autowired
     private UserService userService;
+    
+    @Autowired
+    private BlacklistRepository blacklistRepository;
+    
+    @Autowired
+    private ReviewReportRepository reviewReportRepository;
 
     // Lưu một review mới, bao gồm nhiều ảnh nếu có
     @PostMapping("/{storeId}")
-    public ResponseEntity<Review> saveReview(
+    public ResponseEntity<?> saveReview(
         @PathVariable("storeId") String storeId,
         @RequestParam("comment") String comment,
         @RequestParam("rating") Integer rating,
@@ -71,6 +84,25 @@ public class ReviewController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
         review.setUser(currentUser);
+        
+        // Kiểm tra nếu người dùng có trong blacklist và is_active là true, không cho đánh giá
+        Optional<Blacklist> blacklistEntryOpt = blacklistRepository.findByUserAndIsActiveTrue(currentUser);
+        if (blacklistEntryOpt.isPresent()) {
+            Blacklist blacklistEntry = blacklistEntryOpt.get();
+            
+            // Kiểm tra ngày hết hạn và cập nhật trạng thái
+            LocalDateTime now = LocalDateTime.now();
+            if (blacklistEntry.getExpiresAt().isBefore(now)) {
+                blacklistEntry.setActive(false); // Đặt isActive thành false
+                blacklistRepository.save(blacklistEntry); // Lưu thay đổi
+                // Sau khi người dùng hết hạn cấm, cập nhật trạng thái review reports
+                reviewReportRepository.deactivateReportsByUserId(currentUser.getUserId());
+            } else if (blacklistEntry.isActive()) { // Nếu is_active vẫn true, không cho phép đánh giá
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Collections.singletonMap("error", "Bạn đã bị cấm")); // Trả về thông báo lỗi
+            }
+        }
+
 
         // Lưu review trước
         Review savedReview = reviewService.saveReview(review);

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Báo cáo Đánh giá</title>
+    <link rel="icon" href="../image/Pelfusion-Christmas.png">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .card {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="card shadow border-0 mb-7">
+            <div class="card-header">
+                <h5 class="mb-0">Quản lý Báo cáo Đánh giá</h5>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-nowrap">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">Report ID</th>
+                            <th scope="col">Review ID</th>
+                            <th scope="col">Người dùng bị báo cáo</th>
+                            <th scope="col">Người báo cáo</th>
+                            <th scope="col">Lý do</th>
+                            <th scope="col">Ngày báo cáo</th>
+                            <th scope="col">Hành động</th>
+                            <th scope="col">Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="report : ${reportItems}">
+                            <td th:text="${report.reportId}"></td>
+                            <td th:text="${report.reviewId}"></td>
+                            <td th:text="${report.reportedUserId != null ? report.reportedUserId.name : 'Chưa có dữ liệu'}"></td>
+                            <td th:text="${report.reportedBy != null ? report.reportedBy.name : 'Chưa có dữ liệu'}"></td>
+                            <td th:text="${report.reason}"></td>
+                            <td th:text="${report.reportedAt != null ? report.reportedAt : 'Chưa có dữ liệu'}"></td>
+                            <td th:text="${report.status}"></td>
+                            <td>
+                                <span th:if="${report.active}" class="text-success">
+                                    <i class="fas fa-check-circle"></i> <!-- Trạng thái active -->
+                                </span>
+                                <span th:if="${!report.active}" class="text-danger">
+                                    <i class="fas fa-times-circle"></i> <!-- Trạng thái inactive -->
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card-footer border-0 py-5">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item" th:if="${currentPage > 1}">
+                            <a class="page-link" th:href="@{/admin/reports(currentPage=${currentPage - 1})}">&laquo; Trước</a>
+                        </li>
+                        <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPage)}" th:classappend="${currentPage == i ? 'active' : ''}">
+                            <a class="page-link" th:href="@{/admin/reports(currentPage=${i})}" th:text="${i}"></a>
+                        </li>
+                        <li class="page-item" th:if="${currentPage < totalPage}">
+                            <a class="page-link" th:href="@{/admin/reports(currentPage=${currentPage + 1})}">Sau &raquo;</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+</body>
+
+</html>

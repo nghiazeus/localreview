@@ -71,9 +71,12 @@ public class UserServiceImpl implements UserService {
 	    return userRepository.findByEmail(email);
 	}
 
-	
-
-
+	@Override
+	public User findByGoogleId(String googleId) {
+	    // Tìm người dùng theo googleId
+	    User user = userRepository.findByGoogleId(googleId); // Trả về null nếu không tìm thấy
+	    return user; // Trả về người dùng hoặc null
+	}
 
     
 }

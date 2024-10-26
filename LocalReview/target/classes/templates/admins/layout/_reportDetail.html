@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết Báo cáo</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .card {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card shadow border-0 mb-7">
+            <div class="card-header">
+                <h5 class="mb-0">Chi tiết Báo cáo</h5>
+            </div>
+            <div class="card-body">
+                <h6>Nội dung:</h6>
+                <p th:text="${report.content}"></p>
+                <h6>Người báo cáo:</h6>
+                <p th:text="${report.user.name}"></p>
+                <h6>Đánh giá ID:</h6>
+                <p th:text="${report.reviewId}"></p>
+                <h6>Ngày báo cáo:</h6>
+                <p th:text="${report.reportedAt != null ? report.reportedAt : 'Chưa có dữ liệu'}"></p>
+                <h6>Trạng thái:</h6>
+                <p>
+                    <span th:if="${!report.isActive}" class="text-success">
+                        <i class="fas fa-check-circle"></i> Đã xử lý
+                    </span>
+                    <span th:if="${report.isActive}" class="text-danger">
+                        <i class="fas fa-times-circle"></i> Chưa xử lý
+                    </span>
+                </p>
+                <a class="btn btn-primary" th:href="@{/reports}">Quay lại danh sách</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,25 +1,25 @@
-// Function to extract store ID from the current URL
+// Hàm để lấy store ID từ URL hiện tại
 function getStoreId() {
     var url = window.location.href;
     var matches = url.match(/\/store\/detail\/([a-zA-Z0-9-]+)$/);
     return matches ? matches[1] : null;
 }
 
-// Function to handle form submission
+// Hàm để xử lý việc gửi form đánh giá
 function submitReviewForm() {
     var storeId = getStoreId();
     if (!storeId) {
-        alert('Store ID is missing!');
+        alert('Store ID đang bị thiếu!');
         return;
     }
 
     var formData = new FormData();
     formData.append('comment', document.getElementById('comment').value);
     
-    // Get the rating value from hidden input
+    // Lấy giá trị đánh giá từ input ẩn
     var ratingValue = document.getElementById('ratingValue').value;
     if (ratingValue === "0" || ratingValue === "undefined") {
-        alert('Please select a valid rating between 1 and 5.');
+        alert('Vui lòng chọn một đánh giá hợp lệ từ 1 đến 5.');
         return;
     }
     formData.append('rating', ratingValue);
@@ -31,33 +31,36 @@ function submitReviewForm() {
         }
     }
 
-    // Send review data to the server
+    // Gửi dữ liệu đánh giá đến server
     fetch('/api/reviews/' + storeId, {
         method: 'POST',
         body: formData
     })
     .then(response => {
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            // Cố gắng phân tích phản hồi JSON để lấy thông báo lỗi
+            return response.json().then(errData => {
+                alert(errData.error || 'Có lỗi xảy ra khi gửi đánh giá!'); // Hiển thị thông báo lỗi
+            });
         }
-        return response.json();
+        return response.json(); // Trả về dữ liệu phản hồi nếu thành công
     })
     .then(data => {
-        console.log('Success:', data);
-        alert('Review submitted successfully!');
-        // Optionally reset the form or do other UI updates here
+        console.log('Thành công:', data);
+        alert('Đánh giá đã được gửi thành công!'); // Thông báo gửi đánh giá thành công
+        // Có thể reset form hoặc thực hiện các cập nhật UI khác ở đây
     })
     .catch(error => {
-        console.error('Error:', error);
-        alert('Error submitting review!');
+        console.error('Lỗi:', error);
+        alert('Lỗi khi gửi đánh giá!'); // Thông báo lỗi chung
     });
 }
 
-// Add event listener to the form to prevent default submission and handle submission
+// Thêm sự kiện lắng nghe cho form để ngăn chặn gửi mặc định và xử lý việc gửi
 document.addEventListener('DOMContentLoaded', function() {
     var form = document.getElementById('reviewForm');
     form.addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevent default form submission
-        submitReviewForm(); // Call the function to submit the form
+        event.preventDefault(); // Ngăn chặn gửi form mặc định
+        submitReviewForm(); // Gọi hàm để gửi form
     });
 });

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh sách Blacklist</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+   <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .card {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="card shadow border-0 mb-7">
+            <div class="card-header">
+                <h5 class="mb-0">Danh sách Blacklist</h5>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-nowrap">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">STT</th>
+                            <th scope="col">Tên người dùng</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Lý do</th>
+                            <th scope="col">Ngày thêm</th>
+                            <th scope="col">Ngày hết hạn</th>
+                            <th scope="col">Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="item, state : ${blacklistItems}">
+                            <td scope="row" th:text="${state.index + 1}"></td>
+                            <td th:text="${item.user.name}"></td>
+                            <td th:text="${item.user.email}"></td>
+                            <td th:text="${item.reason}"></td>
+                            <td th:text="${item.createdAt != null ? item.createdAt : 'Chưa có dữ liệu'}"></td>
+                            <td th:text="${item.expiresAt != null ? item.expiresAt : 'Chưa có dữ liệu'}"></td>
+                        	 <td>
+					            <span th:if="${item.isActive}" class="text-success">
+					                <i class="fas fa-check-circle"></i> <!-- Biểu tượng tích xanh lá -->
+					            </span>
+					            <span th:if="${!item.isActive}" class="text-danger">
+					                <i class="fas fa-times-circle"></i> <!-- Biểu tượng dấu x đỏ -->
+					            </span>
+					        </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card-footer border-0 py-5">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item" th:if="${currentPage > 1}">
+                            <a class="page-link" th:href="@{'?pageNo=' + ${currentPage - 1}}">&laquo; Previous</a>
+                        </li>
+                        <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPage)}"
+                            th:classappend="${currentPage == i ? 'active' : ''}">
+                            <a class="page-link" th:href="@{${keyword != null && keyword != '' ? '?keyword=' + keyword + '&' : '?'} + 'pageNo=' + ${i}}"
+                               th:text="${i}">1</a>
+                        </li>
+                        <li class="page-item" th:if="${currentPage < totalPage}">
+                            <a class="page-link" th:href="@{'?pageNo=' + ${currentPage + 1}}">Next &raquo;</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

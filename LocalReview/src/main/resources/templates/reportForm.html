@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Báo Cáo Đánh Giá</title>
+</head>
+<body>
+    <h1>Báo Cáo Đánh Giá</h1>
+    <form action="/report/create" method="post">
+        <input type="hidden" name="reviewId" th:value="${reviewId}" />
+
+        <label for="reason">Lý do:</label>
+        <textarea id="reason" name="reason" required></textarea>
+
+        <button type="submit">Gửi Báo Cáo</button>
+    </form>
+</body>
+</html>

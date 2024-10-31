@@ -24,6 +24,9 @@ public interface ReviewService {
     List<ReviewWithPhotosDTO> getReviewsWithPhotosByStoreId(String storeId);
 
 	List<Review> getAllReviews();
-    
+	
+	String getUserIdByReviewId(String reviewId); // Thêm dòng này
+	
+	
     
 }

@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import com.localreview.entity.CustomUserDetails; // Thêm dòng này
 
 import com.localreview.entity.User;
 import com.localreview.repository.UserRepository;
@@ -28,10 +29,17 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }
-        return new org.springframework.security.core.userdetails.User(
-            user.getEmail(), 
-            user.getPassword(), 
-            getAuthorities(user)
+
+        // Tạo đối tượng CustomUserDetails
+        return new CustomUserDetails(
+            user.getUserId(),      // ID người dùng
+            user.getEmail(),   // Email
+            user.getPassword(), // Mật khẩu
+            getAuthorities(user), // Quyền hạn
+            true,              // Tài khoản chưa hết hạn
+            true,              // Tài khoản chưa bị khóa
+            true,              // Chứng chỉ chưa hết hạn
+            true               // Tài khoản đang hoạt động
         );
     }
     

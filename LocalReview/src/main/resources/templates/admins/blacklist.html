@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Danh sách</title>
+    <link rel="icon" href="../image/Pelfusion-Christmas.png">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/cssadmin/index.css">
+</head>
+
+<body>
+    <div class="d-flex flex-column flex-lg-row h-lg-full bg-surface-secondary">
+        <div th:replace="/admins/layout/_menu.html"></div>
+
+        <div class="h-screen flex-grow-1 overflow-y-lg-auto">
+            <header class="bg-surface-primary border-bottom pt-6">
+                <div class="container-fluid">
+                    <h1 class="h2 mb-0 ls-tight text-primary">Quản lý Danh sách</h1>
+                </div>
+            </header>
+
+            <main class="py-6 bg-surface-secondary">
+                <div class="container-fluid">
+                    <!-- Gọi trang Blacklist -->
+                    <div th:replace="/admins/layout/_blacklist.html"></div>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+
+</html>

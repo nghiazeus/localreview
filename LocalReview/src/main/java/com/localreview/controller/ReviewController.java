@@ -10,6 +10,7 @@ import com.localreview.repository.ReviewReportRepository;
 import com.localreview.repository.ReviewRepository;
 import com.localreview.service.ReviewService;
 import com.localreview.service.UserService;
+import com.localreview.serviceiml.NotificationService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,6 +47,9 @@ public class ReviewController {
     
     @Autowired
     private ReviewReportRepository reviewReportRepository;
+    
+    @Autowired
+    private NotificationService notificationService;
 
     // Lưu một review mới, bao gồm nhiều ảnh nếu có
     @PostMapping("/{storeId}")
@@ -106,6 +110,16 @@ public class ReviewController {
 
         // Lưu review trước
         Review savedReview = reviewService.saveReview(review);
+        
+     // Lấy thông tin người dùng A (chủ cửa hàng)
+        String ownerId = store.getOwnerId(); // Lấy userId của chủ cửa hàng
+        User owner = userService.findByUserId(ownerId); // Tìm User dựa trên userId
+
+        if (owner != null) {
+            // Gửi thông báo cho người dùng A
+            String message = "Người dùng " + currentUser.getName() + " đã đánh giá cửa hàng của bạn.";
+            notificationService.sendRealTimeNotification(message, "new_review", owner.getUserId()); // Gửi thông báo
+        }
 
         // Xử lý ảnh sau khi review đã được lưu
         if (images != null && images.length > 0) {

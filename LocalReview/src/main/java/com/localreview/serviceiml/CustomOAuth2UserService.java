@@ -50,7 +50,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         // Tạo một OAuth2User mới với thông tin của userEntity
         return new DefaultOAuth2User(
             authorities,
-            oAuth2User.getAttributes(),
+            attributesWithUserId,
             "name" // Attribute để lấy tên người dùng từ OAuth2User
         );
     }

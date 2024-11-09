@@ -48,6 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
             .csrf().disable() // Vô hiệu hóa CSRF protection nếu cần thiết.
             .authorizeRequests()
+            	.antMatchers("/socket-endpoint/**").permitAll()  // Cho phép WebSocket mà không yêu cầu xác thực
                 .antMatchers("/user", "/register-store").hasAnyAuthority("user", "store_owner")
                 .antMatchers("/api/reviews").hasAuthority("store_owner")
                 .antMatchers("/admin/dashboard").hasAuthority("admin") // Chỉ cho phép admin truy cập

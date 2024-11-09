@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Thông báo</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        h2 {
+            text-align: center;
+        }
+        #notificationList {
+            list-style-type: none; /* Bỏ dấu chấm đầu dòng */
+            padding: 0;
+        }
+        #notificationList li {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            background-color: white; /* Màu nền cho thông báo */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s; /* Hiệu ứng chuyển màu nền */
+        }
+        #notificationList li:hover {
+            background-color: #e0e0e0; /* Màu nền khi hover */
+        }
+        /* Định dạng cho thông báo chưa đọc */
+        .unread {
+            font-weight: bold; /* Đậm cho thông báo chưa đọc */
+            color: #333; /* Màu chữ */
+        }
+        /* Định dạng cho thông báo đã đọc */
+        .read {
+            font-weight: normal; /* Nhạt cho thông báo đã đọc */
+            color: #888; /* Màu chữ nhạt */
+        }
+        #notificationCount {
+            text-align: center;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h2>Danh sách thông báo</h2>
+    <div id="notificationCount">Số lượng thông báo chưa đọc: 0</div>
+    <ul id="notificationList"></ul>
+
+    <script th:inline="javascript">
+        var userId = /*[[${session.userId}]]*/ 'defaultUserId'; // Gán giá trị userId từ session
+
+        if (userId === 'defaultUserId') {
+            console.error("User ID is not available.");
+        } else {
+            let unreadCount = 0; // Biến để lưu số lượng thông báo chưa đọc
+
+            // Hàm để cập nhật số lượng thông báo chưa đọc
+            function updateUnreadCount() {
+                document.getElementById('notificationCount').innerText = `Số lượng thông báo chưa đọc: ${unreadCount}`;
+            }
+
+            // Hàm để lấy thông báo từ server
+            function loadNotifications() {
+                fetch(`/notifications/${userId}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.text().then(text => {
+                                throw new Error(`Error ${response.status}: ${text}`);
+                            });
+                        }
+                        return response.json();
+                    })
+                    .then(notifications => {
+                        const notificationList = document.getElementById('notificationList');
+                        notificationList.innerHTML = ''; // Clear the list before appending new items
+                        unreadCount = 0; // Đặt lại số lượng thông báo chưa đọc
+
+                        notifications.forEach(notification => {
+                            var listItem = document.createElement('li');
+                            listItem.innerText = notification.message; // Sử dụng thông điệp từ notification
+                            listItem.setAttribute('data-id', notification.notificationId); // Lưu ID thông báo
+                            listItem.onclick = function() {
+                                markAsRead(notification.notificationId); // Gọi hàm đánh dấu đã đọc
+                            };
+                            // Thêm class để định dạng theo trạng thái đã đọc
+                            listItem.className = notification.read ? 'read' : 'unread'; // Thay đổi class dựa trên trạng thái đọc
+                            
+                            // Nếu thông báo chưa đọc, tăng biến đếm
+                            if (!notification.read) {
+                                unreadCount++;
+                            }
+                            
+                            notificationList.appendChild(listItem);
+                        });
+
+                        // Cập nhật số lượng thông báo chưa đọc
+                        updateUnreadCount();
+                    })
+                    .catch(error => console.error('Error fetching notifications:', error));
+            }
+
+            // Hàm để đánh dấu thông báo là đã đọc
+            function markAsRead(notificationId) {
+                if (!notificationId) {
+                    console.error("Invalid notification ID.");
+                    return;
+                }
+            
+                fetch(`/notifications/${notificationId}/read`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Error ${response.status}: Unable to mark notification as read.`);
+                    }
+                    console.log(`Notification ${notificationId} marked as read.`);
+            
+                    // Tìm phần tử `li` trong DOM
+                    const listItem = document.querySelector(`li[data-id='${notificationId}']`);
+                    
+                    if (listItem) {
+                        // Nếu phần tử tồn tại, cập nhật class
+                        listItem.className = 'read'; // Cập nhật class thành 'read'
+                        unreadCount--; // Giảm số lượng thông báo chưa đọc
+                        updateUnreadCount(); // Cập nhật lại số lượng thông báo chưa đọc
+                    } else {
+                        console.warn(`Notification element with ID ${notificationId} not found in DOM.`);
+                    }
+                })
+                .catch(error => console.error('Error marking notification as read:', error));
+            }
+
+            // Kết nối WebSocket
+            var socket = new SockJS('http://localhost:8080/socket-endpoint');
+            var stompClient = Stomp.over(socket);
+
+            stompClient.connect({}, function (frame) {
+                console.log('Connected: ' + frame);
+                // Đăng ký subscribe đến kênh thông báo
+                stompClient.subscribe('/user/' + userId + '/topic/notifications', function (notification) {
+                    console.log('Received notification: ', notification.body);
+                    
+                    // Chuyển đổi thông báo từ JSON
+                    try {
+                        var notificationObj = JSON.parse(notification.body);
+                        var listItem = document.createElement('li');
+                        listItem.innerText = notificationObj.message; // Sử dụng thông điệp từ notification
+                        listItem.setAttribute('data-id', notificationObj.notificationId); // Lưu ID thông báo
+                        listItem.onclick = function() {
+                            markAsRead(notificationObj.notificationId); // Gọi hàm đánh dấu đã đọc
+                        };
+                        // Thêm class để định dạng theo trạng thái đã đọc
+                        listItem.className = 'unread'; // Mặc định là chưa đọc
+                        
+                        // Cập nhật số lượng thông báo chưa đọc
+                        unreadCount++;
+                        updateUnreadCount(); // Cập nhật giao diện số lượng thông báo
+
+                        document.getElementById('notificationList').appendChild(listItem);
+                    } catch (e) {
+                        console.error('Error parsing notification:', e);
+                    }
+                });
+            }, function (error) {
+                console.log('Error connecting: ' + error);
+            });
+
+            // Tải thông báo khi trang được tải
+            loadNotifications();
+        }
+    </script>
+</body>
+</html>

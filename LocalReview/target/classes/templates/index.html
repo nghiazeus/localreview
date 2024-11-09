@@ -23,6 +23,10 @@
     <link rel="stylesheet" href="/css/loading.css">
     <script src="/js/loading.js" defer></script>
     <script src="/js/loaddata.js" defer></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+    <!-- Nạp thư viện STOMP.js từ CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 </head>
 
 <body>
@@ -408,6 +412,78 @@
         });
 
     </script>
+    
+    
+    <!-- js lấy userID cho thông báo websocket -->
+	    <script th:inline="javascript">
+	    // Khai báo biến toàn cục để lưu trữ userId
+	    var userId = /*[[${session.userId}]]*/ 'defaultUserId'; // Lấy userId từ session
+	
+	    // Khởi tạo hệ thống thông báo khi trang được tải
+	    function initNotificationSystem() {
+	        if (userId === 'defaultUserId') {
+	            console.error("User ID is not available.");
+	        } else if (!userId) {
+	            console.error("User ID is undefined or empty.");
+	        } else {
+	            connectWebSocket(userId);
+	        }
+	    }
+	
+	    // Khai báo biến toàn cục để theo dõi số lượng thông báo chưa đọc
+	    let unreadCount = 0;
+	    let stompClient = null;
+	
+	    // Hàm cập nhật số lượng thông báo chưa đọc
+	    function updateNotificationBadge() {
+		    const notificationBadge = document.getElementById('notificationBadge').querySelector('span');
+		
+		    if (notificationBadge) {
+		        notificationBadge.innerText = unreadCount;
+		        notificationBadge.style.display = unreadCount > 0 ? 'inline-block' : 'none';
+		    } else {
+		        console.error('Notification badge element not found.');
+		    }
+		}
+
+	
+	    // Xử lý nhận thông báo mới
+	    function handleNewNotification(notification) {
+	        try {
+	            const notificationObj = JSON.parse(notification.body);
+	            unreadCount++;
+	            updateNotificationBadge();
+	
+	            // Thêm thông báo vào danh sách
+	            const listItem = document.createElement('li');
+	            listItem.innerText = notificationObj.message; 
+	            listItem.className = 'unread'; 
+	            document.getElementById('notificationList').appendChild(listItem);
+	        } catch (error) {
+	            console.error('Error parsing notification:', error);
+	        }
+	    }
+	
+	    // Kết nối đến WebSocket và thiết lập đăng ký nhận thông báo
+	    function connectWebSocket(userId) {
+	        const socket = new SockJS('https://0cbe-125-235-238-71.ngrok-free.app/socket-endpoint'); // Địa chỉ server WebSocket
+	        stompClient = Stomp.over(socket);
+	
+	        stompClient.connect({}, (frame) => {
+	            console.log('Connected: ' + frame);
+	
+	            stompClient.subscribe('/user/' + userId + '/topic/notifications', handleNewNotification);
+	        }, (error) => {
+	            console.error('Error connecting: ', error);
+	        });
+	    }
+	
+	    // Gọi hàm khởi tạo khi trang đã tải xong
+	    document.addEventListener("DOMContentLoaded", initNotificationSystem);
+	</script>
+    
+    
+   
 </body>
 
 </html>
